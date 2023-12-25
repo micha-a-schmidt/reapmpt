@@ -1,0 +1,76 @@
+#################################################################################################
+# The package `REAP' is written for Mathematica 7 and is distributed under the
+# terms of GNU Public License http://www.gnu.org/copyleft/gpl.html
+#################################################################################################
+
+
+
+
+<function name=Definitions>
+<code>
+ThetaW = ArcSin[Sqrt[0.231]];(*Weinberg angle*)
+ThetaC = ThetaQuark12; (*Cabibbo Angle*)
+ThetaQuark12 = ArcSin[0.223];
+ThetaQuark13 = ArcSin[0.0036];
+ThetaQuark23 = ArcSin[0.041];
+DeltaQuark = 1.02;
+</code>
+</function>
+
+<function name=RGEMass>
+<head>
+RGEMass::usage="RGEMass[particle name] returns the mass of the particle at the Z
+boson mass. The possible particles are u,d,s,c,b,t,e,\[Mu],\[Tau] and Z.";
+</head>
+<doc level=simple>
+\function{RGEMass[\param{particle name}]} returns the mass of the given particle.
+<example>
+\begin{verbatim}
+RGEMass["t"]
+\end{verbatim}
+returns 174, the mass of the top quark.
+</example>
+</doc>
+<code>
+RGEMass[s_] := 
+	Which[
+	        True, "Masses not supported anymore",
+		s == "u", 4*10^(-3), 
+		s == "d", 7*10^(-3),
+		s == "s", 125*10^(-3), 
+		s == "c", 1.25,
+		s == "b", 4.2, 
+		s == "t", 174, 
+		s == "e", 511*10^(-6), 
+		s == "\<\[Mu]\>", 105.7*10^(-3), 
+		s == "\<\[Tau]\>", 1.777,
+		s == "Z", 91.19
+		]; 
+</code>
+</function>
+
+
+<function name=gMZ>
+<head>
+RGEgMZ::usage="RGEgMZ[coupling] returns the value of the coupling constant <coupling> (coupling=1,2,3) at the mass of the Z boson. Be careful RGEgMZ[1] is the coupling constant of U(1) Hypercharge with GUT charge normalization, i.e. RGEgMZ[1]=Sqrt[5/3]*g1";
+</head>
+<doc level=simple>
+\function{RGEgMZ[\param{i}]} returns the value of the coupling constant i at the
+mass of the Z boson.
+<example>
+\begin{verbatim}
+RGEgMZ[3]
+\end{verbatim}
+returns the coupling constant of QCD at mZ.
+</example>
+</doc>
+<code>
+RGEgMZ[i_] := 
+	Which[	  i == 1, 0.461425, 
+		  i == 2, 0.65184, 
+		  i == 3, 1.2143];
+</code>
+</function>
+
+
+

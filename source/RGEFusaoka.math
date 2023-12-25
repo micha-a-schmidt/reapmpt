@@ -1,0 +1,13 @@
+(* The package `REAP' is written for Mathematica 7 and is distributed under the
+terms of GNU Public License http://www.gnu.org/copyleft/gpl.html *)
+
+
+
+
+BeginPackage["REAP`RGEFusaoka`",{"REAP`RGESymbol`"}];
+
+<PERL>
+Package("RGEFusaoka.cxml","{\"REAP`RGESymbol`\"}");
+</PERL>
+
+

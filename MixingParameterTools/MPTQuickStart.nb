@@ -1,0 +1,235 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.0'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[      4878,        154]*)
+(*NotebookOutlinePosition[      6042,        190]*)
+(*  CellTagsIndexPosition[      5998,        186]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Mixing parameter tools - quick start", "Title"],
+
+Cell["\<\
+This notebook illustrates some features of the \
+`MixingParameterTools' package.\
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell["Preliminaries", "Section"],
+
+Cell["Evaluating the following cell is mandatory:", "Text"],
+
+Cell[BoxData[
+    \(\(Needs["\<MixingParameterTools`MPT3x3`\>"];\)\)], "Input"],
+
+Cell["Let's see if the package is loaded:", "Text"],
+
+Cell[BoxData[
+    \(\(?CKMParameters\)\)], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Quarks", "Section"],
+
+Cell["\<\
+The flavor structure of quark and lepton mass matrices is one of \
+the greatest puzzles of present theoretical physics. We are not going to \
+solve it in this notebook.
+Let's play with random numbers instead. We need some unknown \
+\[ScriptCapitalO](1) parameters:\
+\>", "Text"],
+
+Cell[BoxData[{\(ClearAll[rndEntry, rndMatrix];\), "\n", \(rndEntry := 
+        Exp[Random[
+            Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]];\), "\[IndentingNewLine]", 
+  
+    RowBox[{
+      RowBox[{"rndMatrix", ":=", 
+        RowBox[{"(", GridBox[{
+              {"rndEntry", "rndEntry", "rndEntry"},
+              {"rndEntry", "rndEntry", "rndEntry"},
+              {"rndEntry", "rndEntry", "rndEntry"}
+              }], ")"}]}], ";"}]}], "Input"],
+
+Cell[BoxData[
+    \(rndMatrix\)], "Input"],
+
+Cell["Now we can read off the CKM matrix from our texture.", "Text"],
+
+Cell[BoxData[{\(ClearAll[Yd, Yu, UCKM];\), "\[IndentingNewLine]", \(Yd = 
+        rndMatrix;\), "\[IndentingNewLine]", \(Yu = 
+        rndMatrix;\), "\[IndentingNewLine]", \(UCKM = 
+        Catch[CKMMatrix[Yu, Yd]];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", "\"\<\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_CKM\)=\>\"", "]"}], 
+      ";"}], "\[IndentingNewLine]", \(Print[MatrixForm[UCKM]];\)}], "Input"],
+
+Cell["... and the corresponding parameters ...", "Text"],
+
+Cell[BoxData[
+    \(\(Print["\<CKM parameters: \>", 
+        Catch[CKMParameters[Yu, Yd]]];\)\)], "Input"],
+
+Cell["... and, for instance, the Cabbibo angle...", "Text"],
+
+Cell[BoxData[
+    \(\(Print[\*"\"\<\!\(\[Theta]\_Cabbibo\)=\>\"", \(Catch[
+              CKMParameters[Yu, Yd]]\)\[LeftDoubleBracket]1, 
+            1\[RightDoubleBracket]/Degree];\)\)], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Neutrinos", "Section"],
+
+Cell["\<\
+Let's try some random matrices for the neutrinos as well. We have \
+to be a little bit careful to come up with a symmetric \[Nu] mass \
+matrix.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(ClearAll[Ye, tmpF, m];\)\), "\[IndentingNewLine]", 
+    \(\(Ye = rndMatrix;\)\), "\[IndentingNewLine]", 
+    \(\(tmpF = rndMatrix;\)\), "\[IndentingNewLine]", 
+    \(\(m = tmpF + Transpose[tmpF];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<MNS parameters: \>", 
+        Catch[MNSParameters[m, Ye]]];\)\)}], "Input"],
+
+Cell["Let's see what the solar angle is:", "Text"],
+
+Cell[BoxData[
+    \(Print[\*"\"\<\!\(\[Theta]\_12\)=\>\"", \(Catch[
+            MNSParameters[m, Ye]]\)\[LeftDoubleBracket]1, 
+          1\[RightDoubleBracket]/Degree]\)], "Input"]
+}, Open  ]]
+}, Open  ]]
+},
+FrontEndVersion->"5.0 for X",
+ScreenRectangle->{{0, 1280}, {0, 1024}},
+WindowSize->{676, 668},
+WindowMargins->{{160, Automatic}, {Automatic, 10}},
+PrintingPageRange->{Automatic, Automatic},
+PrintingOptions->{"PrintingMargins"->{{0, 0}, {72, 72}},
+"PaperSize"->{504, 842.375},
+"PaperOrientation"->"Portrait",
+"PrintCellBrackets"->False,
+"PrintRegistrationMarks"->True,
+"PrintMultipleHorizontalPages"->False,
+"FirstPageHeader"->False,
+"FirstPageFooter"->False,
+"PostScriptOutputFile":>FrontEnd`FileName[{$RootDirectory, "users", "mratz", \
+"mathematica", "Notebooks", "MassRen"}, "mist.ps", CharacterEncoding -> \
+"iso8859-1"],
+"Magnification"->1},
+StyleDefinitions -> "Report.nb"
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 53, 0, 134, "Title"],
+Cell[1832, 55, 104, 3, 28, "Text"],
+
+Cell[CellGroupData[{
+Cell[1961, 62, 32, 0, 67, "Section"],
+Cell[1996, 64, 59, 0, 28, "Text"],
+Cell[2058, 66, 79, 1, 32, "Input"],
+Cell[2140, 69, 51, 0, 28, "Text"],
+Cell[2194, 71, 51, 1, 32, "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[2282, 77, 25, 0, 67, "Section"],
+Cell[2310, 79, 288, 6, 60, "Text"],
+Cell[2601, 87, 450, 10, 104, "Input"],
+Cell[3054, 99, 42, 1, 32, "Input"],
+Cell[3099, 102, 68, 0, 28, "Text"],
+Cell[3170, 104, 438, 7, 112, "Input"],
+Cell[3611, 113, 56, 0, 28, "Text"],
+Cell[3670, 115, 106, 2, 32, "Input"],
+Cell[3779, 119, 59, 0, 28, "Text"],
+Cell[3841, 121, 195, 3, 32, "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[4073, 129, 28, 0, 67, "Section"],
+Cell[4104, 131, 167, 4, 44, "Text"],
+Cell[4274, 137, 340, 6, 96, "Input"],
+Cell[4617, 145, 50, 0, 28, "Text"],
+Cell[4670, 147, 180, 3, 32, "Input"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

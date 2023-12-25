@@ -1,0 +1,53 @@
+\NeedsTeXFormat{LaTeX2e}
+\documentclass[10pt,a4paper,twoside]{scrartcl}
+
+\input{RGEDocPreamble}
+
+\begin{document}
+\font\TitleFont=cmbx10 at 40pt \font\SubTitleFont=cmbx10 at 25pt
+\pagenumbering{arabic} \title{\TitleFont{REAP <INCLUDE>../RGEVersion
+</INCLUDE>}\\[1cm]
+\SubTitleFont{Users guide} } \author{S.~Antusch, J.~Kersten,
+M.~Lindner, M.~Ratz and M.A.~Schmidt} \maketitle
+\begin{abstract}
+  This is an users guide of the \package{REAP} add-on
+  for Mathematica. We describe the functions which allow to calculate the
+  evolution of the neutrino mass matrix in different models (SM, MSSM, 2HDM).
+  There is a reference of the most important functions. Besides this function
+  reference there is a description of the installation procedure, a short HowTo and a section about frequently asked questions.
+\end{abstract}
+\thispagestyle{empty}
+\tableofcontents
+\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{RGELicense}
+\input{RGEIntroduction}
+
+%\begin{center}
+% \fbox{\textbf{Note}: The documentation for the mixing parameter tools is in a
+% separate directory!}
+%\end{center}
+%\input{MixingParameterTools.tex}
+
+\input{RGEInstallation}
+
+\input{RGEHowTo}
+
+<PERL>
+our $level="simple";
+parse("RGEReference.cmtex");
+</PERL>
+
+%\input{RGEShortReference}
+%\input{RGEModels}
+
+\input{RGEFAQ}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\bibliography{reap}
+
+\end{document}
+

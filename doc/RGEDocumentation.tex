@@ -1,0 +1,1309 @@
+\NeedsTeXFormat{LaTeX2e}
+\documentclass[10pt,a4paper,twoside]{scrartcl}
+
+\input{RGEDocPreamble}
+
+\begin{document}
+\font\TitleFont=cmbx10 at 40pt \font\SubTitleFont=cmbx10 at 25pt
+\pagenumbering{arabic} \title{\TitleFont{REAP 1.11.5
+}\\[1cm]\SubTitleFont{Documentation} } \author{S.~Antusch, J.~Kersten,
+M.~Lindner, M.~Ratz and M.A.~Schmidt} \maketitle
+\begin{abstract}
+  This is a more detailed documentation of the \package{REAP} add-on
+  for Mathematica. We describe the functions which allow to calculate the
+  evolution of the neutrino mass matrix in different models (SM, MSSM, 2HDM).
+  Besides a function reference there is short HowTo on how you can build your
+  own model.
+\end{abstract}
+\thispagestyle{empty}
+\tableofcontents
+\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{RGELicense}
+
+\input{RGEIntroduction}
+
+%\begin{center}
+% \fbox{\textbf{Note}: The documentation for the mixing parameter tools is in a
+% separate directory!}
+%\end{center}
+
+\input{RGEInstallation}
+\input{RGEHowTo}
+
+
+\section{Reference}
+
+\subsection{Implementation details}
+
+\package{REAP} is divided in three parts. The main part
+is \package{RGESolver} which
+provides a standard interface between the different models and the user. Thus
+the user does not have to know anything about the implementation details of the
+different models besides the parameters of the models. 
+The second part are the different models, like \package{RGESM},
+\package{RGEMSSM}, \dots which contain the model
+specific parts of the package. 
+The third part is formed by some utility packages
+(\package{RGEUtilities}, \package{RGEParameters}, 
+\package{RGEInitial}, \package{RGEFusaokaYukawa}, \package{RGESymbol}, \package{RGETakagi}) which provide several useful functions
+to the different models. In principle, a user only needs a limited set of
+functions of \package{RGESolver}.
+
+
+
+%% The package \package{REAP} is divided in three parts. The main part is the Mathematica File \package{REAP`RGESolver`} which provides a standard interface to all model. The second part are the different models, like \package{REAP`RGESM`}, \dots ,which contain the model specific parts of the package. The third part is formed by some utility packages (\package{REAP`RGEUtilities`}, \package{REAP`RGEParameters`}, \package{REAP`RGESymbol`}, \package{REAP`RGEInitial`}, \package{REAP`RGEFusaoka`}, \package{REAP`RGETakagi`}) which provide several useful functions to the different models.
+
+%% The \package{RGESolver} provides the interface between the user and the different models. Every model has to register with \function{RegisterModel}.
+%% First the model name is saved in the list named Model. The other parameters are stored in similar lists.
+%% The user has to tell to \package{RGESolver} how his model does look like. He adds several EFT's to his model by \function{RGEAddEFT}. These EFT's are stored in the list \variable{RGEModel}.
+
+\subsection[\package{RGESolver}]{\package{REAP`RGESolver`}}
+
+The package distinguishes between two different kind of functions. On the one
+hand, there are functions which directly work with the supplied models. They are
+named \function{RGE*Model*}. On the other hand, there are functions dealing
+with the models which are used as an effective field theory (EFT), i.e.\ have been added by
+\function{RGEAddEFT}. These functions are named \function{RGE*EFT*}.
+
+At the beginning, all models have to be loaded by
+\function{RGERegisterModel} in order to make them accessible through
+\package{RGESolver}. \function{RGERegisterModel} takes as argument
+different functions to communicate with the model. After all models have been
+registered which is done by the packages, the models are contained in, the user
+has to specify, how his sequence of EFTs is made up. Different models can be
+added as EFT by \function{RGEAddEFT}. The cutoff is specified by the option
+\option{RGECutoff}. Next, the initial values have to be supplied by the function 
+\function{RGESetInitial}. Then the renormalization group equations are solved
+by executing \function{RGESolve} which uses \function{NDSolve} to numerically
+integrate the differential equations. Finally, the parameters can be obtained
+through \function{RGEGetSolution} at any scale. In order to illustrate the use
+of \package{REAP}, an example is given in Sec.~\ref{sec:FirstSteps} and the
+algorithm to solve the different ranges is demonstrated in the following example.
+
+The setup is the MSSM extended by 3 right-handed neutrinos at the GUT scale of
+$2\cdot10^{16} \GeV$ and set the SUSY breaking scale to 1 TeV. The initial values
+are set to the suggested values which are specified in Sec.~\ref{sec:Models}.
+At first, we define the model and set the initial values.
+\begin{verbatim}
+  RGEAddModel["MSSM"];
+  RGEAddModel["SM",RGECutoff->1000];
+  RGESetInitial[2 10^16];
+\end{verbatim}
+The execution of \function{RGESolve[$91.19$,$2\cdot 10^{16}$]} solves the RGE and finds the scales where
+the right-handed neutrinos are integrated out.
+
+\begin{enumerate}
+\item Solve the RGEs for the MSSM with $3$ right-handed neutrinos between the
+  GUT scale and the SUSY breaking scale without considering any thresholds.
+\item Find the heaviest right-handed neutrino with mass $M_3$ and add a new EFT
+  by \\ \function{RGEAddEFT["MSSM",RGECutoff->$M_3$, RGEIntegratedOut->1]}.
+\item Calculate initial values for MSSM with $2$ right-handed neutrinos by matching $\kappa,
+  Y_\nu$, $M$ and the other parameters at the scale where the first right-handed neutrino is integrated out.
+\item Solve the RGEs for the MSSM with $2$ right-handed neutrinos between $M_3$ and
+  the SUSY breaking scale.
+\item Find the second to heaviest right-handed neutrino with mass $M_2$ and add
+  a new EFT by \function{RGEAddEFT["MSSM", RGECutoff->$M_2$,
+  RGEIntegratedOut->2]}.
+%\item etc.
+\item Calculate initial values for MSSM with $1$ right-handed neutrino.
+\item Solve the RGEs for the MSSM with $1$ right-handed neutrinos between $M_2$ and
+  the SUSY breaking scale.
+\item Find the lightest right-handed neutrino with mass $M_1$ and add
+  a new EFT by\\ \function{RGEAddEFT["MSSM0N", RGECutoff->$M_1$]}.
+\item Calculate initial values for MSSM without right-handed neutrinos.
+\item Solve the RGEs for the MSSM without right-handed neutrinos between $M_1$
+  and the SUSY breaking scale.
+\item Calculate initial values for the SM
+\item Since all right-handed neutrinos have been integrated out already, change
+  SM to SM0N.
+\item Solve the RGEs for SM0N between the SUSY breaking scale and the mass of $Z^0$.
+\end{enumerate}
+
+\subsubsection{RGEAdd}
+
+\function{RGEAdd[\param{model},\optparam{options}]} 
+specifies that \param{model} should be used as an effective theory (EFT)
+up to a cutoff energy given in the \optparam{options}.  If no cutoff is
+given, $\infty$ is used.  \optparam{options} can also be used to specify
+various parameters such as $\tan\beta$.  See Sec.~\ref{sec:Models} for a
+complete list of the models and options available.
+
+\begin{verbatim}
+  RGEAdd["MSSM",RGEtan\[Beta]->50]
+  RGEAdd["SM",RGECutoff->10^3]
+\end{verbatim}
+In this case, the MSSM with $\tan\beta=50$ is used at high energies.
+Below $10^3\GeV$ (the SUSY breaking scale in this example), the SM is
+used as an EFT.
+
+
+
+\subsubsection{RGEAddEFT}
+
+This command is identical to \function{RGEAdd}.
+
+\subsubsection{RGEGetEFTOptions}
+
+Same as \function{RGEGetOptions}.
+
+\subsubsection{RGEGetInitial}
+
+\function{RGEGetInitial[]} returns the scale at which the initial values
+are given and the initial values.
+%
+% \begin{verbatim}
+%  RGEGetInitial[]
+%\end{verbatim}
+%This returns \begin{verbatim}{2 10^16, {RGEg1->0.2, RGEg2->0.5, RGEg3->0.3}}\end{verbatim}
+%
+
+\subsubsection{RGEGetModelOptions}
+
+\function{RGEGetModelOptions[\param{model name}]} returns the options of the model
+\param{model name}.
+ 
+  \begin{verbatim}
+   RGEGetModelOptions["SM"]
+ \end{verbatim}
+% This returns the options which are currently set for the ``SM''.
+ 
+
+\subsubsection{RGEGetOptions}
+
+\function{RGEGetOptions[\param{model}]} returns the options set by
+\function{RGEAdd} or \function{RGESetOptions} for the EFT \param{model}.
+Wildcards can be used in \param{model}.
+ 
+  \begin{verbatim}
+   RGEGetOptions["SM*"]
+ \end{verbatim}
+ This returns the options which are currently set for all EFTs whose
+ names start with ``SM''.
+ 
+
+\subsubsection{RGEGetParameters}
+
+\function{RGEGetParameters[\param{model}]} returns the quantities that run
+in the \param{model}.
+% 
+%  \begin{verbatim}
+%   RGEGetParameters["SM"];
+% \end{verbatim}
+% This returns the parameters of the ``SM''.
+% 
+
+\subsubsection{RGEGetSolution}
+
+\label{sec:RGEGetSolution}
+\function{RGEGetSolution[\param{scale},\optparam{parameter}]} 
+returns the solution of the RGEs at the energy \param{scale}.
+The \optparam{parameter} (optional) specifies the quantity
+of interest (cf.\ Sec.~\ref{sec:Models} for the lists for each model).
+If no \optparam{parameter} is given, the values of all running
+quantities are returned.
+
+
+\begin{verbatim}
+  RGEGetSolution[100,RGEM\[Nu]]
+\end{verbatim}
+returns the neutrino mass matrix at $100\GeV$.
+\begin{verbatim}
+  RGEGetSolution[100]
+\end{verbatim}
+returns all parameters at $100\GeV$.
+
+
+
+\subsubsection{RGEGetTransitions}
+
+\function{RGEGetTransitions[]} returns the transitions (thresholds)
+between the various EFTs in a list
+containing the energy scale, the model name and its options.
+%
+%\begin{verbatim}
+%  Print[RGEGetTransitions[]];
+%  {{10000000,MSSM,{}},{10000,MSSM,{RGEIntegratedOut->1}}}
+%\end{verbatim}
+%
+
+
+\subsubsection{RGELoadAll}
+
+\function{RGELoadAll[\param{filename}]} loads the saved state which is given in
+\param{filename}.
+
+\subsubsection{RGELoadResults}
+
+\function{RGELoadResults[\param{model}]} loads the saved model which is given in
+\param{model}.
+
+\subsubsection{RGERegisterModel}
+
+\function{RGERegisterModel\label{func:RGERegisterModel}[\param{name}, \param{get
+parameters}, \param{solve
+RGE}, \param{return solution}, \param{transition functions}, \param{provide
+initial values}, \param{set options}, \param{get options}]} of the package
+\package{REAP} registers a new model.  Its 8 parameters are:
+\begin{enumerate}
+  \item a string containing the name of the model
+  \item a string containing the name of the package
+  \item a function returning a list of the parameters of the model
+  \item a function to solve the RGE of this model in a given range
+  \item a list of replacement rules with the functions to return the result,
+  like \textit{Symbol$\rightarrow$function returning the solution}
+  \item a list containing the transition functions in the form \textit{\{``name of
+  the target model'',name of the function\}}
+  \item a function to provide initial values
+  \item a function to set options of the model
+  \item a function to get the initial values
+\end{enumerate}
+
+
+\begin{verbatim}
+RGERegisterModel["SM","SolveNeutrinoRGES`RGESM`" `Private`GetParameters,
+        `Private`SolveModel, {RGEAll->`Private`GetSolution,
+        RGEM\[Nu]->`Private`GetM\[Nu], RGEMe->`Private`GetMe,
+        RGEMu->`Private`GetMu, RGEMd->`Private`GetMd},
+        {{"SM",`Private`TransSM},{"SM0N",`Private`TransSM0N}},
+        `Private`GetInitial, `Private`ModelSetOptions, `Private`ModelGetOptions
+        ];
+\end{verbatim}
+
+This example registers the SM.  There are 5 functions to return solutions:
+Private`GetSolution, Private`GetM$\nu$,\dots. Moreover the only 2 transition
+functions are the transition functions to the SM (with righthanded neutrinos)
+itself: \{"SM",Private`TransSM\} and to the SM without righthanded Neutrinos
+\{"SM0N",Private`TransSM0N\}.
+
+
+
+\subsubsection{RGEReset}
+
+\function{RGEReset[]} removes all EFTs and resets all options which have
+been changed by \function{RGEAdd} or \function{RGESetOptions}
+%functions named RGE*EFT* 
+to their default values. 
+Options which have been changed by
+%functions named RGE*Model* (e.g. RGESetModelOptions)
+\function{RGESetModelOptions} are not reset.
+
+\subsubsection{RGESaveAll}
+
+\function{RGESaveAll[\param{filename}]} saves the state to \param{filename}.
+
+\subsubsection{RGESaveInitialData}
+
+\function{RGESaveInitialData[]} returns all data which is relevant to rerun the
+calculation,i.e. Initial values and the range. The data is returned as a list of replacement rules which
+is self-explaining (RGEUpperBound, RGELowerBound determine the range which is
+passed to \function{RGESolve}, RGEBoundaryScale is the scale where the
+initial data is given and RGEModelData is the model with cutoff and options. The remaining parameters are the initial values.).
+
+\subsubsection{RGESaveResults}
+
+\function{RGESaveModel[]} returns the current model. It can be loaded again by \function{RGELoadResults}.
+
+\subsubsection{RGESetEFTOptions}
+
+Same as \function{RGESetOptions}.
+
+\subsubsection{RGESetInitial}
+
+\function{RGESetInitial[\param{scale},\param{initial conditions}]} sets
+the initial values at the energy \param{scale}.  They are entered as
+replacement rules and can also contain options (e.g.\ to select the
+neutrino mass hierarchy).  See Sec.~\ref{sec:Models} for the names of
+the variables and options in the different models.
+The option \variable{RGESuggestion} chooses between
+several sets of default values. If it is not given, the first set of default
+values is taken.  In general, these are the default values at the GUT scale.
+
+\begin{verbatim}
+  RGESetInitial[10^16,RGE\[Theta]13->4 Degree,RGEMlightest->0.1]
+\end{verbatim}
+This sets the initial values at $10^{16}\GeV$.  The mixing angle
+$\theta_{13}$ is set to $4^\circ$, and the mass of the lightest neutrino
+to $0.1\eV$.  For the other parameters, the default values are used.
+
+
+
+\subsubsection{RGESetModelOptions}
+
+\function{RGESetModelOptions[\param{model name},\param{options}]} globally changes the options
+of \param{model name} to \param{options}. Metacharacters, like * and @, are
+allowed in the \param{model name}. \param{model name} is matched against all
+model names with \function{StringMatchQ}.
+
+\begin{verbatim}
+  RGESetModelOptions["SM",RGEvEW->246];
+\end{verbatim}
+This sets the option RGEvEW of the ``SM'' to 246.  The other options are
+unchanged.
+
+
+\subsubsection{RGESetOptions}
+
+\function{RGESetOptions[\param{model},\param{options}]} changes the options
+of the EFTs defined by \function{RGEAdd} with name matching \param{model} to \param{options}. Metacharacters, like * and @, are
+allowed in the name.
+
+\begin{verbatim}
+  RGESetOptions["MSSM",RGEtan\[Beta]->40]
+\end{verbatim}
+This sets $\tan\beta$ of the ``MSSM'' to 40.  The EFT must have been
+added earlier by \function{RGEAdd["MSSM"]}.  The other options are
+unchanged.
+
+
+
+\subsubsection{RGESolve}
+
+\function{RGESolve[\param{low},\param{high},\optparam{options}]} solves
+the RGEs between the energies \param{low} and \param{high}. 
+It accepts the same options as \function{NDSolve}.  In addition, the option
+\variable{RGERemoveAutoGeneratedEntries} determines whether automatically
+generated EFTs (such as the MSSM with 2 singlet neutrinos, if one
+started with 3 singlets) are removed before solving the RGEs. The default
+value is ``True''.
+% which means that automatically generated entries are removed. 
+If it is set to ``False'', no EFT will be removed.
+
+\begin{verbatim}
+  RGESolve[100,10^15]
+\end{verbatim}
+This solves the RGEs between $100\GeV$ and $10^{15}\GeV$.
+%using the method \variable{StiffnessSwitching} for the calculation.
+
+
+
+
+
+\input{RGESymbol}
+
+\subsection[\package{RGEInitial}]{\package{REAP`RGEInitial`}}
+
+This package contains some functions for converting mass and mixing parameters
+into mass matrices. They are mainly intended for internal use by REAP, but may
+be helpful for the user in some occasions.
+
+
+\subsubsection{RGEGetDiracY$\nu$}
+
+\function{RGEGetDiracY$\nu$[\param{$\theta_{12}$}, \param{$\theta_{13}$},
+    \param{$\theta_{23}$}, \param{$\delta$}, \param{$\delta_e$}, \param{$\delta_\mu$}, \param{$\delta_\tau$},
+    \param{$\varphi_1$}, \param{$\varphi_2$}, \param{Mlightest}, \param{$\Delta m^2_\mathrm{atm}$}, \param{$\Delta m^2_\mathrm{sol}$}, \param{mass hierarchy}, \param{vu}]} returns a suggestion for Y$\nu$
+    in the case of Dirac neutrinos.
+\begin{itemize}
+\item The first 9 parameters specify the mixing matrix.
+\item The 10th parameter is the mass of the lightest neutrino.
+\item The 11th and 12th parameter are the mass squared differences of the
+atmospheric and solar neutrino oscillations respectively.
+\item The 13th parameter is the mass hierarchy. "i" means inverted and "r" or
+"n" means normal.
+\item The 14th parameter is the vev of the Higgs coupling
+to the neutrinos.
+\end{itemize}
+
+
+\subsubsection{RGEGetM}
+
+\function{RGEGetM[\param{$\theta_{12}$},\param{$\theta_{13}$},
+\param{$\theta_{23}$},\param{$\delta$},\param{$\delta_e$},\param{$\delta_\mu$},\param{$\delta_\tau$},\param{$\varphi_1$},\param{$\varphi_2$},\param{Mlightest},\param{$\Delta
+m^2_\mathrm{atm}$},\param{$\Delta m^2_\mathrm{sol}$},\param{mass hierarchy}, \param{vu},\param{$Y_\nu$}]} returns a
+    suggestion for the mass matrix of the right-handed neutrinos.
+\begin{itemize}
+\item The first 9 parameters specify the mixing matrix.
+\item The 10th parameter is the mass of the lightest neutrino.
+\item The 11th and 12th parameter are the mass squared differences of the
+atmospheric and solar neutrino oscillations respectively.
+\item The 13th parameter is the mass hierarchy. "i" means inverted and "r" or
+"n" means normal.
+\item The 14th parameter the neutrino Yukawa coupling matrix
+\item The 15th parameter is the vev of the Higgs coupling
+to the neutrinos.
+\end{itemize}
+
+
+\subsubsection{RGEGetY$\nu$}
+
+\function{RGEGetY$\nu$[\param{$\left(Y_\nu\right)_{33}$},\param{ratio}]} returns a suggestion of
+the Yukawa matrix of $\nu$ at the GUT scale.  The first parameter is the mass of
+the heaviest neutrino and the second parameter specifies the mass ratio between
+the neutrinos. The result is a diagonal hierarchical matrix.
+
+\subsubsection{RGEGetYd}
+
+\function{RGEGetYd[\param{$y_1$}, \param{$y_2$}, \param{$y_3$}, \param{$\theta_{12}$},\param{$\theta_{13}$}, \param{$\theta_{23}$},\param{$\delta$},\param{$\delta_e$},\param{$\delta_\mu$},\param{$\delta_\tau$},\param{$\varphi_1$},\param{$\varphi_2$}]} returns a suggestion for
+    Yd.
+\begin{itemize}
+\item The first 3 parameters are the eigenvalues of $Y_d$.
+\item The next 9 parameters are the mixing parameters.
+\end{itemize}
+
+
+\subsubsection{RGEGetYe}
+
+\function{RGEGetYe[\param{Yukawa $\tau$}]} returns a suggestion for the Yukawa
+matrix of the charged leptons at the GUT scale.  The parameter is the Yukawa
+coupling of the $\tau$. The suggested matrix is diagonal.
+
+\subsubsection{RGEGet$\kappa$}
+
+\function{RGEGet$\kappa$[\param{$\theta_{12}$},\param{$\theta_{13}$},\param{$\theta_{23}$},\param{$\delta$},\param{$\delta_e$},\param{$\delta_\mu$},\param{$\delta_\tau$},\param{$\varphi_1$},\param{$\varphi_2$},\param{Mlightest},\param{$\Delta
+m^2_\mathrm{atm}$},\param{$\Delta m^2_\mathrm{sol}$},\param{mass hierarchy},\param{vu}]} returns a suggestion for
+    $\kappa$, the coupling of the dimension 5 operator, in
+$\mathrm{GeV}^{-1}$.
+\begin{itemize}
+\item The first 9 parameters specify the mixing matrix.
+\item The 10th parameter is the mass of the lightest neutrino.
+\item The 11th and 12th parameter are the mass squared differences of the
+atmospheric and solar neutrino oscillations, respectively.
+\item The 13th parameter is the mass hierarchy. "i" means inverted and "r" or
+"n" means normal.
+\item The 14th parameter is the vev of the Higgs coupling
+to the neutrinos.
+\end{itemize}
+
+
+
+
+
+\subsection[\package{RGEParameters}]{\package{REAP`RGEParameters`}}
+\package{RGEParameters} contains measured parameters of the SM like mixing
+angles, masses and coupling constants. %\cite{PDBook}
+  
+\subsubsection{RGEMass}
+
+\function{RGEMass[\param{particle name}]} returns the mass of the given particle.
+
+\begin{verbatim}
+RGEMass["t"]
+\end{verbatim}
+returns 174, the mass of the top quark.
+
+
+\subsubsection{gMZ}
+
+\function{RGEgMZ[\param{i}]} returns the value of the coupling constant i at the
+mass of the Z boson.
+
+\begin{verbatim}
+RGEgMZ[3]
+\end{verbatim}
+returns the coupling constant of QCD at mZ.
+
+
+
+
+
+\subsection[\package{RGEUtilities}]{\package{REAP`RGEUtilities`}}
+This package contains some functions needed by \package{RGESM},\package{RGEMSSM}
+and \package{2HDM}.
+
+
+
+
+\subsection[\package{RGETakagi}]{\package{REAP`RGETakagi`}}
+This package contains a function implementing the Takagi diagonalization, which was implemented by Vinzenz Maurer following the algorithm described in Ref.~\cite{Hahn:2006xx}.
+
+
+\subsubsection{RGETakagiDecomposition}
+
+\function{RGETakagiDecomposition[\param{M}]} performs a Takagi decomposition of \param{M} and returns in a list the unitary matrix \param{u} and the diagonalised matrix \param{d}, i.e. {\param{u},\param{d}} with \param{d}=\param{u}.\param{M}.param{u}$^T$. This was implemented by Vinzenz Maurer following the algorithm described in arXiv:physics/0607103 [physics.comp-ph].
+
+\begin{verbatim}
+  {u,d}=RGETakagiDecomposition[M];
+\end{verbatim}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% models
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Models\label{sec:Models}}
+
+%\subsection{\package{RGEToyModel}}
+%This package contains a toy model for testing purposes.
+
+\subsection{Standard Model (SM)}
+
+\subsubsection[\package{RGESM}]{\package{REAP`RGESM`}}
+This package contains the Standard Model extended by an arbitrary number of right-handed neutrinos (SM)
+to 1 loop order.  It is possible to automatically find transitions where heavy
+neutrinos are integrated out.  However, quarks are not integrated out.
+
+\vspace{2ex}
+Options:
+\begin{itemize}
+\item RGEIntegratedOut\ is the number of right-handed neutrinos which are
+  integrated out. (default: 0)
+\item RGESearchTransition\ enables/disables the automatic search for
+  transitions, i.e.\ automatically integrating out right-handed
+neutrinos. (default: True)
+\item RGEThresholdFactor\ determines where heavy degrees of freedom are integrated
+  out: RGEThresholdFactor*Mass=Scale where degree of freedom is integrated
+  out. (default: 1)
+\item RGE$\lambda$\ sets the initial value of the quartic Higgs coupling
+  $\lambda$ which is used when changing from the MSSM to the SM at
+  $M_\mathrm{SUSY}$.  (default: 0.5)
+\item RGEvEW\ is the vev of the Higgs at the electroweak scale
+  in GeV (default: 246).  It is treated as a constant, i.e.\ its running
+  is not taken into account.
+
+\end{itemize}
+
+Options used by \function{RGESetInitial}:
+
+If the default values of all parameters are used, the resulting parameters will
+be compatible to the experimental data at the Z boson mass. The number of right-handed neutrinos is given by the initial conditions. There
+is no need to specify the number of neutrinos somewhere else.
+\begin{itemize}
+\item RGEM$\nu$r\ is the mass matrix of the right-handed neutrinos.
+  If this parameter is specified, it also determines the light neutrino
+  mass matrix via the see-saw formula (together with RGEY$\nu$).  Thus,
+  RGEMassHierarchy, RGEMlightest, RGE$\Delta$m2atm, RGE$\Delta$m2sol,
+  RGE$\varphi$1, RGE$\varphi$2, RGE$\delta$, RGE$\delta$e,
+  RGE$\delta\mu$, RGE$\delta\tau$, RGE$\theta$12, RGE$\theta$13, and
+  RGE$\theta$23 do not have any effect in this case.
+  
+\item RGEMassHierarchy\ is the hierarchy of the neutrino masses; "r" or "n"
+  means normal hierarchy, "i" means inverted hierarchy (default: "r").
+  
+\item RGEMlightest \ is the mass of the lightest neutrino in eV (default: $\mathcal{O}(0.01)
+  \eV$).
+  \ The default of RGEMlightest depends on the
+model. It is chosen in such a way, that the parameters are compatible with the
+experimental data.
+\item RGEY$\nu$\ is the neutrino Yukawa matrix in ``RL convention''. This option overrides the
+  built-in Yukawa matrix, i.e.\ RGEY$\nu33$ and RGEY$\nu$Ratio do not have any
+  effect. 
+    (default: RGEGetY$\nu$(RGEY$\nu33$, RGE$Y\nu$Ratio))
+  
+\item RGEY$\nu$33\ is the (3,3) entry in the neutrino Yukawa matrix at the GUT
+  scale.\ The default value depends on the
+  model and it is chosen in such a way, that it is compatible with the
+  experimental data (default: $\mathcal{O}(1)$).
+  
+\item RGEY$\nu$Ratio\ determines the relative value of the neutrino Yukawa couplings.\ The default value depends on the
+  model and it is chosen in such a way, that it is compatible with the
+  experimental data (default: $\mathcal{O}(1)$).
+\item RGEYd\ is the Yukawa matrix of the down-type quarks.
+  If this parameter is given, RGEyd, RGEys, RGEyb, RGEq$\varphi$1,
+  RGEq$\varphi$2, RGEq$\delta$, RGEq$\delta$e, RGEq$\delta\mu$,
+  RGEq$\delta\tau$, RGEq$\theta$12, RGEq$\theta$13, and RGEq$\theta$23
+  are ignored.
+  
+\item RGEYe\ is the charged lepton Yukawa matrix.
+  If this parameter is given, RGEye, RGEy$\mu$ and RGEy$\tau$ are
+  ignored.
+    \\ (default:
+  RGEGetYe(0.8*Mass$\left[\mathrm{"}\tau\mathrm{"}\right]$*Sqrt[2]/RGEvd))
+  
+\item RGEYu\ is the Yukawa matrix of the up-type quarks.
+  If this parameter is given, RGEyu, RGEyc and RGEyt are ignored;
+  it is recommended not to use RGEq$\varphi$1, RGEq$\varphi$2,
+  RGEq$\delta$, RGEq$\delta$e, RGEq$\delta\mu$, RGEq$\delta\tau$,
+  RGEq$\theta$12, RGEq$\theta$13, and RGEq$\theta$23 in this case, since
+  they are not necessarily equal to the CKM mixing parameters.
+\item RGE$\Delta$m2atm\ is the atmospheric mass squared difference (default: $ \mathcal{O}(10^{-3}) \eV^2$).\ The default value depends on the
+  model and it is chosen in such a way, that it is compatible with the
+  experimental data.
+  
+\item RGE$\Delta$m2sol\ is the solar mass squared difference (default:
+  $\mathcal{O}(10^{-4}) \eV^2$).\ The default value depends on the
+  model and it is chosen in such a way, that it is compatible with the
+  experimental data.
+\item RGE$\varphi$1\ and RGE$\varphi2$ are the Majorana CP phases $\varphi_1$ and $\varphi_2$ in radians (default: $0$).
+  
+\item RGE$\delta$\ is the Dirac CP phase $\delta$ in radians (default: $0$).
+\item RGE$\delta$e, RGE$\delta\mu$ and RGE$\delta\tau$ are the unphysical phases $\delta_e$,
+  $\delta_\mu$ and $\delta_\tau$ (default: $0$). 
+\item RGE$\kappa$\ is the coupling of the dimension 5 neutrino mass operator.
+  
+\item RGE$\lambda$\ is the quartic Higgs self-coupling (default: 0.5).  We use the
+  convention that the corresponding term in the Lagrangian is
+  $-\frac{\lambda}{4} (\phi^\dagger \phi)^2$.
+  
+\item RGE$\theta$12, RGE$\theta13$ and RGE$\theta23$ are the angles $\theta_{12}$, $\theta_{13}$
+and $\theta_{23}$ of the MNS matrix in radians. (default: $\theta_{13}=0$ and
+$\theta_{23}=\frac{\pi}{4}$). The default of $\theta_{12}$ depends on the
+model. It is chosen in such a way, that the parameters are compatible with the
+experimental data. 
+\item RGEg RGEg is the coupling constants of SU(5)
+  
+\item RGEg1, RGEg2 and RGEg3 are the coupling constants of U$(1)_\mathrm{Y}$,
+  SU$(2)_\mathrm{L}$ and SU$(3)_\mathrm{C}$, respectively.  GUT charge
+  normalization is used for $g_1$.
+  
+\item RGEm RGEm is the Higgs mass
+  
+\item RGEq$\varphi$1\ and RGEq$\varphi2$ are the unphysical phases $\varphi_1$ and $\varphi_2$ of the
+ CKM matrix which correspond to the Majorana phases in the MNS matrix (default: $0$).
+\item RGEq$\delta$\ is the Dirac CP phase $\delta$ of the CKM matrix.
+\item RGEq$\delta$e, RGEq$\delta\mu$ and RGE$\delta\tau$ are the unphysical phases $\delta_e$,
+$\delta_\mu$ and $\delta_\tau$ of the CKM matrix (default: $0$).
+\item RGEq$\theta$12, RGEq$\theta13$ and RGEq$\theta23$ are the angles of the CKM matrix. 
+\item RGEyd, RGEys and RGEyb are the Yukawa coupling of the down-type quarks $d$,
+  $s$ and $b$.
+\item RGEye, RGEy$\mu$ and RGEy$\tau$ are the Yukawa couplings of the charged
+  leptons $e$, $\mu$ and $\tau$.
+\item RGEyu, RGEyc and RGEyt are the Yukawa couplings of the up-type quarks $u$,
+  $c$ and $t$.
+
+\end{itemize}
+
+Parameters accepted by \function{RGEGetSolution}:
+\begin{itemize}
+\item 
+RGECoupling is used to get the coupling constants.
+\item 
+RGEGWCondition returns the Gildener Weinberg condition.
+\item 
+RGEGWConditions returns all Gildener Weinberg conditions.
+\item 
+RGEM1Tilde returns the effective light-neutrino mass $\widetilde{m}_1 =
+\frac{\left(m_D m_D^\dagger\right)_{11}}{M_1}=\frac{(Y_\nu Y_\nu^\dagger)_{11} 
+v^2}{2 M_1}$ which is commonly used in thermal leptogenesis. $\widetilde{m}_1$ is
+given in eV.
+\item 
+RGEM$\nu$ is used to get the mass matrix of the left-handed neutrinos.
+\item 
+RGEM$\nu$r is the mass matrix of the right-handed neutrinos.
+\item 
+RGEMd is used to get the mass matrix of the down-type quarks.
+\item 
+RGEMe is used to get the mass matrix of the charged leptons.
+\item 
+RGEMixingParameters returns the mixing parameters in the leptonic sector as they
+are returned by MNSParameters: $\left\{\left\{\theta_{12},\theta_{13},\theta_{23},\delta,\delta_e,\delta_\mu,\delta_\tau,\varphi_1,\varphi_2\right\},\left\{y_1,y_2,y_3\right\},\left\{y_e,y_\mu,y_\tau\right\}\right\}$
+\item 
+RGEMu is used to get the mass matrix of the up-type quarks.
+\item 
+RGEPoleMTop is used to get the pole mass of the top quark in the
+$\overline{\text{MS}}$ scheme. The pole mass term of the top quark is given by
+\begin{equation}
+m_t^\text{Pole} = m_t(m_t) \cdot (1 + \frac{4\alpha_s}{3\pi})
+\end{equation}
+to 1-loop order.
+\item 
+RGERawM$\nu$r is used to get the raw mass matrix of the right-handed neutrinos.
+\item 
+RGERaw is used to get the raw values of all parameters. A raw parameter is
+the internal representation of the parameter
+\item 
+RGERawY$\Delta$ is used to get the Yukawa coupling matrix of the coupling to the Higgs triplet.
+\item 
+RGERawY$\nu$ is used to get the raw Yukawa coupling matrix of the
+neutrinos.
+\item 
+RGEAll returns all parameters of the model.
+\item 
+RGEVEVratio returns the squared ratio of $v_R$ over the EW symmetry breaking scale.
+\item 
+RGEVEVratios returns the squared ratio of $v_R$ over the EW symmetry breaking scale.
+\item 
+RGEY$\nu$ is used to get the Yukawa coupling matrix of the neutrinos.
+\item 
+RGEYd is used to get the Yukawa coupling matrix of the down-type quarks.
+\item 
+ RGEYe is used to get the Yukawa coupling matrix of the charged leptons.
+\item 
+RGEYu is used to get the Yukawa coupling matrix of the up-type quarks.
+\item 
+RGE$\alpha$ is used to get the fine structure constants.
+\item 
+RGE$\epsilon$1 is used to get the CP asymmetry \cite{Covi:1996wh} for 
+leptogenesis for $M_1 \ll M_2, M_3$,
+   \begin{equation}
+     \epsilon_1=\frac{3}{8\pi}\frac{M_1}{v^2}
+     \frac{\sum_{f,g}\im\left[\left(Y_\nu\right)_{1f}\left(Y_\nu\right)_{1g}
+     \left(m^*_\nu\right)_{fg}\right]}{\left(Y_\nu Y_\nu^\dagger\right)_{11}}\; .\label{eq:RGEepsilonSM}
+   \end{equation}
+   Eq.~\eqref{eq:RGEepsilonSM} 
+also holds if there are additional contributions to the neutrino mass operator, as it is for example 
+the case in the type II see-saw mechanism \cite{Antusch:2004xy}.
+\item 
+RGE$\epsilon$1Max is used to get the upper bound \cite{Buchmuller:2003gz} 
+on the CP asymmetry for leptogenesis in the type I see-saw mechanism 
+for $M_1 \ll M_2, M_3$,
+  \begin{equation}
+    \epsilon_1^\text{max}=\frac{3}{8\pi}\frac{M_1 m_3}{v^2}\left[1-\frac{m_1}{m_3}\left(1+\frac{m_3^2-m_1^2}{\widetilde{m}_1}\right)^\frac{1}{2}\right]\;.
+  \end{equation}
+\item 
+RGE$\lambda$ is used to get the quartic Higgs self coupling.
+
+\end{itemize}
+
+\subsubsection[\package{RGESM0N}]{\package{REAP`RGESM0N`}}
+This package contains the Standard Model without any right-handed neutrinos
+(SM0N) to 1 loop order.
+
+\vspace{2ex} It has the same parameters and options as \package{RGESM},
+with the following exceptions:  The only
+missing options are RGEIntegratedOut, RGESearchTransition, RGEThresholdFactor,
+RGEPrecision and RGEMaxNumberIterations, which are used to control the process
+of integrating out.  Besides, RGEM$\nu$r and RGEY$\nu$ are no parameters of
+\function{RGESetInitial}, and RGE$\epsilon$Max, RGE$\epsilon$, RGEM1Tilde, RGERawM$\nu$r and RGERawY$\nu$ are not accepted as
+parameters by \function{RGEGetSolution}.  \function{RGESetInitial} has
+an additional option: RGESuggestion can be used to choose between
+different sets of default values, ``GUT'' (default) and ``MZ''.  They
+refer to typical parameter values at the GUT scale or at the $Z$ mass,
+respectively.
+
+\subsubsection[\package{RGESMDirac}]{\package{REAP`RGESMDirac`}}
+This package contains the Standard Model with Dirac Neutrinos to 1 loop order.
+
+\vspace{2ex} It has the same parameters and options as \package{RGESM},
+with the following exceptions:  The only
+missing options are RGEIntegratedOut, RGESearchTransition, RGEThresholdFactor,
+RGEPrecision and RGEMaxNumberIterations, which are used to control the process
+of integrating out.  In addition RGE$\kappa$ and RGEM$\nu$r are no parameters of
+\function{RGESetInitial} and RGEMixingParameters, RGE$\epsilon$Max, RGE$\epsilon$, RGEM1Tilde, RGERawM$\nu$r, RGERawY$\nu$ and RGE$\kappa$ are not
+accepted as parameters by \function{RGEGetSolution}.
+\function{RGESetInitial} has an additional option: RGESuggestion can be
+used to choose between different sets of default values, ``GUT''
+(default) and ``MZ''.  They refer to typical parameter values at the GUT
+scale or at the $Z$ mass, respectively.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Minimal Supersymmetric Standard Model (MSSM)}
+
+\subsubsection[\package{RGEMSSM}]{\package{REAP`RGEMSSM`}}
+This package contains the Minimal Supersymmetric Standard Model extended by an arbitrary number of 
+right-handed neutrinos (MSSM) to 1 and 2 loop order.
+
+It is possible to automatically find transitions where heavy neutrinos are
+integrated out.  But neither quarks are integrated out nor MSSM thresholds are
+considered. 
+
+Options:
+\begin{itemize}
+\item RGEIntegratedOut\ is the number of right-handed neutrinos which are
+  integrated out. (default: 0)
+\item RGEModelVariant\ is a switch to change between different versions, but
+  there are only two versions right now: 1Loop and 2Loop (default: 1Loop).
+\item RGESearchTransition\ enables/disables the automatic search for
+  transitions, i.e.\ automatically integrating out right-handed
+neutrinos. (default: True)
+\item RGEThresholdFactor\ determines where heavy degrees of freedom are integrated
+  out: RGEThresholdFactor*Mass=Scale where degree of freedom is integrated
+  out. (default: 1)
+\item RGE$\Gamma$d\ parameterizes the finite supersymmetric threshold corrections
+\begin{equation}
+Y_d^\mathrm{SM} = Y_d^\mathrm{MSSM} (1 + \mathrm{RGE}\Gamma\mathrm{d}) * \cos(\beta)
+\end{equation}
+in the basis, in which $Y_u$ is diagonal and the left-handed mixing is entirely contained in $Y_d$. It is related to the notation in \cite{Blazek:1995nv}
+\begin{equation}
+\mathrm{RGE}\Gamma\mathrm{d} \equiv \epsilon (V_{CKM} \Gamma_D^\dagger V_{CKM}^\dagger +\Gamma_U^\dagger)
+\end{equation}
+with $\epsilon = \tan\beta/(16 \pi^2)$ and $\Gamma_{U,D}$ defines as in Eq.~(1) of Ref.~\cite{Blazek:1995nv}. 
+\item RGE$\Gamma$e\ parameterizes the finite supersymmetric threshold corrections
+\begin{equation}
+Y_e^\mathrm{SM} = Y_e^\mathrm{MSSM} (1 + \mathrm{RGE}\Gamma\mathrm{e}) * \cos\beta
+\end{equation}
+in the basis, in which the Weinberg operator $\kappa$ is diagonal and the left-handed mixing is entirely contained in $Y_e$. It is defined in a similar way to RGE$\Gamma$d.
+\item RGEtan$\beta$\ is the value of $\tan\beta=\frac{v_u}{v_d}$, the ratio of the 2
+  Higgs vevs (default: 50).
+\item RGEvEW\ is the combination $v=\sqrt{v_u^2+v_d^2}$ of the Higgs vevs at the
+  electroweak scale in GeV (default: 246).  The vevs are treated as
+  constants, i.e.\ their running is not taken into account.
+
+\end{itemize}
+
+Options used by \function{RGESetInitial}:
+
+If the default values of all parameters are used, the resulting parameters will
+be compatible to the experimental data at the Z boson mass. The number of right-handed neutrinos is given by the initial conditions. There
+is no need to specify the number of neutrinos somewhere else.
+\begin{itemize}
+\item RGEM$\nu$r\ is the mass matrix of the right-handed neutrinos.
+  If this parameter is specified, it also determines the light neutrino
+  mass matrix via the see-saw formula (together with RGEY$\nu$).  Thus,
+  RGEMassHierarchy, RGEMlightest, RGE$\Delta$m2atm, RGE$\Delta$m2sol,
+  RGE$\varphi$1, RGE$\varphi$2, RGE$\delta$, RGE$\delta$e,
+  RGE$\delta\mu$, RGE$\delta\tau$, RGE$\theta$12, RGE$\theta$13, and
+  RGE$\theta$23 do not have any effect in this case.
+  
+\item RGEMassHierarchy\ is the hierarchy of the neutrino masses; "r" or "n"
+  means normal hierarchy, "i" means inverted hierarchy (default: "r").
+  
+\item RGEMlightest \ is the mass of the lightest neutrino in eV (default: $\mathcal{O}(0.01)
+  \eV$).
+  \ The default of RGEMlightest depends on the
+model. It is chosen in such a way, that the parameters are compatible with the
+experimental data.
+\item RGEY$\nu$\ is the neutrino Yukawa matrix in ``RL convention''. This option overrides the
+  built-in Yukawa matrix, i.e.\ RGEY$\nu33$ and RGEY$\nu$Ratio do not have any
+  effect. 
+    (default: RGEGetY$\nu$(RGEY$\nu33$, RGE$Y\nu$Ratio))
+  
+\item RGEY$\nu$33\ is the (3,3) entry in the neutrino Yukawa matrix at the GUT
+  scale.\ The default value depends on the
+  model and it is chosen in such a way, that it is compatible with the
+  experimental data (default: $\mathcal{O}(1)$).
+  
+\item RGEY$\nu$Ratio\ determines the relative value of the neutrino Yukawa couplings.\ The default value depends on the
+  model and it is chosen in such a way, that it is compatible with the
+  experimental data (default: $\mathcal{O}(1)$).
+\item RGEYd\ is the Yukawa matrix of the down-type quarks.
+  If this parameter is given, RGEyd, RGEys, RGEyb, RGEq$\varphi$1,
+  RGEq$\varphi$2, RGEq$\delta$, RGEq$\delta$e, RGEq$\delta\mu$,
+  RGEq$\delta\tau$, RGEq$\theta$12, RGEq$\theta$13, and RGEq$\theta$23
+  are ignored.
+  
+\item RGEYe\ is the charged lepton Yukawa matrix.
+  If this parameter is given, RGEye, RGEy$\mu$ and RGEy$\tau$ are
+  ignored.
+    \\ (default:
+  RGEGetYe(0.8*Mass$\left[\mathrm{"}\tau\mathrm{"}\right]$*Sqrt[2]/RGEvd))
+  
+\item RGEYu\ is the Yukawa matrix of the up-type quarks.
+  If this parameter is given, RGEyu, RGEyc and RGEyt are ignored;
+  it is recommended not to use RGEq$\varphi$1, RGEq$\varphi$2,
+  RGEq$\delta$, RGEq$\delta$e, RGEq$\delta\mu$, RGEq$\delta\tau$,
+  RGEq$\theta$12, RGEq$\theta$13, and RGEq$\theta$23 in this case, since
+  they are not necessarily equal to the CKM mixing parameters.
+\item RGE$\Delta$m2atm\ is the atmospheric mass squared difference (default: $ \mathcal{O}(10^{-3}) \eV^2$).\ The default value depends on the
+  model and it is chosen in such a way, that it is compatible with the
+  experimental data.
+  
+\item RGE$\Delta$m2sol\ is the solar mass squared difference (default:
+  $\mathcal{O}(10^{-4}) \eV^2$).\ The default value depends on the
+  model and it is chosen in such a way, that it is compatible with the
+  experimental data.
+\item RGE$\varphi$1\ and RGE$\varphi2$ are the Majorana CP phases $\varphi_1$ and $\varphi_2$ in radians (default: $0$).
+  
+\item RGE$\delta$\ is the Dirac CP phase $\delta$ in radians (default: $0$).
+\item RGE$\delta$e, RGE$\delta\mu$ and RGE$\delta\tau$ are the unphysical phases $\delta_e$,
+  $\delta_\mu$ and $\delta_\tau$ (default: $0$). 
+\item RGE$\kappa$\ is the coupling of the dimension 5 neutrino mass operator.
+  
+\item RGE$\theta$12, RGE$\theta13$ and RGE$\theta23$ are the angles $\theta_{12}$, $\theta_{13}$
+and $\theta_{23}$ of the MNS matrix in radians. (default: $\theta_{13}=0$ and
+$\theta_{23}=\frac{\pi}{4}$). The default of $\theta_{12}$ depends on the
+model. It is chosen in such a way, that the parameters are compatible with the
+experimental data. 
+\item RGEg RGEg is the coupling constants of SU(5)
+  
+\item RGEg1, RGEg2 and RGEg3 are the coupling constants of U$(1)_\mathrm{Y}$,
+  SU$(2)_\mathrm{L}$ and SU$(3)_\mathrm{C}$, respectively.  GUT charge
+  normalization is used for $g_1$.
+  
+\item RGEm RGEm is the Higgs mass
+  
+\item RGEq$\varphi$1\ and RGEq$\varphi2$ are the unphysical phases $\varphi_1$ and $\varphi_2$ of the
+ CKM matrix which correspond to the Majorana phases in the MNS matrix (default: $0$).
+\item RGEq$\delta$\ is the Dirac CP phase $\delta$ of the CKM matrix.
+\item RGEq$\delta$e, RGEq$\delta\mu$ and RGE$\delta\tau$ are the unphysical phases $\delta_e$,
+$\delta_\mu$ and $\delta_\tau$ of the CKM matrix (default: $0$).
+\item RGEq$\theta$12, RGEq$\theta13$ and RGEq$\theta23$ are the angles of the CKM matrix. 
+\item RGEyd, RGEys and RGEyb are the Yukawa coupling of the down-type quarks $d$,
+  $s$ and $b$.
+\item RGEye, RGEy$\mu$ and RGEy$\tau$ are the Yukawa couplings of the charged
+  leptons $e$, $\mu$ and $\tau$.
+\item RGEyu, RGEyc and RGEyt are the Yukawa couplings of the up-type quarks $u$,
+  $c$ and $t$.
+
+\end{itemize}
+
+Parameters accepted by \function{RGEGetSolution}:
+\begin{itemize}
+\item 
+RGECoupling is used to get the coupling constants.
+\item 
+RGEGWCondition returns the Gildener Weinberg condition.
+\item 
+RGEGWConditions returns all Gildener Weinberg conditions.
+\item 
+RGEM1Tilde returns the effective light-neutrino mass $\widetilde{m}_1 =
+\frac{\left(m_D m_D^\dagger\right)_{11}}{M_1}=\frac{(Y_\nu Y_\nu^\dagger)_{11} 
+v^2}{2 M_1}$ which is commonly used in thermal leptogenesis. $\widetilde{m}_1$ is
+given in eV.
+$v$ is the vev of the Higgs doublet which couples to the neutrinos.
+\item 
+RGEM$\nu$ is used to get the mass matrix of the left-handed neutrinos.
+\item 
+RGEM$\nu$r is the mass matrix of the right-handed neutrinos.
+\item 
+RGEMd is used to get the mass matrix of the down-type quarks.
+\item 
+RGEMe is used to get the mass matrix of the charged leptons.
+\item 
+RGEMixingParameters returns the mixing parameters in the leptonic sector as they
+are returned by MNSParameters: $\left\{\left\{\theta_{12},\theta_{13},\theta_{23},\delta,\delta_e,\delta_\mu,\delta_\tau,\varphi_1,\varphi_2\right\},\left\{y_1,y_2,y_3\right\},\left\{y_e,y_\mu,y_\tau\right\}\right\}$
+\item 
+RGEMu is used to get the mass matrix of the up-type quarks.
+\item 
+RGEPoleMTop is used to get the pole mass of the top quark in the
+$\overline{\text{MS}}$ scheme. The pole mass term of the top quark is given by
+\begin{equation}
+m_t^\text{Pole} = m_t(m_t) \cdot (1 + \frac{4\alpha_s}{3\pi})
+\end{equation}
+to 1-loop order.
+\item 
+RGERawM$\nu$r is used to get the raw mass matrix of the right-handed neutrinos.
+\item 
+RGERaw is used to get the raw values of all parameters. A raw parameter is
+the internal representation of the parameter
+\item 
+RGERawY$\Delta$ is used to get the Yukawa coupling matrix of the coupling to the Higgs triplet.
+\item 
+RGERawY$\nu$ is used to get the raw Yukawa coupling matrix of the
+neutrinos.
+\item 
+RGEAll returns all parameters of the model.
+\item 
+RGEVEVratio returns the squared ratio of $v_R$ over the EW symmetry breaking scale.
+\item 
+RGEVEVratios returns the squared ratio of $v_R$ over the EW symmetry breaking scale.
+\item 
+RGEY$\nu$ is used to get the Yukawa coupling matrix of the neutrinos.
+\item 
+RGEYd is used to get the Yukawa coupling matrix of the down-type quarks.
+\item 
+ RGEYe is used to get the Yukawa coupling matrix of the charged leptons.
+\item 
+RGEYu is used to get the Yukawa coupling matrix of the up-type quarks.
+\item 
+RGE$\alpha$ is used to get the fine structure constants.
+\item 
+RGE$\epsilon$1 is used to get the CP asymmetry \cite{Covi:1996wh} for 
+leptogenesis for $M_1 \ll M_2, M_3$,
+   \begin{equation}
+     \epsilon_1=\frac{3}{4\pi}\frac{M_1}{v^2}
+     \frac{\sum_{f,g}\im\left[\left(Y_\nu\right)_{1f}\left(Y_\nu\right)_{1g}
+     \left(m^*_\nu\right)_{fg}\right]}{\left(Y_\nu Y_\nu^\dagger\right)_{11}}\;. \label{eq:RGEepsilonMSSM}
+   \end{equation}
+   Eq.~\eqref{eq:RGEepsilonMSSM} 
+also holds if there are additional contributions to the neutrino mass operator, as it is for example 
+the case in the type II see-saw mechanism \cite{Antusch:2004xy}.
+\item 
+RGE$\epsilon$1Max is used to get the upper bound \cite{Buchmuller:2003gz} 
+on the CP asymmetry for leptogenesis in the type I see-saw mechanism 
+for $M_1 \ll M_2, M_3$,
+  \begin{equation}
+    \epsilon_1^\text{max}=\frac{3}{4\pi}\frac{M_1 m_3}{v^2}\left[1-\frac{m_1}{m_3}\left(1+\frac{m_3^2-m_1^2}{\widetilde{m}_1}\right)^\frac{1}{2}\right]\;.
+  \end{equation}
+\item 
+RGE$\kappa$ is used to get $\kappa$.
+
+\end{itemize}
+
+\subsubsection[\package{RGEMSSM0N}]{\package{REAP`RGEMSSM0N`}}
+This package contains the Minimal Supersymmetric Standard Model (MSSM) without
+any right-handed neutrinos to 1 and 2 loop order.
+
+\vspace{2ex} It has the same parameter and options as \package{RGEMSSM}.  The
+only missing options are RGEIntegratedOut, RGESearchTransition,
+RGEThresholdFactor, RGEPrecision and RGEMaxNumberIterations, which are used to
+control the process of integrating out.  In addition RGEM$\nu$r and RGEY$\nu$
+are no parameters of \function{RGESetInitial} and RGE$\epsilon$Max,
+RGE$\epsilon$, RGEM1Tilde, RGERawM$\nu$r and RGERawY$\nu$
+are not accepted as parameters by \function{RGEGetSolution}.
+
+
+\subsubsection[\package{RGEMSSMDirac}]{\package{REAP`RGEMSSMDirac`}}
+This package contains the MSSM with Dirac Neutrinos to 1 loop order and 2 loop
+order.
+
+\vspace{2ex} It has the same parameter and options as \package{RGEMSSM}.  The
+only missing options are RGEIntegratedOut, RGESearchTransition,
+RGEThresholdFactor, RGEPrecision and RGEMaxNumberIterations, which are used to
+control the process of integrating out.  In addition RGEM$\nu$r and RGE$\kappa$
+are no parameter of \function{RGESetInitial} and RGEMixingParameters, RGE$\epsilon$Max,
+RGE$\epsilon$, RGEM1Tilde, RGERawM$\nu$r, RGERawY$\nu$ and
+RGE$\kappa$ are not accepted as parameters by \function{RGEGetSolution}.
+
+\subsection{Two Higgs Doublet Model (2HDM)}
+
+\subsubsection[\package{RGE2HDM}]{\package{REAP`RGE2HDM`}}
+This package contains the Two Higgs Doublet Model (2HDM) with a $\mathbb{Z}_2$
+symmetry extended by an arbitrary number of right-handed neutrinos. The charged leptons always couple to the first Higgs. In addition
+there are right-handed neutrinos. The $\beta$-functions are to 1 loop order. The
+vevs of the Higgs fields are $v_1=\braket{\phi_1}$ and
+$v_2=\braket{\phi_2}$. They obey $v^2=v_1^2+v_2^2$, $v_1=v\cos\beta$ and
+$v_2=v\sin\beta$, where v is the v.e.v. of the SM Higgs and $\beta$
+($\tan\beta=\frac{v_2}{v_1}$, $\beta\in\left(0,\frac{\pi}{2}\right)$) is used to
+parametrize the Higgs vevs.
+
+Thus there are 2 dimension 5 operators which give mass to the light neutrinos.
+\begin{equation*}
+  \mathcal{L}_\kappa^{(ii)}=\frac{1}{4}\kappa_{gf}^{(ii)}\overline{l_{Lc}^C}^g\epsilon^{cd}\phi_d^{(i)}l_{Lb}^f\epsilon^{ba}\phi_a^{(i)}+\mathrm{h.c.}\quad\quad(i=1\;
+  or\; 2)
+\end{equation*}
+The Higgs potential is
+\begin{eqnarray*}
+\mathcal{L}_{2Higgs}&=& -\frac{\lambda_1}{4}
+\left(\phi^{(1)\dagger}\phi^{(1)}\right)^2 -\frac{\lambda_2}{4}
+\left(\phi^{(2)\dagger}\phi^{(2)}\right)^2\\
+&&-\lambda_3\left(\phi^{(1)\dagger}\phi^{(1)}\right)\left(\phi^{(2)\dagger}\phi^{(2)}\right)
+-\lambda_4\left(\phi^{(1)\dagger}\phi^{(2)}\right)\left(\phi^{(2)\dagger}\phi^{(1)}\right)
+\\ &&
+-\left[\frac{\lambda_5}{4}\left(\phi^{(1)\dagger}\phi^{(2)}\right)^2+\mathrm{h.c.}\right]\\
+\end{eqnarray*}
+
+The charged leptons always couple to the first Higgs field and the coupling of
+the other fields to the Higgs fields is determined by RGEModelOptions.
+
+It is possible to automatically find transitions where heavy neutrinos are
+integrated out.  But no other particles are integrated out.
+
+Options:
+\begin{itemize}
+\item RGEIntegratedOut\ is the number of right-handed neutrinos which are
+  integrated out. (default: 0)
+\item RGESearchTransition\ enables/disables the automatic search for
+  transitions, i.e.\ automatically integrating out right-handed
+neutrinos. (default: True)
+\item RGEThresholdFactor\ determines where heavy degrees of freedom are integrated
+  out: RGEThresholdFactor*Mass=Scale where degree of freedom is integrated
+  out. (default: 1)
+\item RGE$\lambda$1, RGE$\lambda2$, RGE$\lambda3$, RGE$\lambda4$ and RGE$\lambda5$
+  set the initial values of the couplings $\lambda_i$
+  $i\in\{1,\dots,5\}$ in the Higgs potential which are used when
+  changing from the MSSM to the 2HDM at $M_\mathrm{SUSY}$
+  (default: $\lambda_1=\lambda_2=0.75$, $\lambda_3=\lambda_4=0.2$, $\lambda_5=0.25$).
+\item RGEtan$\beta$ is the value of $\tan\beta=\frac{v_2}{v_1}$, the ratio of the 2
+  Higgs vevs (default: 50).
+\item RGEvEW\ is the combination $v=\sqrt{v_1^2+v_2^2}$ of the Higgs vevs at the
+  electroweak scale in GeV (default: 246).  The vevs are treated as
+  constants, i.e.\ their running is not taken into account.
+\item RGEz$\nu$\ is a list defining the Higgs the neutrinos are coupling to. If the $n^{th}$ component is one,
+    the Higgs couples to the neutrinos. If it is 0, it won't
+    couple (default: $\{0,1\}$). The charged leptons always couple to the
+  first Higgs.
+\item RGEzd\ is a list defining the Higgs the down-type quarks are coupling to. If the $n^{th}$ component is one,
+    the Higgs couples to the down-type quarks. If it is 0, it won't
+    couple (default: $\{1,0\}$).
+\item RGEzu\ is a list defining the Higgs the up-type quarks are coupling to. If the $n^{th}$ component is one,
+    the Higgs couples to the up-type quarks. If it is 0, it won't
+    couple (default: $\{0,1\}$).
+
+\end{itemize}
+
+Options used by \function{RGESetInitial}:
+
+If the default values of all parameters are used, the resulting parameters will
+be compatible to the experimental data at the Z boson mass. The number of right-handed neutrinos is given by the initial conditions. There
+is no need to specify the number of neutrinos somewhere else.
+\begin{itemize}
+\item RGEM$\nu$r\ is the mass matrix of the right-handed neutrinos.
+  If this parameter is specified, it also determines the light neutrino
+  mass matrix via the see-saw formula (together with RGEY$\nu$).  Thus,
+  RGEMassHierarchy, RGEMlightest, RGE$\Delta$m2atm, RGE$\Delta$m2sol,
+  RGE$\varphi$1, RGE$\varphi$2, RGE$\delta$, RGE$\delta$e,
+  RGE$\delta\mu$, RGE$\delta\tau$, RGE$\theta$12, RGE$\theta$13, and
+  RGE$\theta$23 do not have any effect in this case.
+  
+\item RGEMassHierarchy\ is the hierarchy of the neutrino masses; "r" or "n"
+  means normal hierarchy, "i" means inverted hierarchy (default: "r").
+  
+\item RGEMlightest \ is the mass of the lightest neutrino in eV (default: $\mathcal{O}(0.01)
+  \eV$).
+  \ The default of RGEMlightest depends on the
+model. It is chosen in such a way, that the parameters are compatible with the
+experimental data.
+\item RGEY$\nu$\ is the neutrino Yukawa matrix in ``RL convention''. This option overrides the
+  built-in Yukawa matrix, i.e.\ RGEY$\nu33$ and RGEY$\nu$Ratio do not have any
+  effect. 
+    (default: RGEGetY$\nu$(RGEY$\nu33$, RGE$Y\nu$Ratio))
+  
+\item RGEY$\nu$33\ is the (3,3) entry in the neutrino Yukawa matrix at the GUT
+  scale.\ The default value depends on the
+  model and it is chosen in such a way, that it is compatible with the
+  experimental data (default: $\mathcal{O}(1)$).
+  
+\item RGEY$\nu$Ratio\ determines the relative value of the neutrino Yukawa couplings.\ The default value depends on the
+  model and it is chosen in such a way, that it is compatible with the
+  experimental data (default: $\mathcal{O}(1)$).
+\item RGEYd\ is the Yukawa matrix of the down-type quarks.
+  If this parameter is given, RGEyd, RGEys, RGEyb, RGEq$\varphi$1,
+  RGEq$\varphi$2, RGEq$\delta$, RGEq$\delta$e, RGEq$\delta\mu$,
+  RGEq$\delta\tau$, RGEq$\theta$12, RGEq$\theta$13, and RGEq$\theta$23
+  are ignored.
+  
+\item RGEYe\ is the charged lepton Yukawa matrix.
+  If this parameter is given, RGEye, RGEy$\mu$ and RGEy$\tau$ are
+  ignored.
+    \\ (default:
+  RGEGetYe(0.8*Mass$\left[\mathrm{"}\tau\mathrm{"}\right]$*Sqrt[2]/RGEvd))
+  
+\item RGEYu\ is the Yukawa matrix of the up-type quarks.
+  If this parameter is given, RGEyu, RGEyc and RGEyt are ignored;
+  it is recommended not to use RGEq$\varphi$1, RGEq$\varphi$2,
+  RGEq$\delta$, RGEq$\delta$e, RGEq$\delta\mu$, RGEq$\delta\tau$,
+  RGEq$\theta$12, RGEq$\theta$13, and RGEq$\theta$23 in this case, since
+  they are not necessarily equal to the CKM mixing parameters.
+\item RGE$\Delta$m2atm\ is the atmospheric mass squared difference (default: $ \mathcal{O}(10^{-3}) \eV^2$).\ The default value depends on the
+  model and it is chosen in such a way, that it is compatible with the
+  experimental data.
+  
+\item RGE$\Delta$m2sol\ is the solar mass squared difference (default:
+  $\mathcal{O}(10^{-4}) \eV^2$).\ The default value depends on the
+  model and it is chosen in such a way, that it is compatible with the
+  experimental data.
+\item RGE$\varphi$1\ and RGE$\varphi2$ are the Majorana CP phases $\varphi_1$ and $\varphi_2$ in radians (default: $0$).
+  
+\item RGE$\delta$\ is the Dirac CP phase $\delta$ in radians (default: $0$).
+\item RGE$\delta$e, RGE$\delta\mu$ and RGE$\delta\tau$ are the unphysical phases $\delta_e$,
+  $\delta_\mu$ and $\delta_\tau$ (default: $0$). 
+\item RGE$\kappa$1\ is the coupling of the dimension 5 operator associated
+  with the first Higgs in the 2HDM.
+  
+\item RGE$\kappa$2\ is the coupling of the dimension 5 operator associated
+  with the second Higgs in the 2HDM.
+  
+\item RGE$\lambda$1, RGE$\lambda2$, RGE$\lambda3$, RGE$\lambda4$ and RGE$\lambda5$ are the parameters
+$\lambda_1$, $\lambda_2$, $\lambda_3$, $\lambda_4$ and $\lambda_5$ in the Higgs potential
+(default: $\lambda_1=\lambda_2=0.75$, $\lambda_3=\lambda_4=0.2$, $\lambda_5=0.25$).
+\item RGE$\theta$12, RGE$\theta13$ and RGE$\theta23$ are the angles $\theta_{12}$, $\theta_{13}$
+and $\theta_{23}$ of the MNS matrix in radians. (default: $\theta_{13}=0$ and
+$\theta_{23}=\frac{\pi}{4}$). The default of $\theta_{12}$ depends on the
+model. It is chosen in such a way, that the parameters are compatible with the
+experimental data. 
+\item RGEg RGEg is the coupling constants of SU(5)
+  
+\item RGEg1, RGEg2 and RGEg3 are the coupling constants of U$(1)_\mathrm{Y}$,
+  SU$(2)_\mathrm{L}$ and SU$(3)_\mathrm{C}$, respectively.  GUT charge
+  normalization is used for $g_1$.
+  
+\item RGEm RGEm is the Higgs mass
+  
+\item RGEq$\varphi$1\ and RGEq$\varphi2$ are the unphysical phases $\varphi_1$ and $\varphi_2$ of the
+ CKM matrix which correspond to the Majorana phases in the MNS matrix (default: $0$).
+\item RGEq$\delta$\ is the Dirac CP phase $\delta$ of the CKM matrix.
+\item RGEq$\delta$e, RGEq$\delta\mu$ and RGE$\delta\tau$ are the unphysical phases $\delta_e$,
+$\delta_\mu$ and $\delta_\tau$ of the CKM matrix (default: $0$).
+\item RGEq$\theta$12, RGEq$\theta13$ and RGEq$\theta23$ are the angles of the CKM matrix. 
+\item RGEyd, RGEys and RGEyb are the Yukawa coupling of the down-type quarks $d$,
+  $s$ and $b$.
+\item RGEye, RGEy$\mu$ and RGEy$\tau$ are the Yukawa couplings of the charged
+  leptons $e$, $\mu$ and $\tau$.
+\item RGEyu, RGEyc and RGEyt are the Yukawa couplings of the up-type quarks $u$,
+  $c$ and $t$.
+
+\end{itemize}
+
+Parameters accepted by \function{RGEGetSolution}:
+\begin{itemize}
+\item 
+RGECoupling is used to get the coupling constants.
+\item 
+RGEGWCondition returns the Gildener Weinberg condition.
+\item 
+RGEGWConditions returns all Gildener Weinberg conditions.
+\item 
+RGEM1Tilde returns the effective light-neutrino mass $\widetilde{m}_1 =
+\frac{\left(m_D m_D^\dagger\right)_{11}}{M_1}=\frac{(Y_\nu Y_\nu^\dagger)_{11} 
+v^2}{2 M_1}$ which is commonly used in thermal leptogenesis. $\widetilde{m}_1$ is
+given in eV.
+\item 
+RGEM$\nu$ is used to get the mass matrix of the left-handed neutrinos.
+\item 
+RGEM$\nu$r is the mass matrix of the right-handed neutrinos.
+\item 
+RGEMd is used to get the mass matrix of the down-type quarks.
+\item 
+RGEMe is used to get the mass matrix of the charged leptons.
+\item 
+RGEMixingParameters returns the mixing parameters in the leptonic sector as they
+are returned by MNSParameters: $\left\{\left\{\theta_{12},\theta_{13},\theta_{23},\delta,\delta_e,\delta_\mu,\delta_\tau,\varphi_1,\varphi_2\right\},\left\{y_1,y_2,y_3\right\},\left\{y_e,y_\mu,y_\tau\right\}\right\}$
+\item 
+RGEMu is used to get the mass matrix of the up-type quarks.
+\item 
+RGEPoleMTop is used to get the pole mass of the top quark in the
+$\overline{\text{MS}}$ scheme. The pole mass term of the top quark is given by
+\begin{equation}
+m_t^\text{Pole} = m_t(m_t) \cdot (1 + \frac{4\alpha_s}{3\pi})
+\end{equation}
+to 1-loop order.
+\item 
+RGERawM$\nu$r is used to get the raw mass matrix of the right-handed neutrinos.
+\item 
+RGERaw is used to get the raw values of all parameters. A raw parameter is
+the internal representation of the parameter
+\item 
+RGERawY$\Delta$ is used to get the Yukawa coupling matrix of the coupling to the Higgs triplet.
+\item 
+RGERawY$\nu$ is used to get the raw Yukawa coupling matrix of the
+neutrinos.
+\item 
+RGEAll returns all parameters of the model.
+\item 
+RGEVEVratio returns the squared ratio of $v_R$ over the EW symmetry breaking scale.
+\item 
+RGEVEVratios returns the squared ratio of $v_R$ over the EW symmetry breaking scale.
+\item 
+RGEY$\nu$ is used to get the Yukawa coupling matrix of the neutrinos.
+\item 
+RGEYd is used to get the Yukawa coupling matrix of the down-type quarks.
+\item 
+ RGEYe is used to get the Yukawa coupling matrix of the charged leptons.
+\item 
+RGEYu is used to get the Yukawa coupling matrix of the up-type quarks.
+\item 
+RGE$\alpha$ is used to get the fine structure constants.
+\item 
+RGE$\kappa$1 is the parameter of the dimension 5 operator associated
+  with the first Higgs in the 2HDM.
+\item 
+RGE$\kappa$2 is the parameter of the dimension 5 operator associated
+  with the second Higgs in the 2HDM.
+  
+\item 
+RGE$\lambda$ is used to get the Higgs couplings.
+
+\end{itemize}
+
+  
+
+\subsubsection[\package{RGE2HDM0N}]{\package{REAP`RGE2HDM0N`}}
+This package contains the Two Higgs Doublet Model (2HDM) with a $\mathbb{Z}_2$
+symmetry without right-handed neutrinos.
+
+\vspace{2ex} It has the same parameters and options as
+\package{RGE2HDM}, with the following exceptions:  The
+only missing options are RGEIntegratedOut, RGESearchTransition,
+RGEThresholdFactor, RGEPrecision and RGEMaxNumberIterations, which are used to
+control the process of integrating out.  In addition RGEM$\nu$r and RGEY$\nu$
+are no parameters of \function{RGESetInitial} and RGEM1Tilde, RGERawM$\nu$r and RGERawY$\nu$
+are not accepted as parameters by \function{RGEGetSolution}.
+\function{RGESetInitial} has an additional option: RGESuggestion can be
+used to choose between different sets of default values, ``GUT''
+(default) and ``MZ''.  They refer to typical parameter values at the GUT
+scale or at the $Z$ mass, respectively.
+
+
+\subsubsection[\package{RGE2HDMDirac}]{\package{REAP`RGE2HDMDirac`}}
+This package contains the 2HDM with Dirac neutrinos to 1 loop order.
+
+\vspace{2ex} It has the same parameters and options as
+\package{RGE2HDM}, with the following exceptions: The
+only missing options are RGEIntegratedOut, RGESearchTransition,
+RGEThresholdFactor, RGEPrecision and RGEMaxNumberIterations, which are used to
+control the process of integrating out.  In addition RGEM$\nu$r, RGE$\kappa$1
+and RGE$\kappa$2 are no parameter of \function{RGESetInitial} and
+RGEMixingParameters, RGEM1Tilde, RGERawM$\nu$r,
+RGERawY$\nu$, RGE$\kappa$1 and RGE$\kappa$2 are not accepted as parameters by
+\function{RGEGetSolution}.
+\function{RGESetInitial} has an additional option: RGESuggestion can be
+used to choose between different sets of default values, ``GUT''
+(default) and ``MZ''.  They refer to typical parameter values at the GUT
+scale or at the $Z$ mass, respectively.
+
+
+%\input{RGEModels}
+\input{RGEConventions}
+
+\input{RGENewModelHowTo}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bibliography{reap}
+
+\end{document}

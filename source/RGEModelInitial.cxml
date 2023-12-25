@@ -1,0 +1,363 @@
+<function name=RGESuggestion>
+<doc level=internal>
+\ chooses between several sets of initial values.  The possibilities
+  implemented so far are ``GUT'' and (only in SM0N, SMDirac, 2HDM0N and
+  2HDMDirac) ``MZ'' (default: ``GUT'').
+  </doc>
+</function>
+
+<function name=RGEMassHierarchy>
+<doc level=simple>
+\ is the hierarchy of the neutrino masses; "r" or "n"
+  means normal hierarchy, "i" means inverted hierarchy (default: "r").
+  </doc>
+  </function>
+
+<function name=RGE\[Theta]12>
+<doc level=simple>
+, RGE$\theta13$ and RGE$\theta23$ are the angles $\theta_{12}$, $\theta_{13}$
+and $\theta_{23}$ of the MNS matrix in radians. (default: $\theta_{13}=0$ and
+$\theta_{23}=\frac{\pi}{4}$). The default of $\theta_{12}$ depends on the
+model. It is chosen in such a way, that the parameters are compatible with the
+experimental data. 
+</doc>
+</function>
+
+<function name=RGE\[Theta]23>
+</function>
+
+<function name=RGE\[Theta]13>
+</function>
+
+<function name=RGE\[Delta]>
+<doc level=simple>
+\ is the Dirac CP phase $\delta$ in radians (default: $0$).
+</doc>
+</function>
+
+  <function name=RGE\[Delta]e>
+<doc level=simple>
+, RGE$\delta\mu$ and RGE$\delta\tau$ are the unphysical phases $\delta_e$,
+  $\delta_\mu$ and $\delta_\tau$ (default: $0$). 
+</doc>
+</function>
+
+<function name=RGE\[Delta]\[Mu]>
+</function>
+
+<function name=RGE\[Delta]\[Tau]>
+</function>
+
+  <function name=RGE\[CurlyPhi]1>
+ <doc level=simple>
+\ and RGE$\varphi2$ are the Majorana CP phases $\varphi_1$ and $\varphi_2$ in radians (default: $0$).
+  </doc>
+  </function>
+
+  <function name=RGE\[CurlyPhi]2>
+  </function>
+
+  <function name=RGEMlightest>
+  <doc level=simple>
+ \ is the mass of the lightest neutrino in eV (default: $\mathcal{O}(0.01)
+  \eV$).
+  </doc>
+  <doc level=advanced>
+\ The default of RGEMlightest depends on the
+model. It is chosen in such a way, that the parameters are compatible with the
+experimental data.
+</doc>
+  </function>
+  
+  <function name=RGE\[CapitalDelta]m2atm>
+  <doc level=simple>
+\ is the atmospheric mass squared difference (default: $ \mathcal{O}(10^{-3}) \eV^2$).
+</doc>
+<doc level=advanced>
+\ The default value depends on the
+  model and it is chosen in such a way, that it is compatible with the
+  experimental data.
+  </doc>
+  </function>
+  
+<function name=RGE\[CapitalDelta]m2sol>
+<doc level=simple>
+\ is the solar mass squared difference (default:
+  $\mathcal{O}(10^{-4}) \eV^2$).
+</doc>
+<doc level=advanced>
+\ The default value depends on the
+  model and it is chosen in such a way, that it is compatible with the
+  experimental data.
+</doc>
+  </function>
+
+  <function name=RGEY\[Nu]33>
+  <doc level=simple>
+\ is the (3,3) entry in the neutrino Yukawa matrix at the GUT
+  scale.
+</doc>
+<doc level=advanced>
+\ The default value depends on the
+  model and it is chosen in such a way, that it is compatible with the
+  experimental data (default: $\mathcal{O}(1)$).
+  </doc>
+  </function>
+
+  
+  <function name=RGEY\[Nu]Ratio>
+<doc level=simple>
+\ determines the relative value of the neutrino Yukawa couplings.
+</doc>
+<doc level=advanced>
+\ The default value depends on the
+  model and it is chosen in such a way, that it is compatible with the
+  experimental data (default: $\mathcal{O}(1)$).
+</doc>
+  </function>
+
+  <function name=RGEg1>
+  <doc level=simple>
+, RGEg2 and RGEg3 are the coupling constants of U$(1)_\mathrm{Y}$,
+  SU$(2)_\mathrm{L}$ and SU$(3)_\mathrm{C}$, respectively.  GUT charge
+  normalization is used for $g_1$.
+  </doc>
+  </function>
+
+  <function name=RGEg2>
+  </function>
+
+  <function name=RGEg3>
+  </function>
+
+  <function name=RGEg>
+  <doc level=simple>
+ RGEg is the coupling constants of SU(5)
+  </doc>
+  </function>
+
+  <function name=RGEm>
+  <doc level=simple>
+ RGEm is the Higgs mass
+  </doc>
+  </function>
+
+  <function name=RGEYu>
+  <doc level=simple>
+\ is the Yukawa matrix of the up-type quarks.
+  If this parameter is given, RGEyu, RGEyc and RGEyt are ignored;
+  it is recommended not to use RGEq$\varphi$1, RGEq$\varphi$2,
+  RGEq$\delta$, RGEq$\delta$e, RGEq$\delta\mu$, RGEq$\delta\tau$,
+  RGEq$\theta$12, RGEq$\theta$13, and RGEq$\theta$23 in this case, since
+  they are not necessarily equal to the CKM mixing parameters.
+</doc>
+  </function>
+
+  <function name=RGEYd>
+  <doc level=simple>
+\ is the Yukawa matrix of the down-type quarks.
+  If this parameter is given, RGEyd, RGEys, RGEyb, RGEq$\varphi$1,
+  RGEq$\varphi$2, RGEq$\delta$, RGEq$\delta$e, RGEq$\delta\mu$,
+  RGEq$\delta\tau$, RGEq$\theta$12, RGEq$\theta$13, and RGEq$\theta$23
+  are ignored.
+  </doc>
+  </function>
+
+  <function name=RGEY\[Nu]>
+  <doc level=simple>
+\ is the neutrino Yukawa matrix in ``RL convention''. This option overrides the
+  built-in Yukawa matrix, i.e.\ RGEY$\nu33$ and RGEY$\nu$Ratio do not have any
+  effect. 
+  </doc>
+  <doc level=advanced>
+  (default: RGEGetY$\nu$(RGEY$\nu33$, RGE$Y\nu$Ratio))
+  </doc>
+  </function>
+
+  <function name=RGEYe>
+  <doc level=simple>
+\ is the charged lepton Yukawa matrix.
+  If this parameter is given, RGEye, RGEy$\mu$ and RGEy$\tau$ are
+  ignored.
+  </doc>
+  <doc level=advanced>
+  \\ (default:
+  RGEGetYe(0.8*Mass$\left[\mathrm{"}\tau\mathrm{"}\right]$*Sqrt[2]/RGEvd))
+  </doc>
+  </function>
+
+  <function name=RGEM\[Nu]r>
+  <doc level=simple model=((MS)?SM)|(2HDM)>
+\ is the mass matrix of the right-handed neutrinos.
+  If this parameter is specified, it also determines the light neutrino
+  mass matrix via the see-saw formula (together with RGEY$\nu$).  Thus,
+  RGEMassHierarchy, RGEMlightest, RGE$\Delta$m2atm, RGE$\Delta$m2sol,
+  RGE$\varphi$1, RGE$\varphi$2, RGE$\delta$, RGE$\delta$e,
+  RGE$\delta\mu$, RGE$\delta\tau$, RGE$\theta$12, RGE$\theta$13, and
+  RGE$\theta$23 do not have any effect in this case.
+  </doc>
+  </function>
+  
+  
+  <function name=RGE\[Kappa]>
+  <doc level=simple model=(MS)?SM(0N)?>
+\ is the coupling of the dimension 5 neutrino mass operator.
+  </doc>
+  </function>
+
+  <function name=RGE\[Lambda]>
+  <doc level=simple model=^SM.*>
+\ is the quartic Higgs self-coupling (default: 0.5).  We use the
+  convention that the corresponding term in the Lagrangian is
+  $-\frac{\lambda}{4} (\phi^\dagger \phi)^2$.
+  </doc>
+  </function>
+
+
+  <function name=RGE\[CapitalLambda]1>
+  <doc level=simple model=^SMTriplet.*>
+\ is the quartic Higgs self-coupling (default: 0.5).  We use the
+  convention that the corresponding term in the Lagrangian is
+  $-\frac{\lambda}{4} (\phi^\dagger \phi)^2$.
+  </doc>
+  </function>
+
+<function name=RGE\[CapitalLambda]2>
+</function>
+<function name=RGE\[CapitalLambda]4>
+</function>
+<function name=RGE\[CapitalLambda]5>
+</function>
+<function name=RGE\[CapitalLambda]6>
+</function>
+<function name=RGEM\[CapitalDelta]2>
+</function>
+<function name=RGEY\[CapitalDelta]>
+</function>
+
+  <function name=RGE\[CapitalLambda]u>
+  <doc level=simple model=^SMTriplet.*>
+\ is the coupling of the Higgs triplet to the MSSM Higgs doublet giving mass to up-type quarks.
+  </doc>
+  </function>
+
+<function name=RGE\[CapitalLambda]d>
+</function>
+
+<function name=RGEM\[CapitalDelta]>
+</function>
+
+<function name=RGE\[Kappa]1>
+<doc level=simple model=2HDM(0N)?>
+\ is the coupling of the dimension 5 operator associated
+  with the first Higgs in the 2HDM.
+  </doc>
+  </function>
+  
+<function name=RGE\[Kappa]2>
+<doc level=simple model=2HDM(0N)?>
+\ is the coupling of the dimension 5 operator associated
+  with the second Higgs in the 2HDM.
+  </doc>
+  </function>
+
+<function name=RGE\[Lambda]1>
+<doc level=simple model=2HDM.*>
+, RGE$\lambda2$, RGE$\lambda3$, RGE$\lambda4$ and RGE$\lambda5$ are the parameters
+$\lambda_1$, $\lambda_2$, $\lambda_3$, $\lambda_4$ and $\lambda_5$ in the Higgs potential
+(default: $\lambda_1=\lambda_2=0.75$, $\lambda_3=\lambda_4=0.2$, $\lambda_5=0.25$).
+</doc>
+</function>
+
+<function name=RGE\[Lambda]2>
+</function>
+
+<function name=RGE\[Lambda]3>
+</function>
+
+<function name=RGE\[Lambda]4>
+</function>
+
+<function name=RGE\[Lambda]5>
+</function>
+
+<function name=RGEq\[Theta]12>
+<doc level=simple>
+, RGEq$\theta13$ and RGEq$\theta23$ are the angles of the CKM matrix. 
+</doc>
+</function>
+
+<function name=RGEq\[Theta]13>
+</function>
+
+<function name=RGEq\[Theta]23>
+</function>
+
+<function name=RGEq\[Delta]>
+<doc level=simple>
+\ is the Dirac CP phase $\delta$ of the CKM matrix.
+</doc>
+</function>
+
+<function name=RGEq\[Delta]e>
+<doc level=simple>
+, RGEq$\delta\mu$ and RGE$\delta\tau$ are the unphysical phases $\delta_e$,
+$\delta_\mu$ and $\delta_\tau$ of the CKM matrix (default: $0$).
+</doc>
+</function>
+
+<function name=RGEq\[Delta]\[Mu]>
+</function>
+
+<function name=RGEq\[Delta]\[Tau]>
+</function>
+
+<function name=RGEq\[CurlyPhi]1>
+<doc level=simple>
+\ and RGEq$\varphi2$ are the unphysical phases $\varphi_1$ and $\varphi_2$ of the
+ CKM matrix which correspond to the Majorana phases in the MNS matrix (default: $0$).
+</doc>
+</function>
+
+<function name=RGEq\[CurlyPhi]2>
+</function>
+
+<function name=RGEyu>
+<doc level=simple>
+, RGEyc and RGEyt are the Yukawa couplings of the up-type quarks $u$,
+  $c$ and $t$.
+</doc>
+</function>
+
+<function name=RGEyc>
+</function>
+
+<function name=RGEyt>
+</function>
+
+<function name=RGEyd>
+<doc level=simple>
+, RGEys and RGEyb are the Yukawa coupling of the down-type quarks $d$,
+  $s$ and $b$.
+</doc>
+</function>
+
+<function name=RGEys>
+</function>
+
+<function name=RGEyb>
+</function>
+
+<function name=RGEye>
+<doc level=simple>
+, RGEy$\mu$ and RGEy$\tau$ are the Yukawa couplings of the charged
+  leptons $e$, $\mu$ and $\tau$.
+</doc>
+</function>
+
+<function name=RGEy\[Mu]>
+</function>
+
+<function name=RGEy\[Tau]>
+</function>
+

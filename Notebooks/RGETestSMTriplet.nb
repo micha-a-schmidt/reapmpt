@@ -1,0 +1,2071 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     74718,       2062]
+NotebookOptionsPosition[     70160,       1908]
+NotebookOutlinePosition[     70520,       1924]
+CellTagsIndexPosition[     70477,       1921]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Test of Model Predictions", "Title"],
+
+Cell["\<\
+This Notebook shows how REAP can be used to test how the predictions of a \
+given model change during the RG evolution to low energy.\
+\>", "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<REAP`RGESMTriplet`\>\"", "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<REAP`RGEPlotUtilities`\>\"", "]"}], 
+  ";"}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"MZ", "=", "91.12"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"GUT", "=", 
+   RowBox[{"2", " ", 
+    RowBox[{"10", "^", "16"}]}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.646456779056077*^9, 3.646456779630904*^9}}],
+
+Cell["\<\
+RGEReset is used in order to set all variables of RGESolver to their default \
+values, if the notebook is executed several times.\
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"RGEReset", "[", "]"}], ";"}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell["Definition of the model", "Section"],
+
+Cell["\<\
+We assume a supersymmetric model.  Below the SUSY-breaking scale (taken to be \
+1 TeV), the SM is used as an effective theory.\
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[CapitalDelta]Scale", "=", 
+   RowBox[{"10", "^", "10"}]}], ";"}]], "Input"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"RGEAdd", "[", "\"\<SMTriplet0N\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"RGEAdd", "[", 
+   RowBox[{"\"\<SM0N\>\"", ",", 
+    RowBox[{"RGECutoff", "\[Rule]", "\[CapitalDelta]Scale"}]}], "]"}], 
+  ";"}], "\[IndentingNewLine]"}], "Input"],
+
+Cell[TextData[{
+ "All couplings are given explicitly and no default values of the REAP \
+package are used. The Yukawa couplings are given in \"RL convention\".  The \
+neutrino masses are determined by ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["Y", "\[Nu]"], TraditionalForm]]],
+ "and ",
+ Cell[BoxData[
+  FormBox["M", TraditionalForm]]],
+ ".\n\[Kappa] is set to 0. In a type II see-saw scenario, \[Kappa] is \
+different from 0 below the mass threshold of the Higgs triplet."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"IniOpt", "=", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"RGE\[CapitalLambda]6", "\[Rule]", 
+     RowBox[{"\[CapitalDelta]Scale", "*", "2.5", "*", 
+      RowBox[{"10", "^", 
+       RowBox[{"-", "5"}]}]}]}], ",", " ", 
+    RowBox[{"RGEM\[CapitalDelta]2", "\[Rule]", 
+     RowBox[{"\[CapitalDelta]Scale", "^", "2"}]}], ",", 
+    RowBox[{"RGEMlightest", "\[Rule]", "0"}], ",", 
+    RowBox[{"RGEMassHierarchy", "->", "\"\<i\>\""}], ",", 
+    RowBox[{"RGE\[Theta]13", "\[Rule]", "0"}], ",", 
+    RowBox[{"RGE\[Theta]23", "\[Rule]", 
+     RowBox[{"45", " ", "Degree"}]}]}], "}"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"RGE\[CapitalLambda]6", "\[Rule]", "250000.00000000003`"}], ",", 
+   RowBox[{"RGEM\[CapitalDelta]2", "\[Rule]", "100000000000000000000"}], ",", 
+   
+   RowBox[{"RGEMlightest", "\[Rule]", "0"}], ",", 
+   RowBox[{"RGEMassHierarchy", "\[Rule]", "\<\"i\"\>"}], ",", 
+   RowBox[{"RGE\[Theta]13", "\[Rule]", "0"}], ",", 
+   RowBox[{"RGE\[Theta]23", "\[Rule]", 
+    RowBox[{"45", " ", "\[Degree]"}]}]}], "}"}]], "Output",
+ CellChangeTimes->{3.646456786888667*^9, 3.646456817503428*^9, 
+  3.64645685430271*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"RGESetInitial", "[", 
+   RowBox[{"GUT", ",", 
+    RowBox[{"Sequence", "[", "IniOpt", "]"}]}], "]"}], ";"}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"RGEGetInitial", "[", "]"}], "//", "N"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"2.`*^16", ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"RGEg1", "\[Rule]", "0.5787925294736758`"}], ",", 
+     RowBox[{"RGEg2", "\[Rule]", "0.5214759925514961`"}], ",", 
+     RowBox[{"RGEg3", "\[Rule]", "0.5269038649895842`"}], ",", 
+     RowBox[{"RGEYu", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"5.403905482238657`*^-6", ",", "0.`", ",", "0.`"}], "}"}], 
+        ",", 
+        RowBox[{"{", 
+         RowBox[{"0.`", ",", "0.001563683288477569`", ",", "0.`"}], "}"}], 
+        ",", 
+        RowBox[{"{", 
+         RowBox[{"0.`", ",", "0.`", ",", "0.4829021920298374`"}], "}"}]}], 
+       "}"}]}], ",", 
+     RowBox[{"RGEYd", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"0.000021176161674718076`", "\[VeryThinSpace]", "-", 
+           RowBox[{"1.6543612251060553`*^-24", " ", "\[ImaginaryI]"}]}], ",", 
+          
+          RowBox[{"0.00004569672691158728`", "\[VeryThinSpace]", "+", 
+           RowBox[{"1.1201742235049776`*^-7", " ", "\[ImaginaryI]"}]}], ",", 
+          RowBox[{"0.00002136717436201793`", "\[VeryThinSpace]", "+", 
+           RowBox[{"2.5808982612642705`*^-6", " ", "\[ImaginaryI]"}]}]}], 
+         "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"0.00004569672691158729`", "\[VeryThinSpace]", "-", 
+           RowBox[{"1.1201742235049776`*^-7", " ", "\[ImaginaryI]"}]}], ",", 
+          RowBox[{"0.00022369763256163206`", "\[VeryThinSpace]", "-", 
+           RowBox[{"1.0339757656912846`*^-25", " ", "\[ImaginaryI]"}]}], ",", 
+          
+          RowBox[{"0.0002570966230005667`", "\[VeryThinSpace]", "-", 
+           RowBox[{"1.8848880578453537`*^-8", " ", "\[ImaginaryI]"}]}]}], 
+         "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"0.00002136717436201793`", "\[VeryThinSpace]", "-", 
+           RowBox[{"2.5808982612642705`*^-6", " ", "\[ImaginaryI]"}]}], ",", 
+          RowBox[{"0.0002570966230005667`", "\[VeryThinSpace]", "+", 
+           RowBox[{"1.8848880578453534`*^-8", " ", "\[ImaginaryI]"}]}], ",", 
+          RowBox[{"0.006140012998097206`", "\[VeryThinSpace]", "+", 
+           RowBox[{"0.`", " ", "\[ImaginaryI]"}]}]}], "}"}]}], "}"}]}], ",", 
+     RowBox[{"RGEYe", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"2.836967997360869`*^-6", ",", "0.`", ",", "0.`"}], "}"}], 
+        ",", 
+        RowBox[{"{", 
+         RowBox[{"0.`", ",", "0.000598755371896428`", ",", "0.`"}], "}"}], 
+        ",", 
+        RowBox[{"{", 
+         RowBox[{"0.`", ",", "0.`", ",", "0.010178888347714644`"}], "}"}]}], 
+       "}"}]}], ",", 
+     RowBox[{"RGEY\[CapitalDelta]", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"0.92148607190235`", ",", "0.006099995511241641`", ",", 
+          RowBox[{"-", "0.006099995511241641`"}]}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"0.006099995511241641`", ",", "0.4645838886400726`", ",", 
+          RowBox[{"-", "0.4645838886400726`"}]}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"-", "0.006099995511241641`"}], ",", 
+          RowBox[{"-", "0.4645838886400726`"}], ",", "0.4645838886400726`"}], 
+         "}"}]}], "}"}]}], ",", 
+     RowBox[{"RGE\[Kappa]", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"0.`", ",", "0.`", ",", "0.`"}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"0.`", ",", "0.`", ",", "0.`"}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"0.`", ",", "0.`", ",", "0.`"}], "}"}]}], "}"}]}], ",", 
+     RowBox[{"RGE\[Lambda]", "\[Rule]", "0.5`"}], ",", 
+     RowBox[{"RGE\[CapitalLambda]1", "\[Rule]", "0.5`"}], ",", 
+     RowBox[{"RGE\[CapitalLambda]2", "\[Rule]", "0.5`"}], ",", 
+     RowBox[{"RGE\[CapitalLambda]4", "\[Rule]", "0.5`"}], ",", 
+     RowBox[{"RGE\[CapitalLambda]5", "\[Rule]", "0.5`"}], ",", 
+     RowBox[{"RGE\[CapitalLambda]6", "\[Rule]", "250000.00000000003`"}], ",", 
+     
+     RowBox[{"RGEM\[CapitalDelta]2", "\[Rule]", "1.`*^20"}]}], "}"}]}], 
+  "}"}]], "Output",
+ CellChangeTimes->{3.646456787017227*^9, 3.646456817591365*^9, 
+  3.6464568543579206`*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"RGESolve", "[", 
+   RowBox[{"MZ", ",", "GUT"}], "]"}], ";"}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"\[CapitalDelta]2", "=", 
+  RowBox[{"Re", "[", 
+   RowBox[{"Sqrt", "[", 
+    RowBox[{"RGEGetSolution", "[", 
+     RowBox[{
+      RowBox[{"\[CapitalDelta]Scale", "+", "1"}], ",", " ", 
+      "RGEM\[CapitalDelta]2"}], "]"}], "]"}], "]"}]}]], "Input"],
+
+Cell[BoxData["8.312190107366823`*^9"], "Output",
+ CellChangeTimes->{3.646456787734548*^9, 3.6464568177366753`*^9, 
+  3.646456854513043*^9}]
+}, Open  ]],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"RGEReset", "[", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"RGEAdd", "[", "\"\<SMTriplet0N\>\"", "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"RGEAdd", "[", 
+   RowBox[{"\"\<SM0N\>\"", ",", 
+    RowBox[{"RGECutoff", "\[Rule]", "\[CapitalDelta]2"}]}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"RGESetInitial", "[", 
+   RowBox[{"GUT", ",", 
+    RowBox[{"Sequence", "[", "IniOpt", "]"}]}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"RGESolve", "[", 
+   RowBox[{"MZ", ",", "GUT"}], "]"}], ";"}]}], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"1", "-", 
+  RowBox[{"Chop", "[", 
+   RowBox[{
+    RowBox[{"Sqrt", "[", 
+     RowBox[{"RGEGetSolution", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{
+         RowBox[{"RGEGetTransitions", "[", "]"}], "[", 
+         RowBox[{"[", 
+          RowBox[{"2", ",", "1"}], "]"}], "]"}], "+", "1"}], ",", " ", 
+       "RGEM\[CapitalDelta]2"}], "]"}], "]"}], "/", 
+    RowBox[{
+     RowBox[{"RGEGetTransitions", "[", "]"}], "[", 
+     RowBox[{"[", 
+      RowBox[{"2", ",", "1"}], "]"}], "]"}]}], "]"}]}]], "Input"],
+
+Cell[BoxData["0.0023868503599470126`"], "Output",
+ CellChangeTimes->{{3.646456789638094*^9, 3.646456817936079*^9}, 
+   3.6464568546707706`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"RGEGetSolution", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"RGEGetTransitions", "[", "]"}], "[", 
+      RowBox[{"[", 
+       RowBox[{"2", ",", "1"}], "]"}], "]"}], "-", "1"}], ",", "RGEM\[Nu]"}], 
+   "]"}], "//", "MatrixForm"}]], "Input"],
+
+Cell[BoxData[
+ TagBox[
+  RowBox[{"(", "\[NoBreak]", GridBox[{
+     {
+      RowBox[{"0.1188618425020323`", "\[VeryThinSpace]", "-", 
+       RowBox[{"1.101759140219748`*^-33", " ", "\[ImaginaryI]"}]}], 
+      RowBox[{"0.0007868344301152977`", "\[VeryThinSpace]", "-", 
+       RowBox[{"7.293358465348572`*^-36", " ", "\[ImaginaryI]"}]}], 
+      RowBox[{
+       RowBox[{"-", "0.000786831130117867`"}], "+", 
+       RowBox[{"7.293327876874966`*^-36", " ", "\[ImaginaryI]"}]}]},
+     {
+      RowBox[{"0.0007868344301152977`", "\[VeryThinSpace]", "-", 
+       RowBox[{"7.293358465348572`*^-36", " ", "\[ImaginaryI]"}]}], 
+      RowBox[{"0.05992636452493165`", "\[VeryThinSpace]", "-", 
+       RowBox[{"5.554719535359299`*^-34", " ", "\[ImaginaryI]"}]}], 
+      RowBox[{
+       RowBox[{"-", "0.05992607980670162`"}], "+", 
+       RowBox[{"5.554693144138557`*^-34", " ", "\[ImaginaryI]"}]}]},
+     {
+      RowBox[{
+       RowBox[{"-", "0.000786831130117867`"}], "+", 
+       RowBox[{"7.293327876874966`*^-36", " ", "\[ImaginaryI]"}]}], 
+      RowBox[{
+       RowBox[{"-", "0.05992607980670162`"}], "+", 
+       RowBox[{"5.554693144138557`*^-34", " ", "\[ImaginaryI]"}]}], 
+      RowBox[{"0.05992579508982434`", "\[VeryThinSpace]", "-", 
+       RowBox[{"5.5546667530432055`*^-34", " ", "\[ImaginaryI]"}]}]}
+    },
+    GridBoxAlignment->{
+     "Columns" -> {{Center}}, "ColumnsIndexed" -> {}, "Rows" -> {{Baseline}}, 
+      "RowsIndexed" -> {}},
+    GridBoxSpacings->{"Columns" -> {
+        Offset[0.27999999999999997`], {
+         Offset[0.7]}, 
+        Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+        Offset[0.2], {
+         Offset[0.4]}, 
+        Offset[0.2]}, "RowsIndexed" -> {}}], "\[NoBreak]", ")"}],
+  Function[BoxForm`e$, 
+   MatrixForm[BoxForm`e$]]]], "Output",
+ CellChangeTimes->{{3.646456789725264*^9, 3.646456817941622*^9}, 
+   3.646456854713633*^9}]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Plots", "Section"],
+
+Cell[CellGroupData[{
+
+Cell["Definitions", "Subsection"],
+
+Cell["Define the plot region", "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ClearAll", "[", 
+   RowBox[{"tmin", ",", "tmax"}], "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"tmin", "=", 
+   RowBox[{"Log", "[", 
+    RowBox[{"10", ",", "MZ"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"tmax", "=", 
+   RowBox[{"Log", "[", 
+    RowBox[{"10", ",", "GUT"}], "]"}]}], ";"}]}], "Input"],
+
+Cell["Define the functions that should be plotted", "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ClearAll", "[", 
+   RowBox[{"Mnu", ",", "Ye"}], "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Mnu", "[", "mu_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{"RGEGetSolution", "[", 
+    RowBox[{"mu", ",", "RGEM\[Nu]"}], "]"}], "//", 
+   "Chop"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Ye", "[", "mu_", "]"}], ":=", 
+   RowBox[{
+    RowBox[{"RGEGetSolution", "[", 
+     RowBox[{"mu", ",", "RGEYe"}], "]"}], "//", "Chop"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{"ClearAll", "[", 
+  RowBox[{
+  "MixingPars", ",", "MixingParsLogScale", ",", "NuMasses", ",", 
+   "NuMassesLogScale"}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"MixingPars", "[", "mu_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{"MNSParameters", "[", 
+    RowBox[{
+     RowBox[{"Mnu", "[", "mu", "]"}], ",", 
+     RowBox[{"Ye", "[", "mu", "]"}]}], "]"}], "\[LeftDoubleBracket]", "1", 
+   "\[RightDoubleBracket]"}]}], "\n", 
+ RowBox[{
+  RowBox[{"MixingParsLogScale", "[", "x_", "]"}], ":=", 
+  RowBox[{"MixingPars", "[", 
+   RowBox[{"10", "^", "x"}], "]"}]}], "\n", 
+ RowBox[{
+  RowBox[{"NuMasses", "[", "mu_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{"MNSParameters", "[", 
+    RowBox[{
+     RowBox[{"Mnu", "[", "mu", "]"}], ",", 
+     RowBox[{"Ye", "[", "mu", "]"}]}], "]"}], "\[LeftDoubleBracket]", "2", 
+   "\[RightDoubleBracket]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"NuMassesLogScale", "[", "x_", "]"}], ":=", 
+   RowBox[{"NuMasses", "[", 
+    RowBox[{"10", "^", "x"}], "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{"ClearAll", "[", 
+  RowBox[{
+  "\[Theta]12", ",", "\[Theta]13", ",", "\[Theta]23", ",", "\[Delta]", ",", 
+   "\[CurlyPhi]1", ",", "\[CurlyPhi]2", ",", "m1", ",", "m2", ",", "m3", ",", 
+   "\[CapitalDelta]m2sol", ",", "\[CapitalDelta]m2atm"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"\[Theta]12", "[", "t_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"MixingParsLogScale", "[", "t", "]"}], "\[LeftDoubleBracket]", 
+    "1", "\[RightDoubleBracket]"}], "/", "Degree"}]}], "\n", 
+ RowBox[{
+  RowBox[{"\[Theta]13", "[", "t_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"MixingParsLogScale", "[", "t", "]"}], "\[LeftDoubleBracket]", 
+    "2", "\[RightDoubleBracket]"}], "/", "Degree"}]}], "\n", 
+ RowBox[{
+  RowBox[{"\[Theta]23", "[", "t_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"MixingParsLogScale", "[", "t", "]"}], "\[LeftDoubleBracket]", 
+    "3", "\[RightDoubleBracket]"}], "/", 
+   "Degree"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"\[Delta]", "[", "t_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"MixingParsLogScale", "[", "t", "]"}], "\[LeftDoubleBracket]", 
+    "4", "\[RightDoubleBracket]"}], "/", "Degree"}]}], "\n", 
+ RowBox[{
+  RowBox[{"\[CurlyPhi]1", "[", "t_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"MixingParsLogScale", "[", "t", "]"}], "\[LeftDoubleBracket]", 
+    "8", "\[RightDoubleBracket]"}], "/", 
+   "Degree"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"\[CurlyPhi]2", "[", "t_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"MixingParsLogScale", "[", "t", "]"}], "\[LeftDoubleBracket]", 
+    "9", "\[RightDoubleBracket]"}], "/", 
+   "Degree"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"m1", "[", "t_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{"NuMassesLogScale", "[", "t", "]"}], "\[LeftDoubleBracket]", "1", 
+   "\[RightDoubleBracket]"}]}], "\n", 
+ RowBox[{
+  RowBox[{"m2", "[", "t_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{"NuMassesLogScale", "[", "t", "]"}], "\[LeftDoubleBracket]", "2", 
+   "\[RightDoubleBracket]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"m3", "[", "t_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{"NuMassesLogScale", "[", "t", "]"}], "\[LeftDoubleBracket]", "3", 
+   "\[RightDoubleBracket]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"\[CapitalDelta]m2sol", "[", "t_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"m2", "[", "t", "]"}], "^", "2"}], "-", 
+   RowBox[{
+    RowBox[{"m1", "[", "t", "]"}], "^", "2"}]}]}], "\n", 
+ RowBox[{
+  RowBox[{"\[CapitalDelta]m2atm", "[", "t_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"m3", "[", "t", "]"}], "^", "2"}], "-", 
+   RowBox[{
+    RowBox[{"m2", "[", "t", "]"}], "^", 
+    "2"}]}]}], "\[IndentingNewLine]"}], "Input"],
+
+Cell["\<\
+Test for compatibility with the experimental data
+(allowed regions at the 3\[Sigma] CL as given in Maltoni et al., \
+hep-ph/0405172v4)\
+\>", "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ClearAll", "[", 
+   RowBox[{"CompareToExperiment", ",", "IsCompatibleWithExp"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"CompareToExperiment", "[", "t_", "]"}], ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"lNotComp", ",", "lComp"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"lComp", "=", 
+       RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"lNotComp", "=", 
+       RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{"Sin", "[", 
+            RowBox[{
+             RowBox[{"\[Theta]12", "[", "t", "]"}], " ", "Degree"}], "]"}], 
+           "^", "2"}], "\[GreaterEqual]", "0.23"}], "&&", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"Sin", "[", 
+            RowBox[{
+             RowBox[{"\[Theta]12", "[", "t", "]"}], " ", "Degree"}], "]"}], 
+           "^", "2"}], "\[LessEqual]", "0.38"}]}], ",", 
+        RowBox[{"lComp", "=", 
+         RowBox[{"Append", "[", 
+          RowBox[{"lComp", ",", "\"\<\[Theta]12\>\""}], "]"}]}], ",", 
+        RowBox[{"lNotComp", "=", 
+         RowBox[{"Append", "[", 
+          RowBox[{"lNotComp", ",", "\"\<\[Theta]12\>\""}], "]"}]}]}], "]"}], 
+      ";", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{"Sin", "[", 
+           RowBox[{
+            RowBox[{"\[Theta]13", "[", "t", "]"}], " ", "Degree"}], "]"}], 
+          "^", "2"}], "\[LessEqual]", "0.051"}], ",", 
+        RowBox[{"lComp", "=", 
+         RowBox[{"Append", "[", 
+          RowBox[{"lComp", ",", "\"\<\[Theta]13\>\""}], "]"}]}], ",", 
+        RowBox[{"lNotComp", "[", 
+         RowBox[{"lNotComp", ",", "\"\<\[Theta]13\>\""}], "]"}]}], "]"}], ";",
+       "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{"Sin", "[", 
+            RowBox[{
+             RowBox[{"\[Theta]23", "[", "t", "]"}], " ", "Degree"}], "]"}], 
+           "^", "2"}], "\[GreaterEqual]", "0.34"}], "&&", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"Sin", "[", 
+            RowBox[{
+             RowBox[{"\[Theta]23", "[", "t", "]"}], " ", "Degree"}], "]"}], 
+           "^", "2"}], "\[LessEqual]", "0.68"}]}], ",", 
+        RowBox[{"lComp", "=", 
+         RowBox[{"Append", "[", 
+          RowBox[{"lComp", ",", "\"\<\[Theta]23\>\""}], "]"}]}], ",", 
+        RowBox[{"lNotComp", "=", 
+         RowBox[{"Append", "[", 
+          RowBox[{"lNotComp", ",", "\"\<\[Theta]23\>\""}], "]"}]}]}], "]"}], 
+      ";", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{"Abs", "[", 
+           RowBox[{"\[CapitalDelta]m2atm", "[", "t", "]"}], "]"}], 
+          "\[GreaterEqual]", 
+          RowBox[{"1.3", " ", 
+           RowBox[{"10", "^", 
+            RowBox[{"-", "3"}]}]}]}], "&&", 
+         RowBox[{
+          RowBox[{"Abs", "[", 
+           RowBox[{"\[CapitalDelta]m2atm", "[", "t", "]"}], "]"}], 
+          "\[LessEqual]", 
+          RowBox[{"3.2", " ", 
+           RowBox[{"10", "^", 
+            RowBox[{"-", "3"}]}]}]}]}], ",", 
+        RowBox[{"lComp", "=", 
+         RowBox[{"Append", "[", 
+          RowBox[{"lComp", ",", "\"\<\[CapitalDelta]m2atm\>\""}], "]"}]}], 
+        ",", 
+        RowBox[{"lNotComp", "=", 
+         RowBox[{"Append", "[", 
+          RowBox[{"lNotComp", ",", "\"\<\[CapitalDelta]m2atm\>\""}], 
+          "]"}]}]}], "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{"\[CapitalDelta]m2sol", "[", "t", "]"}], "\[GreaterEqual]", 
+          
+          RowBox[{"7.1", " ", 
+           RowBox[{"10", "^", 
+            RowBox[{"-", "5"}]}]}]}], "&&", 
+         RowBox[{
+          RowBox[{"\[CapitalDelta]m2sol", "[", "t", "]"}], "\[LessEqual]", 
+          RowBox[{"8.9", " ", 
+           RowBox[{"10", "^", 
+            RowBox[{"-", "5"}]}]}]}]}], ",", 
+        RowBox[{"lComp", "=", 
+         RowBox[{"Append", "[", 
+          RowBox[{"lComp", ",", "\"\<\[CapitalDelta]m2sol\>\""}], "]"}]}], 
+        ",", 
+        RowBox[{"lNotComp", "=", 
+         RowBox[{"Append", "[", 
+          RowBox[{"lNotComp", ",", "\"\<\[CapitalDelta]m2sol\>\""}], 
+          "]"}]}]}], "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"Print", "[", 
+       RowBox[{
+       "\"\<The following parameters are compatible with the experimental \
+data at the 3\[Sigma] CL:\>\"", ",", "lComp"}], "]"}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"Length", "[", "lNotComp", "]"}], "\[Equal]", "0"}], ",", 
+        RowBox[{"Return", "[", "1", "]"}], ",", 
+        RowBox[{"Return", "[", "0", "]"}]}], "]"}], ";"}]}], 
+    "\[IndentingNewLine]", "]"}]}], ";"}], "\n", 
+ RowBox[{"IsCompatibleWithExp", ":=", 
+  RowBox[{"CompareToExperiment", "[", 
+   RowBox[{"Log", "[", 
+    RowBox[{"10", ",", "MZ"}], "]"}], "]"}]}]}], "Input"],
+
+Cell["Positions of the thresholds", "Text"],
+
+Cell[BoxData[{
+ RowBox[{"ClearAll", "[", 
+  RowBox[{"M1", ",", "M2", ",", "M3", ",", "ShadowEFT"}], "]"}], "\n", 
+ RowBox[{
+  RowBox[{"M\[CapitalDelta]", "=", 
+   RowBox[{
+    RowBox[{"RGEGetTransitions", "[", "]"}], "\[LeftDoubleBracket]", 
+    RowBox[{"2", ",", "1"}], "\[RightDoubleBracket]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"ShadowEFT", "=", 
+   RowBox[{"RGEShadowEFT", "[", 
+    RowBox[{"M\[CapitalDelta]", ",", 
+     SuperscriptBox["10", "17"]}], "]"}]}], ";"}]}], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Compatibility to the experimental data", "Subsection"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"IsCompatibleWithExp", ";"}]], "Input"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The following parameters are compatible with the experimental \
+data at the 3\[Sigma] CL:\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"\<\"\[Theta]12\"\>", ",", "\<\"\[Theta]13\"\>", 
+     ",", "\<\"\[Theta]23\"\>"}], "}"}]}],
+  SequenceForm[
+  "The following parameters are compatible with the experimental data at the \
+3\[Sigma] CL:", {"\[Theta]12", "\[Theta]13", "\[Theta]23"}],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.6464567898752604`*^9, 3.6464568181378202`*^9}, 
+   3.646456854811824*^9}]
+}, Open  ]],
+
+Cell["The low energy parameters are", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{
+   "\"\<\!\(\*SubscriptBox[\(\[Theta]\), \(12\)]\)(\!\(\*SubscriptBox[\(M\), \
+\(Z\)]\))=\>\"", ",", 
+    RowBox[{"\[Theta]12", "[", 
+     RowBox[{"Log", "[", 
+      RowBox[{"10", ",", "MZ"}], "]"}], "]"}], ",", "\"\<\[Degree]\>\""}], 
+   "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{
+   "\"\<\!\(\*SubscriptBox[\(\[Theta]\), \(13\)]\)(\!\(\*SubscriptBox[\(M\), \
+\(Z\)]\))=\>\"", ",", 
+    RowBox[{"\[Theta]13", "[", 
+     RowBox[{"Log", "[", 
+      RowBox[{"10", ",", "MZ"}], "]"}], "]"}], ",", "\"\<\[Degree]\>\""}], 
+   "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{
+   "\"\<\!\(\*SubscriptBox[\(\[Theta]\), \(23\)]\)(\!\(\*SubscriptBox[\(M\), \
+\(Z\)]\))=\>\"", ",", 
+    RowBox[{"\[Theta]23", "[", 
+     RowBox[{"Log", "[", 
+      RowBox[{"10", ",", "MZ"}], "]"}], "]"}], ",", "\"\<\[Degree]\>\""}], 
+   "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{
+   "\"\<\!\(\*SubscriptBox[SuperscriptBox[\(\[CapitalDelta]m\), \(2\)], \(atm\
+\)]\)(\!\(\*SubscriptBox[\(M\), \(Z\)]\))=\>\"", ",", 
+    RowBox[{"\[CapitalDelta]m2atm", "[", 
+     RowBox[{"Log", "[", 
+      RowBox[{"10", ",", "MZ"}], "]"}], "]"}], ",", 
+    "\"\<\!\(\*SuperscriptBox[\(eV\), \(2\)]\)\>\""}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{
+   "\"\<\!\(\*SubscriptBox[SuperscriptBox[\(\[CapitalDelta]m\), \(2\)], \(sol\
+\)]\)(\!\(\*SubscriptBox[\(M\), \(Z\)]\))=\>\"", ",", 
+    RowBox[{"\[CapitalDelta]m2sol", "[", 
+     RowBox[{"Log", "[", 
+      RowBox[{"10", ",", "MZ"}], "]"}], "]"}], ",", 
+    "\"\<\!\(\*SuperscriptBox[\(eV\), \(2\)]\)\>\""}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{
+   "\"\<\!\(\*SubscriptBox[\(m\), \(1\)]\)(\!\(\*SubscriptBox[\(M\), \
+\(Z\)]\))=\>\"", ",", 
+    RowBox[{"m1", "[", 
+     RowBox[{"Log", "[", 
+      RowBox[{"10", ",", "MZ"}], "]"}], "]"}], ",", "\"\<eV\>\""}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{
+   "\"\<\!\(\*SubscriptBox[\(m\), \(2\)]\)(\!\(\*SubscriptBox[\(M\), \
+\(Z\)]\))=\>\"", ",", 
+    RowBox[{"m2", "[", 
+     RowBox[{"Log", "[", 
+      RowBox[{"10", ",", "MZ"}], "]"}], "]"}], ",", "\"\<eV\>\""}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{
+   "\"\<\!\(\*SubscriptBox[\(m\), \(3\)]\)(\!\(\*SubscriptBox[\(M\), \
+\(Z\)]\))=\>\"", ",", 
+    RowBox[{"m3", "[", 
+     RowBox[{"Log", "[", 
+      RowBox[{"10", ",", "MZ"}], "]"}], "]"}], ",", "\"\<eV\>\""}], "]"}], 
+  ";"}]}], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\\!\\(\\*SubscriptBox[\\(\[Theta]\\), \
+\\(12\\)]\\)(\\!\\(\\*SubscriptBox[\\(M\\), \\(Z\\)]\\))=\"\>", 
+   "\[InvisibleSpace]", "33.11230647621076`", 
+   "\[InvisibleSpace]", "\<\"\[Degree]\"\>"}],
+  SequenceForm[
+  "\!\(\*SubscriptBox[\(\[Theta]\), \(12\)]\)(\!\(\*SubscriptBox[\(M\), \
+\(Z\)]\))=", 33.11230647621076, "\[Degree]"],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.646456789964561*^9, 3.6464568182240887`*^9}, 
+   3.6464568548522377`*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\\!\\(\\*SubscriptBox[\\(\[Theta]\\), \
+\\(13\\)]\\)(\\!\\(\\*SubscriptBox[\\(M\\), \\(Z\\)]\\))=\"\>", 
+   "\[InvisibleSpace]", "2.5126269179056773`*^-6", 
+   "\[InvisibleSpace]", "\<\"\[Degree]\"\>"}],
+  SequenceForm[
+  "\!\(\*SubscriptBox[\(\[Theta]\), \(13\)]\)(\!\(\*SubscriptBox[\(M\), \
+\(Z\)]\))=", 2.5126269179056773`*^-6, "\[Degree]"],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.646456789964561*^9, 3.6464568182240887`*^9}, 
+   3.646456854853389*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\\!\\(\\*SubscriptBox[\\(\[Theta]\\), \
+\\(23\\)]\\)(\\!\\(\\*SubscriptBox[\\(M\\), \\(Z\\)]\\))=\"\>", 
+   "\[InvisibleSpace]", "41.577961101417415`", 
+   "\[InvisibleSpace]", "\<\"\[Degree]\"\>"}],
+  SequenceForm[
+  "\!\(\*SubscriptBox[\(\[Theta]\), \(23\)]\)(\!\(\*SubscriptBox[\(M\), \
+\(Z\)]\))=", 41.577961101417415`, "\[Degree]"],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.646456789964561*^9, 3.6464568182240887`*^9}, 
+   3.6464568548549433`*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\\!\\(\\*SubscriptBox[SuperscriptBox[\\(\[CapitalDelta]m\\), \
+\\(2\\)], \\(atm\\)]\\)(\\!\\(\\*SubscriptBox[\\(M\\), \\(Z\\)]\\))=\"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"-", "0.007462614914895779`"}], 
+   "\[InvisibleSpace]", "\<\"\\!\\(\\*SuperscriptBox[\\(eV\\), \
+\\(2\\)]\\)\"\>"}],
+  SequenceForm[
+  "\!\(\*SubscriptBox[SuperscriptBox[\(\[CapitalDelta]m\), \(2\)], \
+\(atm\)]\)(\!\(\*SubscriptBox[\(M\), \(Z\)]\))=", -0.007462614914895779, 
+   "\!\(\*SuperscriptBox[\(eV\), \(2\)]\)"],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.646456789964561*^9, 3.6464568182240887`*^9}, 
+   3.646456854893486*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\\!\\(\\*SubscriptBox[SuperscriptBox[\\(\[CapitalDelta]m\\), \
+\\(2\\)], \\(sol\\)]\\)(\\!\\(\\*SubscriptBox[\\(M\\), \\(Z\\)]\\))=\"\>", 
+   "\[InvisibleSpace]", "0.0002985665456138745`", 
+   "\[InvisibleSpace]", "\<\"\\!\\(\\*SuperscriptBox[\\(eV\\), \
+\\(2\\)]\\)\"\>"}],
+  SequenceForm[
+  "\!\(\*SubscriptBox[SuperscriptBox[\(\[CapitalDelta]m\), \(2\)], \
+\(sol\)]\)(\!\(\*SubscriptBox[\(M\), \(Z\)]\))=", 0.0002985665456138745, 
+   "\!\(\*SuperscriptBox[\(eV\), \(2\)]\)"],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.646456789964561*^9, 3.6464568182240887`*^9}, 
+   3.646456854894946*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\\!\\(\\*SubscriptBox[\\(m\\), \
+\\(1\\)]\\)(\\!\\(\\*SubscriptBox[\\(M\\), \\(Z\\)]\\))=\"\>", 
+   "\[InvisibleSpace]", "0.08464070161147003`", 
+   "\[InvisibleSpace]", "\<\"eV\"\>"}],
+  SequenceForm[
+  "\!\(\*SubscriptBox[\(m\), \(1\)]\)(\!\(\*SubscriptBox[\(M\), \(Z\)]\))=", 
+   0.08464070161147003, "eV"],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.646456789964561*^9, 3.6464568182240887`*^9}, 
+   3.64645685489616*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\\!\\(\\*SubscriptBox[\\(m\\), \
+\\(2\\)]\\)(\\!\\(\\*SubscriptBox[\\(M\\), \\(Z\\)]\\))=\"\>", 
+   "\[InvisibleSpace]", "0.08638642783965418`", 
+   "\[InvisibleSpace]", "\<\"eV\"\>"}],
+  SequenceForm[
+  "\!\(\*SubscriptBox[\(m\), \(2\)]\)(\!\(\*SubscriptBox[\(M\), \(Z\)]\))=", 
+   0.08638642783965418, "eV"],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.646456789964561*^9, 3.6464568182240887`*^9}, 
+   3.6464568548973083`*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\\!\\(\\*SubscriptBox[\\(m\\), \
+\\(3\\)]\\)(\\!\\(\\*SubscriptBox[\\(M\\), \\(Z\\)]\\))=\"\>", 
+   "\[InvisibleSpace]", "0", "\[InvisibleSpace]", "\<\"eV\"\>"}],
+  SequenceForm[
+  "\!\(\*SubscriptBox[\(m\), \(3\)]\)(\!\(\*SubscriptBox[\(M\), \(Z\)]\))=", 
+   0, "eV"],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.646456789964561*^9, 3.6464568182240887`*^9}, 
+   3.64645685489839*^9}]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Mixing Angles", "Subsection"],
+
+Cell["Draw the plot for the mixing angles", "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Angles", "=", 
+   RowBox[{"Show", "[", 
+    RowBox[{
+     RowBox[{"Plot", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"\[Theta]12", "[", "t", "]"}], ",", 
+         RowBox[{"\[Theta]13", "[", "t", "]"}], ",", 
+         RowBox[{"\[Theta]23", "[", "t", "]"}]}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"t", ",", "tmin", ",", "tmax"}], "}"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"ImageSize", "\[Rule]", "400"}], ",", 
+       RowBox[{"FrameLabel", "->", 
+        RowBox[{"{", 
+         RowBox[{
+         "\"\<\!\(\*SubscriptBox[\(log\), \(10\)]\)(\[Mu]/GeV)\>\"", ",", 
+          "\"\<\>\""}], "}"}]}], ",", 
+       RowBox[{"FrameTicks", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"RGELogTicksLabeled", "[", 
+           RowBox[{"2", ",", "19"}], "]"}], ",", 
+          RowBox[{"Table", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"i", "*", "15"}], ",", 
+              RowBox[{
+               RowBox[{"ToString", "[", 
+                RowBox[{"i", "*", "15"}], "]"}], "<>", 
+               "\"\<\[Degree]\>\""}]}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"i", ",", "0", ",", "3"}], "}"}]}], "]"}], ",", 
+          RowBox[{"RGELogTicks", "[", 
+           RowBox[{"2", ",", "19"}], "]"}], ",", 
+          RowBox[{"Table", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"i", "*", "15"}], ",", "\"\<\>\""}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"i", ",", "0", ",", "3"}], "}"}]}], "]"}]}], "}"}]}], 
+       ",", "\[IndentingNewLine]", 
+       RowBox[{"PlotRange", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"All", ",", "All"}], "}"}]}], ",", 
+       RowBox[{"PlotStyle", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"Red", ",", "ForestGreen", ",", "Blue"}], "}"}]}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Prolog", "\[Rule]", 
+        RowBox[{"{", "ShadowEFT", "}"}]}], ",", "\[IndentingNewLine]", 
+       RowBox[{"Epilog", "\[Rule]", 
+        RowBox[{"{", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"Text", "[", 
+           RowBox[{
+            RowBox[{"StyleForm", "[", 
+             RowBox[{
+              SubscriptBox["\[Theta]", "12"], ",", 
+              RowBox[{"FontColor", "\[Rule]", "Red"}], ",", 
+              RowBox[{"FontSize", "\[Rule]", "12"}]}], "]"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"tmin", ",", 
+              RowBox[{"\[Theta]12", "[", "tmin", "]"}]}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"-", "0.8"}], ",", "1.4"}], "}"}]}], "]"}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{"Text", "[", 
+           RowBox[{
+            RowBox[{"StyleForm", "[", 
+             RowBox[{
+              SubscriptBox["\[Theta]", "13"], ",", 
+              RowBox[{"FontColor", "\[Rule]", "ForestGreen"}], ",", 
+              RowBox[{"FontSize", "\[Rule]", "12"}]}], "]"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"tmin", ",", 
+              RowBox[{"\[Theta]13", "[", "tmin", "]"}]}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"-", "0.8"}], ",", 
+              RowBox[{"-", "1"}]}], "}"}]}], "]"}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{"Text", "[", 
+           RowBox[{
+            RowBox[{"StyleForm", "[", 
+             RowBox[{
+              SubscriptBox["\[Theta]", "23"], ",", 
+              RowBox[{"FontColor", "\[Rule]", "Blue"}], ",", 
+              RowBox[{"FontSize", "\[Rule]", "12"}]}], "]"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"tmin", ",", 
+              RowBox[{"\[Theta]23", "[", "tmin", "]"}]}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"-", "0.8"}], ",", "1.4"}], "}"}]}], "]"}]}], "}"}]}], 
+       ",", "\[IndentingNewLine]", 
+       RowBox[{"DisplayFunction", "\[Rule]", "Identity"}]}], 
+      "\[IndentingNewLine]", "]"}], ",", 
+     RowBox[{"AxesFront", "\[Rule]", "True"}], ",", 
+     RowBox[{"DisplayFunction", "\[Rule]", "$DisplayFunction"}]}], "]"}]}], 
+  ";"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Export", "[", 
+   RowBox[{"\"\<Angles.eps\>\"", ",", "Angles"}], "]"}], ";"}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell["RG change of the angles:", "Subsubsection"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{
+   "\"\<The RG change of \!\(\*SubscriptBox[\(\[Theta]\), \(12\)]\) is :    \
+\!\(\*SubscriptBox[\(\[Theta]\), \(12\)]\)(\!\(\*SubscriptBox[\(M\), \(GUT\)]\
+\))-\!\(\*SubscriptBox[\(\[Theta]\), \(12\)]\)(\!\(\*SubscriptBox[\(M\), \
+\(Z\)]\)) = \>\"", ",", 
+    RowBox[{
+     RowBox[{"\[Theta]12", "[", 
+      RowBox[{"Log", "[", 
+       RowBox[{"10", ",", "GUT"}], "]"}], "]"}], "-", 
+     RowBox[{"\[Theta]12", "[", 
+      RowBox[{"Log", "[", 
+       RowBox[{"10", ",", "MZ"}], "]"}], "]"}]}], ",", "\"\<\[Degree]\>\""}], 
+   "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{
+   "\"\<The RG change of \!\(\*SubscriptBox[\(\[Theta]\), \(13\)]\) is :    \
+\!\(\*SubscriptBox[\(\[Theta]\), \(13\)]\)(\!\(\*SubscriptBox[\(M\), \(GUT\)]\
+\))-\!\(\*SubscriptBox[\(\[Theta]\), \(13\)]\)(\!\(\*SubscriptBox[\(M\), \
+\(Z\)]\)) = \>\"", ",", 
+    RowBox[{
+     RowBox[{"\[Theta]13", "[", 
+      RowBox[{"Log", "[", 
+       RowBox[{"10", ",", "GUT"}], "]"}], "]"}], "-", 
+     RowBox[{"\[Theta]13", "[", 
+      RowBox[{"Log", "[", 
+       RowBox[{"10", ",", "MZ"}], "]"}], "]"}]}], ",", "\"\<\[Degree]\>\""}], 
+   "]"}], ";", 
+  RowBox[{"Print", "[", 
+   RowBox[{
+   "\"\<The RG change of \!\(\*SubscriptBox[\(\[Theta]\), \(23\)]\) is :    \
+\!\(\*SubscriptBox[\(\[Theta]\), \(23\)]\)(\!\(\*SubscriptBox[\(M\), \(GUT\)]\
+\))-\!\(\*SubscriptBox[\(\[Theta]\), \(23\)]\)(\!\(\*SubscriptBox[\(M\), \
+\(Z\)]\)) = \>\"", ",", 
+    RowBox[{
+     RowBox[{"\[Theta]23", "[", 
+      RowBox[{"Log", "[", 
+       RowBox[{"10", ",", "GUT"}], "]"}], "]"}], "-", 
+     RowBox[{"\[Theta]23", "[", 
+      RowBox[{"Log", "[", 
+       RowBox[{"10", ",", "MZ"}], "]"}], "]"}]}], ",", "\"\<\[Degree]\>\""}], 
+   "]"}], ";"}]}], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The RG change of \\!\\(\\*SubscriptBox[\\(\[Theta]\\), \
+\\(12\\)]\\) is :    \\!\\(\\*SubscriptBox[\\(\[Theta]\\), \
+\\(12\\)]\\)(\\!\\(\\*SubscriptBox[\\(M\\), \
+\\(GUT\\)]\\))-\\!\\(\\*SubscriptBox[\\(\[Theta]\\), \
+\\(12\\)]\\)(\\!\\(\\*SubscriptBox[\\(M\\), \\(Z\\)]\\)) = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"-", "0.11230647621073331`"}], 
+   "\[InvisibleSpace]", "\<\"\[Degree]\"\>"}],
+  SequenceForm[
+  "The RG change of \!\(\*SubscriptBox[\(\[Theta]\), \(12\)]\) is :    \
+\!\(\*SubscriptBox[\(\[Theta]\), \(12\)]\)(\!\(\*SubscriptBox[\(M\), \(GUT\)]\
+\))-\!\(\*SubscriptBox[\(\[Theta]\), \(12\)]\)(\!\(\*SubscriptBox[\(M\), \
+\(Z\)]\)) = ", -0.11230647621073331`, "\[Degree]"],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.6464567924802017`*^9, 3.646456819273778*^9}, 
+   3.6464568562341747`*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The RG change of \\!\\(\\*SubscriptBox[\\(\[Theta]\\), \
+\\(13\\)]\\) is :    \\!\\(\\*SubscriptBox[\\(\[Theta]\\), \
+\\(13\\)]\\)(\\!\\(\\*SubscriptBox[\\(M\\), \
+\\(GUT\\)]\\))-\\!\\(\\*SubscriptBox[\\(\[Theta]\\), \
+\\(13\\)]\\)(\\!\\(\\*SubscriptBox[\\(M\\), \\(Z\\)]\\)) = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"-", "2.5126269158972376`*^-6"}], 
+   "\[InvisibleSpace]", "\<\"\[Degree]\"\>"}],
+  SequenceForm[
+  "The RG change of \!\(\*SubscriptBox[\(\[Theta]\), \(13\)]\) is :    \
+\!\(\*SubscriptBox[\(\[Theta]\), \(13\)]\)(\!\(\*SubscriptBox[\(M\), \(GUT\)]\
+\))-\!\(\*SubscriptBox[\(\[Theta]\), \(13\)]\)(\!\(\*SubscriptBox[\(M\), \
+\(Z\)]\)) = ", -2.5126269158972376`*^-6, "\[Degree]"],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.6464567924802017`*^9, 3.646456819273778*^9}, 
+   3.6464568562361803`*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The RG change of \\!\\(\\*SubscriptBox[\\(\[Theta]\\), \
+\\(23\\)]\\) is :    \\!\\(\\*SubscriptBox[\\(\[Theta]\\), \
+\\(23\\)]\\)(\\!\\(\\*SubscriptBox[\\(M\\), \
+\\(GUT\\)]\\))-\\!\\(\\*SubscriptBox[\\(\[Theta]\\), \
+\\(23\\)]\\)(\\!\\(\\*SubscriptBox[\\(M\\), \\(Z\\)]\\)) = \"\>", 
+   "\[InvisibleSpace]", "3.422038898582585`", 
+   "\[InvisibleSpace]", "\<\"\[Degree]\"\>"}],
+  SequenceForm[
+  "The RG change of \!\(\*SubscriptBox[\(\[Theta]\), \(23\)]\) is :    \
+\!\(\*SubscriptBox[\(\[Theta]\), \(23\)]\)(\!\(\*SubscriptBox[\(M\), \(GUT\)]\
+\))-\!\(\*SubscriptBox[\(\[Theta]\), \(23\)]\)(\!\(\*SubscriptBox[\(M\), \
+\(Z\)]\)) = ", 3.422038898582585, "\[Degree]"],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.6464567924802017`*^9, 3.646456819273778*^9}, 
+   3.6464568562372847`*^9}]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Phases", "Subsection"],
+
+Cell["Draw the plot for the phases", "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Show", "[", 
+   RowBox[{
+    RowBox[{"Plot", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"\[Delta]", "[", "t", "]"}], ",", 
+        RowBox[{"\[CurlyPhi]1", "[", "t", "]"}], ",", 
+        RowBox[{"\[CurlyPhi]2", "[", "t", "]"}]}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"t", ",", "tmin", ",", "tmax"}], "}"}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"ImageSize", "\[Rule]", "400"}], ",", 
+      RowBox[{"FrameLabel", "->", 
+       RowBox[{"{", 
+        RowBox[{
+        "\"\<\!\(\*SubscriptBox[\(log\), \(10\)]\)(\[Mu]/GeV)\>\"", ",", 
+         "\"\<\>\""}], "}"}]}], ",", 
+      RowBox[{"FrameTicks", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"RGELogTicksLabeled", "[", 
+          RowBox[{"2", ",", "19"}], "]"}], ",", 
+         RowBox[{"Table", "[", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"i", "*", "45"}], ",", 
+             RowBox[{
+              RowBox[{"ToString", "[", 
+               RowBox[{"i", "*", "45"}], "]"}], "<>", "\"\<\[Degree]\>\""}]}],
+             "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"i", ",", "0", ",", "8"}], "}"}]}], "]"}], ",", 
+         RowBox[{"RGELogTicks", "[", 
+          RowBox[{"2", ",", "19"}], "]"}], ",", 
+         RowBox[{"Table", "[", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"i", "*", "45"}], ",", "\"\<\>\""}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"i", ",", "0", ",", "12"}], "}"}]}], "]"}]}], "}"}]}], 
+      ",", "\[IndentingNewLine]", 
+      RowBox[{"PlotRange", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{"All", ",", "All"}], "}"}]}], ",", 
+      RowBox[{"PlotStyle", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{"Red", ",", "Blue", ",", "ForestGreen"}], "}"}]}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Prolog", "\[Rule]", 
+       RowBox[{"{", "ShadowEFT", "}"}]}], ",", "\[IndentingNewLine]", 
+      RowBox[{"Epilog", "\[Rule]", 
+       RowBox[{"{", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"Text", "[", 
+          RowBox[{
+           RowBox[{"StyleForm", "[", 
+            RowBox[{"\[Delta]", ",", 
+             RowBox[{"FontColor", "\[Rule]", "Red"}], ",", 
+             RowBox[{"FontSize", "\[Rule]", "12"}]}], "]"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"tmin", ",", 
+             RowBox[{"\[Delta]", "[", "tmin", "]"}]}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"-", "0.8"}], ",", "1.4"}], "}"}]}], "]"}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{"Text", "[", 
+          RowBox[{
+           RowBox[{"StyleForm", "[", 
+            RowBox[{
+             SubscriptBox["\[CurlyPhi]", "1"], ",", 
+             RowBox[{"FontColor", "\[Rule]", "Blue"}], ",", 
+             RowBox[{"FontSize", "\[Rule]", "12"}]}], "]"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"tmin", ",", 
+             RowBox[{"\[CurlyPhi]1", "[", "tmin", "]"}]}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"-", "0.8"}], ",", "1.4"}], "}"}]}], "]"}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{"Text", "[", 
+          RowBox[{
+           RowBox[{"StyleForm", "[", 
+            RowBox[{
+             SubscriptBox["\[CurlyPhi]", "2"], ",", 
+             RowBox[{"FontColor", "\[Rule]", "ForestGreen"}], ",", 
+             RowBox[{"FontSize", "\[Rule]", "12"}]}], "]"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"tmin", ",", 
+             RowBox[{"\[CurlyPhi]2", "[", "tmin", "]"}]}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"-", "0.8"}], ",", 
+             RowBox[{"-", "1"}]}], "}"}]}], "]"}]}], "}"}]}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"DisplayFunction", "\[Rule]", "Identity"}]}], 
+     "\[IndentingNewLine]", "]"}], ",", 
+    RowBox[{"AxesFront", "\[Rule]", "True"}], ",", 
+    RowBox[{"DisplayFunction", "\[Rule]", "$DisplayFunction"}]}], "]"}], 
+  ";"}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell["RG change of the phases:", "Subsubsection"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{
+   "\"\<The RG change of \[Delta] is:   \[Delta](\!\(\*SubscriptBox[\(M\), \
+\(GUT\)]\))-\[Delta](\!\(\*SubscriptBox[\(M\), \(Z\)]\)) = \>\"", ",", " ", 
+    RowBox[{
+     RowBox[{"\[Delta]", "[", 
+      RowBox[{"Log", "[", 
+       RowBox[{"10", ",", "GUT"}], "]"}], "]"}], "-", 
+     RowBox[{"\[Delta]", "[", 
+      RowBox[{"Log", "[", 
+       RowBox[{"10", ",", "MZ"}], "]"}], "]"}]}], ",", "\"\<\[Degree]\>\""}], 
+   "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{
+   "\"\<The RG change of \!\(\*SubscriptBox[\(\[CurlyPhi]\), \(1\)]\) is:   \
+\!\(\*SubscriptBox[\(\[CurlyPhi]\), \(1\)]\)(\!\(\*SubscriptBox[\(M\), \
+\(GUT\)]\))-\!\(\*SubscriptBox[\(\[CurlyPhi]\), \
+\(1\)]\)(\!\(\*SubscriptBox[\(M\), \(Z\)]\)) = \>\"", ",", " ", 
+    RowBox[{
+     RowBox[{"\[CurlyPhi]1", "[", 
+      RowBox[{"Log", "[", 
+       RowBox[{"10", ",", "GUT"}], "]"}], "]"}], "-", 
+     RowBox[{"\[CurlyPhi]1", "[", 
+      RowBox[{"Log", "[", 
+       RowBox[{"10", ",", "MZ"}], "]"}], "]"}]}], ",", "\"\<\[Degree]\>\""}], 
+   "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{
+   "\"\<The RG change of \!\(\*SubscriptBox[\(\[CurlyPhi]\), \(2\)]\) is:   \
+\!\(\*SubscriptBox[\(\[CurlyPhi]\), \(2\)]\)(\!\(\*SubscriptBox[\(M\), \
+\(GUT\)]\))-\!\(\*SubscriptBox[\(\[CurlyPhi]\), \
+\(2\)]\)(\!\(\*SubscriptBox[\(M\), \(Z\)]\)) = \>\"", ",", " ", 
+    RowBox[{
+     RowBox[{"\[CurlyPhi]2", "[", 
+      RowBox[{"Log", "[", 
+       RowBox[{"10", ",", "GUT"}], "]"}], "]"}], "-", 
+     RowBox[{"\[CurlyPhi]2", "[", 
+      RowBox[{"Log", "[", 
+       RowBox[{"10", ",", "MZ"}], "]"}], "]"}]}], ",", "\"\<\[Degree]\>\""}], 
+   "]"}], ";"}]}], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The RG change of \[Delta] is:   \
+\[Delta](\\!\\(\\*SubscriptBox[\\(M\\), \
+\\(GUT\\)]\\))-\[Delta](\\!\\(\\*SubscriptBox[\\(M\\), \\(Z\\)]\\)) = \"\>", 
+   "\[InvisibleSpace]", "180.`", "\[InvisibleSpace]", "\<\"\[Degree]\"\>"}],
+  SequenceForm[
+  "The RG change of \[Delta] is:   \[Delta](\!\(\*SubscriptBox[\(M\), \
+\(GUT\)]\))-\[Delta](\!\(\*SubscriptBox[\(M\), \(Z\)]\)) = ", 180., 
+   "\[Degree]"],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.646456796631919*^9, 3.646456821802635*^9}, 
+   3.646456859180128*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The RG change of \\!\\(\\*SubscriptBox[\\(\[CurlyPhi]\\), \\(1\
+\\)]\\) is:   \\!\\(\\*SubscriptBox[\\(\[CurlyPhi]\\), \
+\\(1\\)]\\)(\\!\\(\\*SubscriptBox[\\(M\\), \
+\\(GUT\\)]\\))-\\!\\(\\*SubscriptBox[\\(\[CurlyPhi]\\), \
+\\(1\\)]\\)(\\!\\(\\*SubscriptBox[\\(M\\), \\(Z\\)]\\)) = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"-", "180.`"}], "\[InvisibleSpace]", "\<\"\[Degree]\"\>"}],
+  SequenceForm[
+  "The RG change of \!\(\*SubscriptBox[\(\[CurlyPhi]\), \(1\)]\) is:   \
+\!\(\*SubscriptBox[\(\[CurlyPhi]\), \(1\)]\)(\!\(\*SubscriptBox[\(M\), \
+\(GUT\)]\))-\!\(\*SubscriptBox[\(\[CurlyPhi]\), \
+\(1\)]\)(\!\(\*SubscriptBox[\(M\), \(Z\)]\)) = ", -180., "\[Degree]"],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.646456796631919*^9, 3.646456821802635*^9}, 
+   3.6464568591817017`*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The RG change of \\!\\(\\*SubscriptBox[\\(\[CurlyPhi]\\), \\(2\
+\\)]\\) is:   \\!\\(\\*SubscriptBox[\\(\[CurlyPhi]\\), \
+\\(2\\)]\\)(\\!\\(\\*SubscriptBox[\\(M\\), \
+\\(GUT\\)]\\))-\\!\\(\\*SubscriptBox[\\(\[CurlyPhi]\\), \
+\\(2\\)]\\)(\\!\\(\\*SubscriptBox[\\(M\\), \\(Z\\)]\\)) = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"-", "180.`"}], "\[InvisibleSpace]", "\<\"\[Degree]\"\>"}],
+  SequenceForm[
+  "The RG change of \!\(\*SubscriptBox[\(\[CurlyPhi]\), \(2\)]\) is:   \
+\!\(\*SubscriptBox[\(\[CurlyPhi]\), \(2\)]\)(\!\(\*SubscriptBox[\(M\), \
+\(GUT\)]\))-\!\(\*SubscriptBox[\(\[CurlyPhi]\), \
+\(2\)]\)(\!\(\*SubscriptBox[\(M\), \(Z\)]\)) = ", -180., "\[Degree]"],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.646456796631919*^9, 3.646456821802635*^9}, 
+   3.646456859186224*^9}]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Masses", "Subsection"],
+
+Cell[CellGroupData[{
+
+Cell["mass eigenvalues", "Subsubsection"],
+
+Cell["Draw the plot for the mass eigenvalues", "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"tlabel", "=", "4"}], ";"}], "   ", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{"Position", " ", "where", " ", "the", " ", "labels", " ", "m1"}], 
+    ",", "m2", ",", 
+    RowBox[{"m3", " ", "should", " ", "be", " ", "placed"}]}], " ", 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Masses", "=", 
+   RowBox[{"Show", "[", 
+    RowBox[{
+     RowBox[{"Plot", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"m1", "[", "t", "]"}], ",", 
+         RowBox[{"m2", "[", "t", "]"}], ",", 
+         RowBox[{"m3", "[", "t", "]"}]}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"t", ",", "tmin", ",", "tmax"}], "}"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"ImageSize", "\[Rule]", "400"}], ",", 
+       RowBox[{"FrameLabel", "->", 
+        RowBox[{"{", 
+         RowBox[{
+         "\"\<\!\(\*SubscriptBox[\(log\), \(10\)]\)(\[Mu]/GeV)\>\"", ",", 
+          "\"\<\!\(\*SubscriptBox[\(m\), \(i\)]\) [eV]\>\""}], "}"}]}], ",", 
+       RowBox[{"FrameTicks", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"RGELogTicksLabeled", "[", 
+           RowBox[{"2", ",", "19"}], "]"}], ",", 
+          RowBox[{"Table", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"i", "*", "0.01"}], ",", 
+              RowBox[{"PaddedForm", "[", 
+               RowBox[{
+                RowBox[{"i", "*", "0.01"}], ",", 
+                RowBox[{"{", 
+                 RowBox[{"3", ",", "2"}], "}"}]}], "]"}]}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"i", ",", "0", ",", "50"}], "}"}]}], "]"}], ",", 
+          RowBox[{"RGELogTicks", "[", 
+           RowBox[{"2", ",", "19"}], "]"}], ",", 
+          RowBox[{"Table", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"i", "*", "0.01"}], ",", "\"\<\>\""}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"i", ",", "0", ",", "50"}], "}"}]}], "]"}]}], "}"}]}], 
+       ",", "\[IndentingNewLine]", 
+       RowBox[{"PlotRange", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"All", ",", "All"}], "}"}]}], ",", 
+       RowBox[{"PlotStyle", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"Red", ",", "Blue", ",", "ForestGreen"}], "}"}]}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Prolog", "\[Rule]", 
+        RowBox[{"{", "ShadowEFT", "}"}]}], ",", "\[IndentingNewLine]", 
+       RowBox[{"Epilog", "\[Rule]", 
+        RowBox[{"{", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"Text", "[", 
+           RowBox[{
+            RowBox[{"StyleForm", "[", 
+             RowBox[{
+              SubscriptBox["m", "1"], ",", 
+              RowBox[{"FontColor", "\[Rule]", "Red"}], ",", 
+              RowBox[{"FontSize", "\[Rule]", "12"}]}], "]"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"tlabel", ",", 
+              RowBox[{"m1", "[", "tlabel", "]"}]}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"-", "0.8"}], ",", "1.4"}], "}"}]}], "]"}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{"Text", "[", 
+           RowBox[{
+            RowBox[{"StyleForm", "[", 
+             RowBox[{
+              SubscriptBox["m", "2"], ",", 
+              RowBox[{"FontColor", "\[Rule]", "Blue"}], ",", 
+              RowBox[{"FontSize", "\[Rule]", "12"}]}], "]"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"tlabel", ",", 
+              RowBox[{"m2", "[", "tlabel", "]"}]}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"-", "0.8"}], ",", 
+              RowBox[{"-", "2"}]}], "}"}]}], "]"}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{"Text", "[", 
+           RowBox[{
+            RowBox[{"StyleForm", "[", 
+             RowBox[{
+              SubscriptBox["m", "3"], ",", 
+              RowBox[{"FontColor", "\[Rule]", "ForestGreen"}], ",", 
+              RowBox[{"FontSize", "\[Rule]", "12"}]}], "]"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"tlabel", ",", 
+              RowBox[{"m3", "[", "tlabel", "]"}]}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"-", "0.8"}], ",", "1.4"}], "}"}]}], "]"}]}], "}"}]}], 
+       ",", "\[IndentingNewLine]", 
+       RowBox[{"DisplayFunction", "\[Rule]", "Identity"}]}], 
+      "\[IndentingNewLine]", "]"}], ",", 
+     RowBox[{"AxesFront", "\[Rule]", "True"}], ",", 
+     RowBox[{"DisplayFunction", "\[Rule]", "$DisplayFunction"}]}], "]"}]}], 
+  ";"}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Export", "[", 
+   RowBox[{"\"\<Masses.eps\>\"", ",", "Masses"}], "]"}], ";"}]], "Input"],
+
+Cell["RG change of the masses:", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{
+   "\"\<The RG change of \!\(\*SubscriptBox[\(m\), \(1\)]\) is:   \
+\!\(\*SubscriptBox[\(m\), \(1\)]\)(\!\(\*SubscriptBox[\(M\), \(GUT\)]\))-\!\(\
+\*SubscriptBox[\(m\), \(1\)]\)(\!\(\*SubscriptBox[\(M\), \(Z\)]\)) = \>\"", 
+    ",", 
+    RowBox[{
+     RowBox[{"m1", "[", 
+      RowBox[{"Log", "[", 
+       RowBox[{"10", ",", "GUT"}], "]"}], "]"}], "-", 
+     RowBox[{"m1", "[", 
+      RowBox[{"Log", "[", 
+       RowBox[{"10", ",", "MZ"}], "]"}], "]"}]}], ",", "\"\< eV\>\""}], "]"}],
+   ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{
+   "\"\<The RG change of \!\(\*SubscriptBox[\(m\), \(2\)]\) is:   \
+\!\(\*SubscriptBox[\(m\), \(2\)]\)(\!\(\*SubscriptBox[\(M\), \(GUT\)]\))-\!\(\
+\*SubscriptBox[\(m\), \(2\)]\)(\!\(\*SubscriptBox[\(M\), \(Z\)]\)) = \>\"", 
+    ",", 
+    RowBox[{
+     RowBox[{"m2", "[", 
+      RowBox[{"Log", "[", 
+       RowBox[{"10", ",", "GUT"}], "]"}], "]"}], "-", 
+     RowBox[{"m2", "[", 
+      RowBox[{"Log", "[", 
+       RowBox[{"10", ",", "MZ"}], "]"}], "]"}]}], ",", "\"\< eV\>\""}], "]"}],
+   ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{
+   "\"\<The RG change of \!\(\*SubscriptBox[\(m\), \(3\)]\) is:   \
+\!\(\*SubscriptBox[\(m\), \(3\)]\)(\!\(\*SubscriptBox[\(M\), \(GUT\)]\))-\!\(\
+\*SubscriptBox[\(m\), \(3\)]\)(\!\(\*SubscriptBox[\(M\), \(Z\)]\)) = \>\"", 
+    ",", 
+    RowBox[{
+     RowBox[{"m3", "[", 
+      RowBox[{"Log", "[", 
+       RowBox[{"10", ",", "GUT"}], "]"}], "]"}], "-", 
+     RowBox[{"m3", "[", 
+      RowBox[{"Log", "[", 
+       RowBox[{"10", ",", "MZ"}], "]"}], "]"}]}], ",", "\"\< eV\>\""}], "]"}],
+   ";"}]}], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The RG change of \\!\\(\\*SubscriptBox[\\(m\\), \\(1\\)]\\) \
+is:   \\!\\(\\*SubscriptBox[\\(m\\), \
+\\(1\\)]\\)(\\!\\(\\*SubscriptBox[\\(M\\), \
+\\(GUT\\)]\\))-\\!\\(\\*SubscriptBox[\\(m\\), \
+\\(1\\)]\\)(\\!\\(\\*SubscriptBox[\\(M\\), \\(Z\\)]\\)) = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"-", "0.015358669308714934`"}], 
+   "\[InvisibleSpace]", "\<\" eV\"\>"}],
+  SequenceForm[
+  "The RG change of \!\(\*SubscriptBox[\(m\), \(1\)]\) is:   \
+\!\(\*SubscriptBox[\(m\), \(1\)]\)(\!\(\*SubscriptBox[\(M\), \(GUT\)]\))-\!\(\
+\*SubscriptBox[\(m\), \(1\)]\)(\!\(\*SubscriptBox[\(M\), \(Z\)]\)) = ", \
+-0.015358669308714934`, " eV"],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.646456799087701*^9, 3.646456822605629*^9}, 
+   3.646456860081924*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The RG change of \\!\\(\\*SubscriptBox[\\(m\\), \\(2\\)]\\) \
+is:   \\!\\(\\*SubscriptBox[\\(m\\), \
+\\(2\\)]\\)(\\!\\(\\*SubscriptBox[\\(M\\), \
+\\(GUT\\)]\\))-\\!\\(\\*SubscriptBox[\\(m\\), \
+\\(2\\)]\\)(\\!\\(\\*SubscriptBox[\\(M\\), \\(Z\\)]\\)) = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"-", "0.015675749720999402`"}], 
+   "\[InvisibleSpace]", "\<\" eV\"\>"}],
+  SequenceForm[
+  "The RG change of \!\(\*SubscriptBox[\(m\), \(2\)]\) is:   \
+\!\(\*SubscriptBox[\(m\), \(2\)]\)(\!\(\*SubscriptBox[\(M\), \(GUT\)]\))-\!\(\
+\*SubscriptBox[\(m\), \(2\)]\)(\!\(\*SubscriptBox[\(M\), \(Z\)]\)) = ", \
+-0.015675749720999402`, " eV"],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.646456799087701*^9, 3.646456822605629*^9}, 
+   3.6464568600834227`*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The RG change of \\!\\(\\*SubscriptBox[\\(m\\), \\(3\\)]\\) \
+is:   \\!\\(\\*SubscriptBox[\\(m\\), \
+\\(3\\)]\\)(\\!\\(\\*SubscriptBox[\\(M\\), \
+\\(GUT\\)]\\))-\\!\\(\\*SubscriptBox[\\(m\\), \
+\\(3\\)]\\)(\\!\\(\\*SubscriptBox[\\(M\\), \\(Z\\)]\\)) = \"\>", 
+   "\[InvisibleSpace]", "0", "\[InvisibleSpace]", "\<\" eV\"\>"}],
+  SequenceForm[
+  "The RG change of \!\(\*SubscriptBox[\(m\), \(3\)]\) is:   \
+\!\(\*SubscriptBox[\(m\), \(3\)]\)(\!\(\*SubscriptBox[\(M\), \(GUT\)]\))-\!\(\
+\*SubscriptBox[\(m\), \(3\)]\)(\!\(\*SubscriptBox[\(M\), \(Z\)]\)) = ", 0, 
+   " eV"],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.646456799087701*^9, 3.646456822605629*^9}, 
+   3.646456860084436*^9}]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["mass squared differences", "Subsubsection"],
+
+Cell["\<\
+Draw the plot for the mass squared differences (on a logarithmic scale)\
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Show", "[", 
+   RowBox[{
+    RowBox[{"Plot", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"Log", "[", 
+         RowBox[{"10", ",", 
+          RowBox[{"Abs", "[", 
+           RowBox[{"\[CapitalDelta]m2sol", "[", "t", "]"}], "]"}]}], "]"}], 
+        ",", 
+        RowBox[{"Log", "[", 
+         RowBox[{"10", ",", 
+          RowBox[{"Abs", "[", 
+           RowBox[{"\[CapitalDelta]m2atm", "[", "t", "]"}], "]"}]}], "]"}]}], 
+       "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"t", ",", "tmin", ",", "tmax"}], "}"}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"ImageSize", "\[Rule]", "400"}], ",", 
+      RowBox[{"FrameLabel", "->", 
+       RowBox[{"{", 
+        RowBox[{
+        "\"\<\!\(\*SubscriptBox[\(log\), \(10\)]\)(\[Mu]/GeV)\>\"", ",", 
+         "\"\<\!\(\*SubsuperscriptBox[\(\[CapitalDelta]m\), \(i\), \(2\)]\) [\
+\!\(\*SuperscriptBox[\(eV\), \(2\)]\)]\>\""}], "}"}]}], ",", 
+      RowBox[{"FrameTicks", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"RGELogTicksLabeled", "[", 
+          RowBox[{"2", ",", "19"}], "]"}], ",", 
+         RowBox[{"RGELogTicksLabeledNegExp", "[", 
+          RowBox[{
+           RowBox[{"-", "6"}], ",", 
+           RowBox[{"-", "1"}]}], "]"}], ",", 
+         RowBox[{"RGELogTicks", "[", 
+          RowBox[{"2", ",", "19"}], "]"}], ",", 
+         RowBox[{"RGELogTicks", "[", 
+          RowBox[{
+           RowBox[{"-", "6"}], ",", 
+           RowBox[{"-", "1"}]}], "]"}]}], "}"}]}], ",", "\[IndentingNewLine]", 
+      RowBox[{"PlotRange", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{"All", ",", "All"}], "}"}]}], ",", 
+      RowBox[{"PlotStyle", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{"ForestGreen", ",", "Blue"}], "}"}]}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Prolog", "\[Rule]", 
+       RowBox[{"{", "ShadowEFT", "}"}]}], ",", "\[IndentingNewLine]", 
+      RowBox[{"Epilog", "\[Rule]", 
+       RowBox[{"{", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"Text", "[", 
+          RowBox[{
+           RowBox[{"StyleForm", "[", 
+            RowBox[{
+             SubsuperscriptBox["\[CapitalDelta]m", "sol", "2"], ",", 
+             RowBox[{"FontColor", "\[Rule]", "ForestGreen"}], ",", 
+             RowBox[{"FontSize", "\[Rule]", "12"}]}], "]"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"tmin", ",", 
+             RowBox[{"Log", "[", 
+              RowBox[{"10", ",", 
+               RowBox[{"Abs", "[", 
+                RowBox[{"\[CapitalDelta]m2sol", "[", "tmin", "]"}], "]"}]}], 
+              "]"}]}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"-", "0.8"}], ",", 
+             RowBox[{"-", "2"}]}], "}"}]}], "]"}], ",", "\[IndentingNewLine]", 
+         RowBox[{"Text", "[", 
+          RowBox[{
+           RowBox[{"StyleForm", "[", 
+            RowBox[{
+             SubsuperscriptBox["\[CapitalDelta]m", "atm", "2"], ",", 
+             RowBox[{"FontColor", "\[Rule]", "Blue"}], ",", 
+             RowBox[{"FontSize", "\[Rule]", "12"}]}], "]"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"tmin", ",", 
+             RowBox[{"Log", "[", 
+              RowBox[{"10", ",", 
+               RowBox[{"Abs", "[", 
+                RowBox[{"\[CapitalDelta]m2atm", "[", "tmin", "]"}], "]"}]}], 
+              "]"}]}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"-", "0.8"}], ",", "1.4"}], "}"}]}], "]"}]}], "}"}]}], 
+      ",", "\[IndentingNewLine]", 
+      RowBox[{"DisplayFunction", "\[Rule]", "Identity"}]}], 
+     "\[IndentingNewLine]", "]"}], ",", 
+    RowBox[{"AxesFront", "\[Rule]", "True"}], ",", 
+    RowBox[{"DisplayFunction", "\[Rule]", "$DisplayFunction"}]}], "]"}], 
+  ";"}]], "Input"],
+
+Cell["\<\
+Draw the plot for the solar mass squared difference (on a linear scale)\
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Show", "[", 
+   RowBox[{
+    RowBox[{"Plot", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"\[CapitalDelta]m2sol", "[", "t", "]"}], "*", 
+       RowBox[{"10", "^", "5"}]}], ",", 
+      RowBox[{"{", 
+       RowBox[{"t", ",", "tmin", ",", "tmax"}], "}"}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"ImageSize", "\[Rule]", "400"}], ",", 
+      RowBox[{"FrameLabel", "->", 
+       RowBox[{"{", 
+        RowBox[{
+        "\"\<\!\(\*SubscriptBox[\(log\), \(10\)]\)(\[Mu]/GeV)\>\"", ",", 
+         "\"\<\!\(\*SubsuperscriptBox[\(\[CapitalDelta]m\), \(sol\), \(2\)]\) \
+[\!\(\*SuperscriptBox[\(10\), \
+\(-5\)]\)\[ThinSpace]\!\(\*SuperscriptBox[\(eV\), \(2\)]\)]\>\""}], "}"}]}], 
+      ",", 
+      RowBox[{"FrameTicks", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"RGELogTicksLabeled", "[", 
+          RowBox[{"2", ",", "19"}], "]"}], ",", 
+         RowBox[{"Table", "[", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"i", ",", "i"}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"i", ",", 
+             RowBox[{"-", "100"}], ",", "100"}], "}"}]}], "]"}], ",", 
+         RowBox[{"RGELogTicks", "[", 
+          RowBox[{"2", ",", "19"}], "]"}], ",", 
+         RowBox[{"Table", "[", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"i", ",", "\"\<\>\""}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"i", ",", 
+             RowBox[{"-", "100"}], ",", "100"}], "}"}]}], "]"}]}], "}"}]}], 
+      ",", "\[IndentingNewLine]", 
+      RowBox[{"PlotRange", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{"All", ",", "All"}], "}"}]}], ",", 
+      RowBox[{"PlotStyle", "\[Rule]", 
+       RowBox[{"{", "ForestGreen", "}"}]}], ",", "\[IndentingNewLine]", 
+      RowBox[{"Prolog", "\[Rule]", 
+       RowBox[{"{", "ShadowEFT", "}"}]}], ",", "\[IndentingNewLine]", 
+      RowBox[{"DisplayFunction", "\[Rule]", "Identity"}]}], 
+     "\[IndentingNewLine]", "]"}], ",", 
+    RowBox[{"AxesFront", "\[Rule]", "True"}], ",", 
+    RowBox[{"DisplayFunction", "\[Rule]", "$DisplayFunction"}]}], "]"}], 
+  ";"}]], "Input"],
+
+Cell["\<\
+Draw the plot for the atmospheric mass squared difference (on a linear scale)\
+\
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Show", "[", 
+   RowBox[{
+    RowBox[{"Plot", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"\[CapitalDelta]m2atm", "[", "t", "]"}], "*", 
+       RowBox[{"10", "^", "3"}]}], ",", 
+      RowBox[{"{", 
+       RowBox[{"t", ",", "tmin", ",", "tmax"}], "}"}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"ImageSize", "\[Rule]", "400"}], ",", 
+      RowBox[{"FrameLabel", "->", 
+       RowBox[{"{", 
+        RowBox[{
+        "\"\<\!\(\*SubscriptBox[\(log\), \(10\)]\)(\[Mu]/GeV)\>\"", ",", 
+         "\"\<\!\(\*SubsuperscriptBox[\(\[CapitalDelta]m\), \(atm\), \(2\)]\) \
+[\!\(\*SuperscriptBox[\(10\), \
+\(-3\)]\)\[ThinSpace]\!\(\*SuperscriptBox[\(eV\), \(2\)]\)]\>\""}], "}"}]}], 
+      ",", 
+      RowBox[{"FrameTicks", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"RGELogTicksLabeled", "[", 
+          RowBox[{"2", ",", "19"}], "]"}], ",", 
+         RowBox[{"Table", "[", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"i", "*", "0.2"}], ",", 
+             RowBox[{"PaddedForm", "[", 
+              RowBox[{
+               RowBox[{"i", "*", "0.2"}], ",", 
+               RowBox[{"{", 
+                RowBox[{"2", ",", "1"}], "}"}]}], "]"}]}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"i", ",", 
+             RowBox[{"-", "50"}], ",", "50"}], "}"}]}], "]"}], ",", 
+         RowBox[{"RGELogTicks", "[", 
+          RowBox[{"2", ",", "19"}], "]"}], ",", 
+         RowBox[{"Table", "[", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"i", "*", "0.2"}], ",", "\"\<\>\""}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"i", ",", "0", ",", "50"}], "}"}]}], "]"}]}], "}"}]}], 
+      ",", "\[IndentingNewLine]", 
+      RowBox[{"PlotRange", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{"All", ",", "All"}], "}"}]}], ",", 
+      RowBox[{"PlotStyle", "\[Rule]", 
+       RowBox[{"{", "Blue", "}"}]}], ",", "\[IndentingNewLine]", 
+      RowBox[{"Prolog", "\[Rule]", 
+       RowBox[{"{", "ShadowEFT", "}"}]}], ",", "\[IndentingNewLine]", 
+      RowBox[{"DisplayFunction", "\[Rule]", "Identity"}]}], 
+     "\[IndentingNewLine]", "]"}], ",", 
+    RowBox[{"AxesFront", "\[Rule]", "True"}], ",", 
+    RowBox[{"DisplayFunction", "\[Rule]", "$DisplayFunction"}]}], "]"}], 
+  ";"}]], "Input"],
+
+Cell["RG change of the mass squared differences:", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{
+   "\"\<The RG change of \!\(\*SubscriptBox[SuperscriptBox[\(\[CapitalDelta]m\
+\), \(2\)], \(sol\)]\) is:     \!\(\*SubscriptBox[SuperscriptBox[\(\
+\[CapitalDelta]m\), \(2\)], \(sol\)]\)(\!\(\*SubscriptBox[\(M\), \(GUT\)]\))-\
+\!\(\*SubscriptBox[SuperscriptBox[\(\[CapitalDelta]m\), \(2\)], \(sol\)]\)(\!\
+\(\*SubscriptBox[\(M\), \(Z\)]\)) = \>\"", ",", 
+    RowBox[{
+     RowBox[{"\[CapitalDelta]m2sol", "[", 
+      RowBox[{"Log", "[", 
+       RowBox[{"10", ",", "GUT"}], "]"}], "]"}], "-", 
+     RowBox[{"\[CapitalDelta]m2sol", "[", 
+      RowBox[{"Log", "[", 
+       RowBox[{"10", ",", "MZ"}], "]"}], "]"}]}], ",", 
+    "\"\< \!\(\*SuperscriptBox[\(eV\), \(2\)]\)\>\""}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{
+   "\"\<The RG change of \!\(\*SubscriptBox[SuperscriptBox[\(\[CapitalDelta]m\
+\), \(2\)], \(atm\)]\) is:     \!\(\*SubscriptBox[SuperscriptBox[\(\
+\[CapitalDelta]m\), \(2\)], \(atm\)]\)(\!\(\*SubscriptBox[\(M\), \(GUT\)]\))-\
+\!\(\*SubscriptBox[SuperscriptBox[\(\[CapitalDelta]m\), \(2\)], \(atm\)]\)(\!\
+\(\*SubscriptBox[\(M\), \(Z\)]\)) = \>\"", ",", 
+    RowBox[{
+     RowBox[{"\[CapitalDelta]m2atm", "[", 
+      RowBox[{"Log", "[", 
+       RowBox[{"10", ",", "GUT"}], "]"}], "]"}], "-", 
+     RowBox[{"\[CapitalDelta]m2atm", "[", 
+      RowBox[{"Log", "[", 
+       RowBox[{"10", ",", "MZ"}], "]"}], "]"}]}], ",", 
+    "\"\< \!\(\*SuperscriptBox[\(eV\), \(2\)]\)\>\""}], "]"}], 
+  ";"}]}], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The RG change of \\!\\(\\*SubscriptBox[SuperscriptBox[\\(\
+\[CapitalDelta]m\\), \\(2\\)], \\(sol\\)]\\) is:     \
+\\!\\(\\*SubscriptBox[SuperscriptBox[\\(\[CapitalDelta]m\\), \\(2\\)], \\(sol\
+\\)]\\)(\\!\\(\\*SubscriptBox[\\(M\\), \
+\\(GUT\\)]\\))-\\!\\(\\*SubscriptBox[SuperscriptBox[\\(\[CapitalDelta]m\\), \
+\\(2\\)], \\(sol\\)]\\)(\\!\\(\\*SubscriptBox[\\(M\\), \\(Z\\)]\\)) = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"-", "0.00009856654561387138`"}], 
+   "\[InvisibleSpace]", "\<\" \\!\\(\\*SuperscriptBox[\\(eV\\), \\(2\\)]\\)\"\
+\>"}],
+  SequenceForm[
+  "The RG change of \!\(\*SubscriptBox[SuperscriptBox[\(\[CapitalDelta]m\), \
+\(2\)], \(sol\)]\) is:     \
+\!\(\*SubscriptBox[SuperscriptBox[\(\[CapitalDelta]m\), \(2\)], \(sol\)]\)(\!\
+\(\*SubscriptBox[\(M\), \(GUT\)]\))-\!\(\*SubscriptBox[SuperscriptBox[\(\
+\[CapitalDelta]m\), \(2\)], \(sol\)]\)(\!\(\*SubscriptBox[\(M\), \(Z\)]\)) = \
+", -0.00009856654561387138, " \!\(\*SuperscriptBox[\(eV\), \(2\)]\)"],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.6464568012444963`*^9, 3.646456823761818*^9}, 
+   3.646456861305483*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The RG change of \\!\\(\\*SubscriptBox[SuperscriptBox[\\(\
+\[CapitalDelta]m\\), \\(2\\)], \\(atm\\)]\\) is:     \
+\\!\\(\\*SubscriptBox[SuperscriptBox[\\(\[CapitalDelta]m\\), \\(2\\)], \\(atm\
+\\)]\\)(\\!\\(\\*SubscriptBox[\\(M\\), \
+\\(GUT\\)]\\))-\\!\\(\\*SubscriptBox[SuperscriptBox[\\(\[CapitalDelta]m\\), \
+\\(2\\)], \\(atm\\)]\\)(\\!\\(\\*SubscriptBox[\\(M\\), \\(Z\\)]\\)) = \"\>", 
+   "\[InvisibleSpace]", "0.0024626149148957756`", 
+   "\[InvisibleSpace]", "\<\" \\!\\(\\*SuperscriptBox[\\(eV\\), \\(2\\)]\\)\"\
+\>"}],
+  SequenceForm[
+  "The RG change of \!\(\*SubscriptBox[SuperscriptBox[\(\[CapitalDelta]m\), \
+\(2\)], \(atm\)]\) is:     \
+\!\(\*SubscriptBox[SuperscriptBox[\(\[CapitalDelta]m\), \(2\)], \(atm\)]\)(\!\
+\(\*SubscriptBox[\(M\), \(GUT\)]\))-\!\(\*SubscriptBox[SuperscriptBox[\(\
+\[CapitalDelta]m\), \(2\)], \(atm\)]\)(\!\(\*SubscriptBox[\(M\), \(Z\)]\)) = \
+", 0.0024626149148957756`, " \!\(\*SuperscriptBox[\(eV\), \(2\)]\)"],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.6464568012444963`*^9, 3.646456823761818*^9}, 
+   3.6464568613113203`*^9}]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{956, 1041},
+WindowMargins->{{960, Automatic}, {Automatic, 18}},
+ShowSelection->True,
+FrontEndVersion->"10.0 for Linux x86 (64-bit) (December 4, 2014)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 42, 0, 90, "Title"],
+Cell[625, 24, 157, 3, 51, "Text"],
+Cell[785, 29, 195, 5, 55, "Input"],
+Cell[983, 36, 261, 7, 55, "Input"],
+Cell[1247, 45, 153, 3, 31, "Text"],
+Cell[1403, 50, 74, 2, 32, "Input"],
+Cell[CellGroupData[{
+Cell[1502, 56, 42, 0, 64, "Section"],
+Cell[1547, 58, 150, 3, 51, "Text"],
+Cell[1700, 63, 112, 3, 32, "Input"],
+Cell[1815, 68, 297, 8, 77, "Input"],
+Cell[2115, 78, 488, 12, 72, "Text"],
+Cell[CellGroupData[{
+Cell[2628, 94, 608, 14, 55, "Input"],
+Cell[3239, 110, 553, 12, 55, "Output"]
+}, Open  ]],
+Cell[3807, 125, 152, 4, 32, "Input"],
+Cell[CellGroupData[{
+Cell[3984, 133, 85, 2, 32, "Input"],
+Cell[4072, 137, 4236, 96, 253, "Output"]
+}, Open  ]],
+Cell[8323, 236, 106, 3, 32, "Input"],
+Cell[CellGroupData[{
+Cell[8454, 243, 271, 7, 32, "Input"],
+Cell[8728, 252, 139, 2, 32, "Output"]
+}, Open  ]],
+Cell[8882, 257, 588, 17, 121, "Input"],
+Cell[CellGroupData[{
+Cell[9495, 278, 534, 16, 55, "Input"],
+Cell[10032, 296, 143, 2, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[10212, 303, 290, 9, 32, "Input"],
+Cell[10505, 314, 1879, 42, 77, "Output"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[12433, 362, 24, 0, 64, "Section"],
+Cell[CellGroupData[{
+Cell[12482, 366, 33, 0, 43, "Subsection"],
+Cell[12518, 368, 38, 0, 31, "Text"],
+Cell[12559, 370, 370, 11, 77, "Input"],
+Cell[12932, 383, 59, 0, 31, "Text"],
+Cell[12994, 385, 4307, 121, 517, "Input"],
+Cell[17304, 508, 158, 4, 51, "Text"],
+Cell[17465, 514, 5133, 137, 429, "Input"],
+Cell[22601, 653, 43, 0, 30, "Text"],
+Cell[22647, 655, 485, 12, 81, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[23169, 672, 60, 0, 44, "Subsection"],
+Cell[CellGroupData[{
+Cell[23254, 676, 62, 1, 32, "Input"],
+Cell[23319, 679, 570, 12, 23, "Print"]
+}, Open  ]],
+Cell[23904, 694, 45, 0, 31, "Text"],
+Cell[CellGroupData[{
+Cell[23974, 698, 2669, 74, 196, "Input"],
+Cell[CellGroupData[{
+Cell[26668, 776, 509, 11, 23, "Print"],
+Cell[27180, 789, 518, 11, 23, "Print"],
+Cell[27701, 802, 512, 11, 23, "Print"],
+Cell[28216, 815, 669, 14, 23, "Print"],
+Cell[28888, 831, 651, 13, 23, "Print"],
+Cell[29542, 846, 482, 11, 23, "Print"],
+Cell[30027, 859, 485, 11, 23, "Print"],
+Cell[30515, 872, 441, 10, 23, "Print"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[31017, 889, 35, 0, 44, "Subsection"],
+Cell[31055, 891, 51, 0, 31, "Text"],
+Cell[31109, 893, 4241, 106, 319, "Input"],
+Cell[35353, 1001, 123, 3, 32, "Input"],
+Cell[CellGroupData[{
+Cell[35501, 1008, 49, 0, 35, "Subsubsection"],
+Cell[CellGroupData[{
+Cell[35575, 1012, 1802, 44, 143, "Input"],
+Cell[CellGroupData[{
+Cell[37402, 1060, 870, 17, 23, "Print"],
+Cell[38275, 1079, 876, 17, 23, "Print"],
+Cell[39154, 1098, 845, 16, 23, "Print"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[40072, 1122, 28, 0, 43, "Subsection"],
+Cell[40103, 1124, 44, 0, 31, "Text"],
+Cell[40150, 1126, 4083, 104, 319, "Input"],
+Cell[CellGroupData[{
+Cell[44258, 1234, 49, 0, 35, "Subsubsection"],
+Cell[CellGroupData[{
+Cell[44332, 1238, 1756, 43, 121, "Input"],
+Cell[CellGroupData[{
+Cell[46113, 1285, 575, 12, 23, "Print"],
+Cell[46691, 1299, 841, 16, 23, "Print"],
+Cell[47535, 1317, 839, 16, 23, "Print"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[48447, 1341, 28, 0, 43, "Subsection"],
+Cell[CellGroupData[{
+Cell[48500, 1345, 41, 0, 35, "Subsubsection"],
+Cell[48544, 1347, 54, 0, 31, "Text"],
+Cell[48601, 1349, 4583, 116, 385, "Input"],
+Cell[53187, 1467, 123, 3, 32, "Input"],
+Cell[53313, 1472, 40, 0, 31, "Text"],
+Cell[CellGroupData[{
+Cell[53378, 1476, 1699, 45, 143, "Input"],
+Cell[CellGroupData[{
+Cell[55102, 1525, 804, 17, 23, "Print"],
+Cell[55909, 1544, 806, 17, 23, "Print"],
+Cell[56718, 1563, 742, 15, 23, "Print"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[57521, 1585, 49, 0, 35, "Subsubsection"],
+Cell[57573, 1587, 95, 2, 31, "Text"],
+Cell[57671, 1591, 3778, 95, 356, "Input"],
+Cell[61452, 1688, 95, 2, 31, "Text"],
+Cell[61550, 1692, 2144, 54, 222, "Input"],
+Cell[63697, 1748, 103, 3, 31, "Text"],
+Cell[63803, 1753, 2369, 60, 244, "Input"],
+Cell[66175, 1815, 58, 0, 31, "Text"],
+Cell[CellGroupData[{
+Cell[66258, 1819, 1527, 34, 176, "Input"],
+Cell[CellGroupData[{
+Cell[67810, 1857, 1145, 21, 23, "Print"],
+Cell[68958, 1880, 1126, 20, 23, "Print"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

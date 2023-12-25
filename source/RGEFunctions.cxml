@@ -1,0 +1,371 @@
+#################################################################################################
+# The package `REAP' is written for Mathematica 7 and is distributed under the
+# terms of GNU Public License http://www.gnu.org/copyleft/gpl.html
+#################################################################################################
+
+
+
+
+#################################################################################
+# functions used in REAP
+#################################################################################
+
+# small functions and definitions
+#################################################################################
+
+<function name=ModelName0N>
+<code model=.*SM$|.*SMTriplet|2HDM$>
+ModelName0N=ModelName<>"0N";
+</code>
+</function>
+
+<function name=Definitions>
+<code model=^SM.*>
+RGEvu:=N[RGEvEW];
+RGEvd:=RGEvu;
+RGEv\[Nu]:=RGEvu;
+RGEve:=RGEvd;
+</code>
+<code model=MSSM.*>
+(*RGEvu:=N[RGEvEW*Sin[ArcTan[RGEtan\[Beta]]]];*)
+RGEvu:=N[RGEvEW*RGEtan\[Beta]/Sqrt[1+RGEtan\[Beta]^2]];
+(*RGEvd:=N[RGEvEW*Cos[ArcTan[RGEtan\[Beta]]]];*)
+RGEvd:=N[RGEvEW/Sqrt[1+RGEtan\[Beta]^2]];
+RGEv\[Nu]:=RGEvu;
+RGEve:=RGEvd;
+</code>
+<code model=2HDM.*>
+RGEvu:=N[RGEvEW*RGEzu.{1/Sqrt[1+RGEtan\[Beta]^2],RGEtan\[Beta]/Sqrt[1+RGEtan\[Beta]^2]}];
+RGEvd:=N[RGEvEW*RGEzd.{1/Sqrt[1+RGEtan\[Beta]^2],RGEtan\[Beta]/Sqrt[1+RGEtan\[Beta]^2]}];
+RGEv\[Nu]:=N[RGEvEW*RGEz\[Nu].{1/Sqrt[1+RGEtan\[Beta]^2],RGEtan\[Beta]/Sqrt[1+RGEtan\[Beta]^2]}];
+RGEve:=N[RGEvEW/Sqrt[1+RGEtan\[Beta]^2]];
+</code>
+<function>
+
+
+<function name=Dagger>
+<code model=.*>
+(*shortcuts*)
+Dagger[x_] := Transpose[Conjugate[x]];
+</code>
+</function>
+
+# functions needed by RegisterModel
+#####################################################################
+
+<function name=GetParameters>
+<code model=.*>
+GetParameters[]:= Block[{},
+(* returns the parameters of the model *)
+   Return[ParameterSymbols];
+];
+</code>
+</function>
+
+<function name=ModelSetOptions>
+<code model=.*>
+ModelSetOptions[pOpts_]:= Block[{},
+(* sets the options of the model *)
+    SetOptions[RGEOptions,RGEFilterOptions[RGEOptions,pOpts]];
+];
+</code>
+</function>
+
+<function name=ModelGetOptions>
+<code model=.*>
+ModelGetOptions[]:= Block[{},
+(* returns the options *)
+   Return[Options[RGEOptions]];
+];
+</code>
+</function>
+
+<function name=GetInitial>
+<code model=.*>
+GetInitial[pOpts___]:=Block[{lSuggestion,lIndexSuggestion,lInitial,lParameters,lParameterRepl},
+(* returns the suggested initial values *)
+   lOpts;
+   Options[lOpts]=Options[RGEOptions];
+   SetOptions[lOpts,RGEFilterOptions[lOpts,pOpts]];
+   lSuggestion=(RGESuggestion/.pOpts)/.{RGESuggestion->"*"};
+   lIndexSuggestion=1;
+   While[lIndexSuggestion<=Length[Initial] && !StringMatchQ[Initial[[lIndexSuggestion,1]],lSuggestion],	lIndexSuggestion++ ];
+   lInitial=Initial[[ lIndexSuggestion,2 ]];
+   lParameters=ParameterSymbols/.pOpts/.lInitial/.pOpts/.lInitial/.pOpts/.lInitial/.Options[lOpts];
+   Return[Table[ParameterSymbols[[li]]->lParameters[[li]], {li,Length[ParameterSymbols]}]];
+   ];
+</code>
+</function>
+
+# SolveModel
+################################################################################
+
+<function name=SolveModel>
+<code model=.*SM0N$|.*SMDirac$|.*SMTriplet0N|LRDoublet$>
+SolveModel[{pUp_?NumericQ,pUpModel_,pUpOptions_},{pDown_?NumericQ,pDownModel_,pDownOptions_},pDirection_?NumericQ,pBoundary_?NumericQ,pInitial_,pNDSolveOpts_,pOpts___]:=Block[{lSolution,lInitial,lODE,lIndexModel},
+(* solves the model and returns the solution, pDown and 0, because the function does not add any models*)
+	lNDSolveOpts;
+	Options[lNDSolveOpts]=Options[NDSolve];
+	SetOptions[lNDSolveOpts,RGEFilterOptions[NDSolve,Options[RGEOptions]]];
+	SetOptions[lNDSolveOpts,RGEFilterOptions[NDSolve,pOpts]];
+	SetOptions[lNDSolveOpts,RGEFilterOptions[NDSolve,Sequence[pNDSolveOpts]]];
+
+	lOpts;
+        Options[lOpts]=Options[RGEOptions];
+        SetOptions[lOpts,RGEFilterOptions[lOpts,pOpts]];
+
+
+	lInitial=SetInitial[pBoundary,pInitial];
+	lIndexModel=Flatten[ Position[ModelVariants,(RGEModelVariant/.Options[lOpts])] ][[ 1 ]];
+	lODE=RGE[[lIndexModel]]/.Options[lOpts];
+
+	lSolution=NDSolve[lODE ~Join~ lInitial, Parameters,{t,pDown,pUp}, Sequence[Options[lNDSolveOpts]]];
+	Return[{lSolution,pDown,0}];
+];
+</code>
+<code model=2HDM0N$|2HDMDirac$>
+SolveModel[{pUp_?NumericQ,pUpModel_,pUpOptions_},{pDown_?NumericQ,pDownModel_,pDownOptions_},pDirection_?NumericQ,pBoundary_?NumericQ,pInitial_,pNDSolveOpts_,pOpts___]:=Block[{lSolution,lInitial,lIndexModel,lODE},
+(* solves the model and returns the solution, pDown and 0, because the function does not add any models*)
+	lNDSolveOpts;
+	Options[lNDSolveOpts]=Options[NDSolve];
+	SetOptions[lNDSolveOpts,RGEFilterOptions[NDSolve,Options[RGEOptions]]];
+	SetOptions[lNDSolveOpts,RGEFilterOptions[NDSolve,pOpts]];
+	SetOptions[lNDSolveOpts,RGEFilterOptions[NDSolve,Sequence[pNDSolveOpts]]];
+
+	lOpts;
+        Options[lOpts]=Options[RGEOptions];
+        SetOptions[lOpts,RGEFilterOptions[lOpts,pOpts]];
+
+	lInitial=SetInitial[pBoundary,pInitial];
+	lIndexModel=Flatten[
+	Position[ModelVariants,(RGEModelVariant/.Options[lOpts])] ][[ 1 ]];
+	lODE=RGE[[lIndexModel]]/.Options[lOpts];
+
+	lSolution=NDSolve[lODE ~Join~ lInitial, Parameters,{t,pDown,pUp}, Sequence[Options[lNDSolveOpts]]];
+	Return[{lSolution,pDown,0}];
+];
+</code>
+<code model=.*SM$|.*SMTriplet$>
+SolveModel[{pUp_?NumericQ,pUpModel_,pUpOptions_},{pDown_?NumericQ,pDownModel_,pDownOptions_},pDirection_?NumericQ,pBoundary_?NumericQ,pInitial_,pNDSolveOpts_,pOpts___]:=Block[{lSolution, (* contains the solution *)
+lInitial, (* initial values in the format needed by NDSolve *)
+lODE, (* RGE and lInitial *)
+lAddedModels, (* number of added models *)
+lIntegratedOut, (* # of neutrinos integrated out *)
+lAlreadyIntegratedOut, (* # of neutrinos already inetgrated out *)
+lTransition, (* transition to be added *)
+lIndexModel, (* variant of the model *)
+lM,lY,l\[Kappa] (* needed for check of too high masses *)
+},
+(* solves the model; returns the solution, the new scale and the number of added models *)
+(* exceptions: too many iterations --> RGETooManyIterations
+               \[Nu] mass above cutoff --> RGE\[Nu]MassAboveCutoff 
+*)
+(* solve differential equation *)
+	lOpts;
+	lAddModelOpts;
+        Options[lOpts]=Options[RGEOptions];
+        SetOptions[lOpts,RGEFilterOptions[lOpts,pOpts]];
+        lLogThresholdFactor=Log[(RGEThresholdFactor/.Options[lOpts,RGEThresholdFactor])];
+	lInitial;
+	Options[lInitial]=pInitial;
+	If[Length[(RGEM\[Nu]r/.pInitial)]>0,
+		{lM,lY\[Nu],l\[Kappa]}=({RGEM\[Nu]r,RGEY\[Nu],RGE\[Kappa]}/.pInitial);
+		If[(RGESearchTransition/.Options[lOpts,RGESearchTransition]), (*CHECK THIS LINE: inverted condition*)
+			{lM,lY,l\[Kappa],lIntegratedOut}=RGETestMY\[Nu][Exp[lLogThresholdFactor+pBoundary],lM,lY\[Nu],l\[Kappa]];
+			If[lIntegratedOut>0,
+				Print["Warning: ",lIntegratedOut, " right-handed neutrinos have a mass above ", Exp[pBoundary], " GeV (",Select[RGEEigenvalues[RGEM\[Nu]r/.pInitial],(#1>Exp[pBoundary])&],"). Thus they have been integrated out."];
+				SetOptions[lOpts,RGEIntegratedOut->(((RGEIntegratedOut/.Options[lOpts,RGEIntegratedOut])/.{RGEIntegratedOut->0})+lIntegratedOut)];
+
+				SetOptions[lInitial,RGEM\[Nu]r->lM,RGEY\[Nu]->lY,RGE\[Kappa]->l\[Kappa]];
+				RGEChangeOptions[Exp[pBoundary],RGEIntegratedOut->(RGEIntegratedOut/.Options[lOpts,RGEIntegratedOut])];
+				];
+			];
+	];
+	If[Length[RGEM\[Nu]r/.Options[lInitial]]==0,
+		lTransition=RGEGetCutoff[(Exp[pUp]+Exp[pDown])/2];
+		RGEDelModel[(Exp[pUp]+Exp[pDown])/2];
+		Options[lAddModelOpts]=RGEFilterOptions[RGEOptions,pOpts];
+		SetOptions[lAddModelOpts,RGEFilterOptions[lAddModelOpts,RGEAutoGenerated->ModelName]];
+		Options[lAddModelOpts]=Options[lAddModelOpts]~Union~{RGEAutoGenerated->ModelName};
+		RGEAddEFT[ModelName0N, RGECutoff->lTransition,RGEFilterOptions[RGEOptions,Options[lAddModelOpts]]];
+                RGESetModelOptions[ModelName0N,Options[RGEOptions]];
+		{lSolution,lTransition,lAddedModels}=(RGEGetSolveModel[ModelName0N])[{pUp,pUpModel,pUpOptions},{pDown,pDownModel,pDownOptions},pDirection,pBoundary,Options[lInitial],pNDSolveOpts,Sequence[pOpts]];
+		Return[{lSolution,lTransition,lAddedModels}];
+	];
+		
+	
+	lNDSolveOpts;
+	Options[lNDSolveOpts]=Options[NDSolve];
+	SetOptions[lNDSolveOpts,RGEFilterOptions[NDSolve,Options[RGEOptions]]];
+	SetOptions[lNDSolveOpts,RGEFilterOptions[NDSolve,pOpts]];
+	SetOptions[lNDSolveOpts,RGEFilterOptions[NDSolve,Sequence[pNDSolveOpts]]];
+	
+	lInitial=SetInitial[pBoundary,Options[lInitial]];
+	lIndexModel=Flatten[ Position[ModelVariants,(RGEModelVariant/.Options[lOpts])] ][[ 1 ]];
+	lODE=RGE[[lIndexModel]]/.Options[lOpts];
+
+        lSolution=NDSolve[lODE ~Join~ lInitial, Parameters,{t,pDown,pUp}, Sequence[Options[lNDSolveOpts]]];
+
+     
+(* search transitions *)
+        lAddedModels=0;
+        lAlreadyIntegratedOut=RGEIntegratedOut/.Options[lOpts,RGEIntegratedOut] /. {RGEIntegratedOut->0};
+        lPrecision=RGEPrecision/.Options[lOpts,RGEPrecision];
+        lIntegratedOut=0;
+(* check whether transitions should not be searched for *)
+        If[!(RGESearchTransition/.Options[lOpts,RGESearchTransition]),Return[{lSolution,pDown,lAddedModels}]];
+        lDownOpts;
+        If[pDownModel!="",
+            Options[lDownOpts]=RGEGetModelOptions[pDownModel][[1,2]],
+	    Options[lDownOpts]={RGEIntegratedOut->0}
+        ];
+        SetOptions[lDownOpts,RGEFilterOptions[lDownOpts,pDownOptions]];
+(* check whether there can not be any transitions *)
+        lLengthM\[Nu]=Length[(M\[Nu]r[pUp]/.lSolution)[[1]] ];
+
+(* to do *)
+(*        If[(pDownModel==ModelName0N),If[(lLengthM\[Nu]-(RGEIntegratedOut/.Options[lOpts,RGEIntegratedOut])<=1),Return[{lSolution,pDown,lAddedModels}]]];
+        If[(pDownModel==ModelName),If[(RGEIntegratedOut/.Options[lDownOpts,RGEIntegratedOut])-(RGEIntegratedOut/.Options[lOpts,RGEIntegratedOut])<=1,Return[{lSolution,pDown,lAddedModels}]]];
+*)
+         lMTransitions=RGESearchTransitions[(GetRawM\[Nu]r[#1,lSolution])&, pUp,pUp,pDown,Sequence[Options[lOpts]]];
+          
+         If[Length[lMTransitions]>0,
+             lThreshold=N[lLogThresholdFactor+Max[lMTransitions],lPrecision];
+             lMTransitions=N[(Select[lMTransitions,(#1>=lThreshold)&])+lLogThresholdFactor,lPrecision];
+             While[Length[lMTransitions]>0,
+                 lTransition=First[lMTransitions];
+                 lDegeneracy=Length[Select[lMTransitions,(Chop[#1-lTransition,10^(-lPrecision)]==0)&]];
+                 lMTransitions=Sort[Select[lMTransitions ,(Chop[#1-lTransition,10^(-lPrecision)]!=0)&],Greater];
+                 lIntegratedOut+=lDegeneracy;		 
+		 If[lIntegratedOut<lLengthM\[Nu],
+			Options[lAddModelOpts]=RGEFilterOptions[RGEOptions,pOpts];
+			SetOptions[lAddModelOpts,RGEFilterOptions[lAddModelOpts,RGEIntegratedOut->lIntegratedOut+lAlreadyIntegratedOut,RGEAutoGenerated->True]];
+			Options[lAddModelOpts]=Options[lAddModelOpts]~Union~{RGEIntegratedOut->lIntegratedOut+lAlreadyIntegratedOut,RGEAutoGenerated->True};
+			RGEAddEFT[ModelName,RGECutoff->Exp[lTransition],RGEFilterOptions[RGEOptions,Options[lAddModelOpts]]],
+                        RGESetModelOptions[ModelName0N,Options[RGEOptions]];
+			Options[lAddModelOpts]=RGEFilterOptions[RGEOptions,pOpts];
+			SetOptions[lAddModelOpts,RGEFilterOptions[lAddModelOpts,RGEAutoGenerated->True]];
+			Options[lAddModelOpts]=Options[lAddModelOpts]~Union~{RGEAutoGenerated->True};
+			RGEAddEFT[ModelName0N,RGECutoff->Exp[lTransition],RGEFilterOptions[RGEOptions,Options[lAddModelOpts]]]
+		 ];
+		 lAddedModels++;
+		],
+	lThreshold=pDown;
+	];
+	
+	Return[{lSolution,lThreshold,lAddedModels}];    
+];
+</code>
+
+<code model=2HDM$>
+SolveModel[{pUp_?NumericQ,pUpModel_,pUpOptions_},{pDown_?NumericQ,pDownModel_,pDownOptions_},pDirection_?NumericQ,pBoundary_?NumericQ,pInitial_,pNDSolveOpts_,pOpts___]:=Block[{lSolution, (* contains the solution *)
+lInitial, (* initial values in the format needed by NDSolve *)
+lODE, (* RGE and lInitial *)
+lAddedModels, (* number of added models *)
+lIntegratedOut, (* # of neutrinos integrated out *)
+lAlreadyIntegratedOut, (* # of neutrinos already inetgrated out *)
+lTransition, (* transition to be added *)
+lIndexModel, (* variant of the model *)
+lM,lY,l\[Kappa]1,l\[Kappa]2,l\[Kappa],l\[Nu] (* needed for check of too high masses *)
+},
+(* solves the model; returns the solution, the new scale and the number of added models *)
+(* exceptions: too many iterations --> RGETooManyIterations
+               \[Nu] mass above cutoff --> RGE\[Nu]MassAboveCutoff 
+*)
+(* solve differential equation *)
+	lOpts;
+	lAddModelOpts;
+        Options[lOpts]=Options[RGEOptions];
+        SetOptions[lOpts,RGEFilterOptions[lOpts,pOpts]];
+        lLogThresholdFactor=Log[(RGEThresholdFactor/.Options[lOpts,RGEThresholdFactor])];
+	lInitial;
+	Options[lInitial]=pInitial;
+	If[Length[(RGEM\[Nu]r/.pInitial)]>0,
+		{lM,lY\[Nu],l\[Kappa]1,l\[Kappa]2}=({RGEM\[Nu]r,RGEY\[Nu],RGE\[Kappa]1,RGE\[Kappa]2}/.pInitial);
+		l\[Nu]=RGEz\[Nu]/.Options[lOpts];
+		l\[Kappa]=l\[Nu].{l\[Kappa]1,l\[Kappa]2};
+		{lM,lY,l\[Kappa],lIntegratedOut}=RGETestMY\[Nu][Exp[lLogThresholdFactor+pBoundary],lM,lY\[Nu],l\[Kappa]];
+		{l\[Kappa]1,l\[Kappa]2}={l\[Kappa]*l\[Nu][[1]],l\[Kappa]*l\[Nu][[2]]};
+		If[lIntegratedOut>0,
+			Print["Warning: ",lIntegratedOut, " right-handed neutrinos have a mass above ", Exp[pBoundary], " GeV (",Select[RGEEigenvalues[RGEM\[Nu]r/.pInitial],(#1>Exp[pBoundary])&],"). Thus they have been integrated out."];
+			SetOptions[lOpts,RGEIntegratedOut->(((RGEIntegratedOut/.Options[lOpts,RGEIntegratedOut])/.{RGEIntegratedOut->0})+lIntegratedOut)];
+
+			SetOptions[lInitial,RGEM\[Nu]r->lM,RGEY\[Nu]->lY,RGE\[Kappa]1->l\[Kappa]1,RGE\[Kappa]2->l\[Kappa]2];
+			RGEChangeOptions[Exp[pBoundary],RGEIntegratedOut->(RGEIntegratedOut/.Options[lOpts,RGEIntegratedOut])];
+		];
+	];
+	If[Length[RGEM\[Nu]r/.Options[lInitial]]==0,
+		lTransition=RGEGetCutoff[(Exp[pUp]+Exp[pDown])/2];
+		RGEDelModel[(Exp[pUp]+Exp[pDown])/2];
+		Options[lAddModelOpts]=RGEFilterOptions[RGEOptions,pOpts];
+		SetOptions[lAddModelOpts,RGEFilterOptions[lAddModelOpts,RGEAutoGenerated->ModelName]];
+		Options[lAddModelOpts]=Options[lAddModelOpts]~Union~{RGEAutoGenerated->ModelName};
+		RGEAddEFT[ModelName0N, RGECutoff->lTransition,RGEFilterOptions[RGEOptions,Options[lAddModelOpts]]];
+                RGESetModelOptions[ModelName0N,Options[RGEOptions]];
+		{lSolution,lTransition,lAddedModels}=(RGEGetSolveModel[ModelName0N])[{pUp,pUpModel,pUpOptions},{pDown,pDownModel,pDownOptions},pDirection,pBoundary,Options[lInitial],pNDSolveOpts,Sequence[pOpts]];
+		Return[{lSolution,lTransition,lAddedModels}];
+	];
+		
+	
+	lNDSolveOpts;
+	Options[lNDSolveOpts]=Options[NDSolve];
+	SetOptions[lNDSolveOpts,RGEFilterOptions[NDSolve,Options[RGEOptions]]];
+	SetOptions[lNDSolveOpts,RGEFilterOptions[NDSolve,pOpts]];
+	SetOptions[lNDSolveOpts,RGEFilterOptions[NDSolve,Sequence[pNDSolveOpts]]];
+	
+	lInitial=SetInitial[pBoundary,Options[lInitial]];
+	lIndexModel=Flatten[ Position[ModelVariants,(RGEModelVariant/.Options[lOpts])] ][[ 1 ]];
+	lODE=RGE[[lIndexModel]]/.Options[lOpts];
+        lSolution=NDSolve[lODE ~Join~ lInitial, Parameters,{t,pDown,pUp}, Sequence[Options[lNDSolveOpts]]];
+     
+(* search transitions *)
+        lAddedModels=0;
+        lAlreadyIntegratedOut=RGEIntegratedOut/.Options[lOpts,RGEIntegratedOut] /. {RGEIntegratedOut->0};
+        lPrecision=RGEPrecision/.Options[lOpts,RGEPrecision];
+        lIntegratedOut=0;
+(* check whether transitions should not be searched for *)
+        If[!(RGESearchTransition/.Options[lOpts,RGESearchTransition]),Return[{lSolution,pDown,lAddedModels}]];
+        lDownOpts;
+        If[pDownModel!="",
+            Options[lDownOpts]=RGEGetModelOptions[pDownModel][[1,2]],
+	    Options[lDownOpts]={RGEIntegratedOut->0}
+        ];
+        SetOptions[lDownOpts,RGEFilterOptions[lDownOpts,pDownOptions]];
+(* check whether there can not be any transitions *)
+        lLengthM\[Nu]=Length[(M\[Nu]r[pUp]/.lSolution)[[1]] ];
+
+(* to do *)
+(*        If[(pDownModel==ModelName0N),If[(lLengthM\[Nu]-(RGEIntegratedOut/.Options[lOpts,RGEIntegratedOut])<=1),Return[{lSolution,pDown,lAddedModels}]]];
+        If[(pDownModel==ModelName),If[(RGEIntegratedOut/.Options[lDownOpts,RGEIntegratedOut])-(RGEIntegratedOut/.Options[lOpts,RGEIntegratedOut])<=1,Return[{lSolution,pDown,lAddedModels}]]];
+*)
+         lMTransitions=RGESearchTransitions[(GetRawM\[Nu]r[#1,lSolution])&, pUp,pUp,pDown,Sequence[Options[lOpts]]];
+          
+         If[Length[lMTransitions]>0,
+             lThreshold=N[lLogThresholdFactor+Max[lMTransitions],lPrecision];
+             lMTransitions=N[(Select[lMTransitions,(#1>=lThreshold)&])+lLogThresholdFactor,lPrecision];
+             While[Length[lMTransitions]>0,
+                 lTransition=First[lMTransitions];
+                 lDegeneracy=Length[Select[lMTransitions,(Chop[#1-lTransition,10^(-lPrecision)]==0)&]];
+                 lMTransitions=Sort[Select[lMTransitions ,(Chop[#1-lTransition,10^(-lPrecision)]!=0)&],Greater];
+                 lIntegratedOut+=lDegeneracy;		 
+		 If[lIntegratedOut<lLengthM\[Nu],
+			Options[lAddModelOpts]=RGEFilterOptions[RGEOptions,pOpts];
+			SetOptions[lAddModelOpts,RGEFilterOptions[lAddModelOpts,RGEIntegratedOut->lIntegratedOut+lAlreadyIntegratedOut,RGEAutoGenerated->True]];
+			Options[lAddModelOpts]=Options[lAddModelOpts]~Union~{RGEIntegratedOut->lIntegratedOut+lAlreadyIntegratedOut,RGEAutoGenerated->True};
+			RGEAddEFT[ModelName,RGECutoff->Exp[lTransition],RGEFilterOptions[RGEOptions,Options[lAddModelOpts]]],
+                        RGESetModelOptions[ModelName0N,Options[RGEOptions]];
+			Options[lAddModelOpts]=RGEFilterOptions[RGEOptions,pOpts];
+			SetOptions[lAddModelOpts,RGEFilterOptions[lAddModelOpts,RGEAutoGenerated->True]];
+			Options[lAddModelOpts]=Options[lAddModelOpts]~Union~{RGEAutoGenerated->True};
+			RGEAddEFT[ModelName0N,RGECutoff->Exp[lTransition],RGEFilterOptions[RGEOptions,Options[lAddModelOpts]]]
+		 ];
+		 lAddedModels++;
+		],
+	lThreshold=pDown;
+	];
+	Return[{lSolution,lThreshold,lAddedModels}];    
+];
+</code>
+</function>
+
+

@@ -1,0 +1,151 @@
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amscd}
+\usepackage[amsthm,thmmarks]{ntheorem}
+%%\usepackage{TheoremCollection}
+\usepackage{accents}
+\usepackage{bbm} % BlackBoeard letters
+%\usepackage[bbgreekl]{MyBbol} % Other Doublestroke Charakters
+\usepackage{bbold}
+\usepackage{fancyhdr} %
+\usepackage{a4wide} %
+\usepackage[small]{caption} %
+\usepackage{makeidx} %
+\usepackage{fleqn} 
+\usepackage{indentfirst} 
+\usepackage{cancel} % \cancel{stuff} provides slashed stuff
+\usepackage{graphicx} % \including PostScript
+\usepackage{color}
+\usepackage{braket} %\bra{stuff} -> <stuff|
+\usepackage{pstricks}
+\usepackage{pst-node,pst-plot}
+\usepackage{nomencl} %Nomenklatur
+\usepackage{mathrsfs}   % Schoenes Lagrange -L mit \mathscr{L}
+\usepackage{pifont} % dinbgbats
+\usepackage[small]{subfigure}
+\usepackage{longtable}
+\usepackage[plain]{fancyref}
+\usepackage{cite}
+%\usepackage[bbgreekl]{MyBbol}  % bb-Symbole auch griechisch
+\usepackage[sort&compress,numbers,colon]{natbib}
+\bibliographystyle{apsrev}
+
+%-- page parameters -------------------------------------------------
+
+\pagestyle{fancyplain}
+
+\advance \headheight by 3.0truept       % for 12pt mandatory...
+\lhead[\fancyplain{}{\thepage}]{\fancyplain{}{\rightmark}}
+\rhead[\fancyplain{}{\leftmark}]{\fancyplain{\thepage}{\thepage}}
+\cfoot{}
+
+%\addtolength{\oddsidemargin}{1.0truecm}
+%\addtolength{\evensidemargin}{-0.3truecm}
+\setlength{\parindent}{0cm}
+
+%-- end of page parameters ------------------------------------------
+
+
+%\makeindex
+%\makeglossary
+
+% \newcommand{\WeightConnect}[4]{\ncline{->}{#1}{#2}\mput*{\ovalnode{#3}{#4}}
+% \ncline{-}{#1}{#3}\ncline{->}{#3}{#2}}
+% 
+% \def\Nf{i}
+% \def\Ng{j}
+% \newcommand{\GroupIndex}[1]{\ifcase#1\or \or a\or b\or c\or d\or e\or f\or g\or h\or i\or j\or
+% k\or l\or m\or n\or o\or p\or q\or r\or s\or t\or u\or v\or w\or x\or
+% y\or z\else\@ctrerr\fi}
+% \newcommand{\FamilyIndex}[1]{\ifcase#1\or \or f\or g\or h\or i\or j\or
+% k\or l\or m\or n\or o\or p\or q\or r\or s\or t\or u\or v\or w\or x\or
+% y\or z\else\@ctrerr\fi}
+\def\chargec{\mathrm{C}}        
+\def\ChargeC{\mathrm{C}}        
+\def\NuMSSM{{$\nu$MSSM}\ }
+\newcommand{\SimpleRoot}[1]{\alpha^{(#1)}}
+\newcommand{\FundamentalWeight}[1]{\mu^{(#1)}}
+\newcommand{\ChargeConjugate}[1]{#1^\chargec}
+\newcommand{\SFConjugate}[1]{#1^\chargec}
+\newcommand{\CenterFmg}[1]{\ensuremath{\vcenter{\hbox{\input{#1.fmg}}}}}
+\newcommand{\CenterObject}[1]{\ensuremath{\vcenter{\hbox{#1}}}}
+\newcommand{\CenterEps}[2][1]{\ensuremath{\vcenter{\hbox{\includegraphics[scale=#1]{#2.eps}}}}} % Input eps files - Usage: \CenterEps[ScaleFactor]{FileName}
+\newcommand{\Commutator}[2]{{\left[ #1,#2\right]}_-}
+\newcommand{\AntiCommutator}[2]{{\left\{ #1,#2\right\}}}
+\newcommand{\RightHandedNeutrino}{\nu}
+\newcommand{\SuperCommutator}[2]{\left\Lbracket #1,#2\right\Rbracket}
+\newcommand{\SuperField}[1]{\bbsymbol{#1}}
+\newcommand{\package}[1]{\texttt{#1}}
+\newcommand{\function}[1]{\texttt{#1}}
+\newcommand{\param}[1]{\texttt{#1}}
+\newcommand{\option}[1]{\texttt{#1}}
+\newcommand{\variable}[1]{\texttt{#1}}
+\newcommand{\optparam}[1]{\texttt{\textit{#1}}}
+\newcommand{\warning}[1]{\hspace{2ex} \textit{warning: #1}}
+\newcommand{\internal}[1]{#1 \warning{This function is for internal use only.}}
+\newcommand{\eV}{\ensuremath{\,\mathrm{eV}}}
+\newcommand{\keV}{\ensuremath{\,\mathrm{keV}}}
+\newcommand{\MeV}{\ensuremath{\,\mathrm{MeV}}}
+\newcommand{\GeV}{\ensuremath{\,\mathrm{GeV}}}
+\newcommand{\TeV}{\ensuremath{\,\mathrm{TeV}}}
+
+\newenvironment{implementation}{\em}{\normalfont}
+
+\DeclareMathOperator{\re}{Re}
+\DeclareMathOperator{\im}{Im}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\quabla}{\boldsymbol{\square}}
+\DeclareMathOperator{\STr}{STr}
+\DeclareMathOperator{\Li}{Li}
+\DeclareMathOperator{\ad}{ad}
+\DeclareMathOperator{\Ad}{Ad}
+\DeclareMathOperator{\AD}{AD}
+\DeclareMathOperator{\ind}{ind}
+\DeclareMathOperator{\ch}{ch}
+\DeclareMathOperator{\Pf}{Pf}
+\DeclareMathOperator{\arcosh}{arcosh}
+
+\def\D{\mathrm{d}}
+\def\I{\mathrm{i}}
+\def\Nf{f}
+\def\Ng{g}
+\def\PlusIEpsilon{}
+\newcommand{\ChargeConjMatrix}{\mathsf{C}}      % Charge conjugation matrix
+\newcommand{\ChargeConjOp}{\boldsymbol{\ChargeConjMatrix}}% cc. operator
+\def\NuMSSM{{$\nu$MSSM}\ }
+\def\secname{section}
+\newif\ifappendix
+\newcommand{\secref}[1]{%
+        \ifappendix\appendixname~\ref{#1}\else\secname~\ref{#1}\fi
+        }
+\appendixfalse
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
+%\renewcommand{\thesubsubsection}{\arabic{section}.\arabic{subsection}.\arabic{subsubsection}}
+% 
+% \renewcommand{\thesection}{\arabic{section}}
+% \renewcommand{\thesection}{\arabic{section}.\arabic{section}}
+% \renewcommand{\thesubsection}{(\roman{subsection})}
+
+\newcommand*{\fancyrefsubseclabelprefix}{subsec}
+\newcommand*{\subsecname}{subsection}
+\fancyrefaddcaptions{english}{%
+\newcommand*{\frefsubsecname}{subsection}
+\newcommand*{\Frefsubsecname}{subsection}
+}
+\numberwithin{equation}{section}
+\numberwithin{table}{section}
+\renewcommand{\thetable}{\arabic{section}-\arabic{table}}
+\renewcommand{\theequation}{\arabic{section}.\arabic{equation}}
+\renewcommand{\labelenumi}{(\arabic{enumi})}
+
+
+\definecolor{MyBlue}{rgb}{0.8,0.85,1}
+\def\labelitemi{$\bullet$}
+\def\labelitemii{--}
+\unitlength=1mm
+
+\allowdisplaybreaks[1]

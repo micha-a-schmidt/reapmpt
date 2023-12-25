@@ -1,0 +1,32 @@
+\NeedsTeXFormat{LaTeX2e}
+\documentclass[10pt,a4paper,twoside]{scrartcl}
+
+\input{RGEDocPreamble}
+
+\begin{document}
+\font\TitleFont=cmbx10 at 40pt \font\SubTitleFont=cmbx10 at 25pt
+\pagenumbering{arabic} \title{\TitleFont{REAP <INCLUDE>../RGEVersion
+</INCLUDE>}\\[1cm]
+\SubTitleFont{Complete reference} } \author{S.~Antusch, J.~Kersten,
+M.~Lindner, M.~Ratz and M.A.~Schmidt} \maketitle
+\begin{abstract}
+  This is an internal documentation of the \package{REAP} add-on
+  for Mathematica. We describe the functions which allow to calculate the
+  evolution of the neutrino mass matrix in different models (SM, MSSM, 2HDM).
+\end{abstract}
+\thispagestyle{empty}
+\tableofcontents
+\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+<PERL>
+our $level="internal";
+parse("RGEReference.cmtex");
+</PERL>
+
+\input{RGEConventions}
+\input{RGENewModelHowTo}
+
+\bibliography{reap}
+\end{document}

@@ -1,0 +1,2519 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     78826,       2510]
+NotebookOptionsPosition[     67642,       2137]
+NotebookOutlinePosition[     67981,       2152]
+CellTagsIndexPosition[     67938,       2149]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["First Steps with the REAP Package", "Title"],
+
+Cell["\<\
+See the 'First Steps' section in the documentation for explanations.\
+\>", "Text"],
+
+Cell[BoxData[{
+ RowBox[{"Needs", "[", "\"\<REAP`RGEMSSM`\>\"", 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Needs", "[", "\"\<REAP`RGEMSSMDirac`\>\"", "]"}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGESetModelOptions", "[", 
+  RowBox[{"\"\<*\>\"", ",", 
+   RowBox[{"RGEtan\[Beta]", "\[Rule]", "50"}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"MZ", "=", "91.12"}], ";"}]], "Input",
+ CellChangeTimes->{{3.646456288168154*^9, 3.646456295417544*^9}}],
+
+Cell["\<\
+Test for compatibility with the experimental data
+(allowed regions for normal mass ordering at the 3\[Sigma] CL as given in \
+JHEP 11 (2014) 052 [arXiv:1409.5439])\
+\>", "Text",
+ CellChangeTimes->{{3.646456580348401*^9, 3.646456585396228*^9}, {
+  3.64645672432397*^9, 3.646456728252131*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ClearAll", "[", 
+   RowBox[{"CompareToExperiment", ",", "IsCompatibleWithExp"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"CompareToExperiment", "[", "t_", "]"}], ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"lNotComp", ",", "lComp"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"lComp", "=", 
+       RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"lNotComp", "=", 
+       RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{"Sin", "[", 
+            RowBox[{
+             RowBox[{"\[Theta]12", "[", "t", "]"}], " ", "Degree"}], "]"}], 
+           "^", "2"}], "\[GreaterEqual]", "0.270"}], "&&", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"Sin", "[", 
+            RowBox[{
+             RowBox[{"\[Theta]12", "[", "t", "]"}], " ", "Degree"}], "]"}], 
+           "^", "2"}], "\[LessEqual]", "0.344"}]}], ",", 
+        RowBox[{"lComp", "=", 
+         RowBox[{"Append", "[", 
+          RowBox[{"lComp", ",", "\"\<\[Theta]12\>\""}], "]"}]}], ",", 
+        RowBox[{"lNotComp", "=", 
+         RowBox[{"Append", "[", 
+          RowBox[{"lNotComp", ",", "\"\<\[Theta]12\>\""}], "]"}]}]}], "]"}], 
+      ";", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"0.0186", "<", 
+          RowBox[{
+           RowBox[{"Sin", "[", 
+            RowBox[{
+             RowBox[{"\[Theta]13", "[", "t", "]"}], " ", "Degree"}], "]"}], 
+           "^", "2"}]}], " ", "\[And]", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"Sin", "[", 
+            RowBox[{
+             RowBox[{"\[Theta]13", "[", "t", "]"}], " ", "Degree"}], "]"}], 
+           "^", "2"}], "\[LessEqual]", "0.0250"}]}], ",", 
+        RowBox[{"lComp", "=", 
+         RowBox[{"Append", "[", 
+          RowBox[{"lComp", ",", "\"\<\[Theta]13\>\""}], "]"}]}], ",", 
+        RowBox[{"lNotComp", "[", 
+         RowBox[{"lNotComp", ",", "\"\<\[Theta]13\>\""}], "]"}]}], "]"}], ";",
+       "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{"Sin", "[", 
+            RowBox[{
+             RowBox[{"\[Theta]23", "[", "t", "]"}], " ", "Degree"}], "]"}], 
+           "^", "2"}], "\[GreaterEqual]", "0.382"}], "&&", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"Sin", "[", 
+            RowBox[{
+             RowBox[{"\[Theta]23", "[", "t", "]"}], " ", "Degree"}], "]"}], 
+           "^", "2"}], "\[LessEqual]", "0.643"}]}], ",", 
+        RowBox[{"lComp", "=", 
+         RowBox[{"Append", "[", 
+          RowBox[{"lComp", ",", "\"\<\[Theta]23\>\""}], "]"}]}], ",", 
+        RowBox[{"lNotComp", "=", 
+         RowBox[{"Append", "[", 
+          RowBox[{"lNotComp", ",", "\"\<\[Theta]23\>\""}], "]"}]}]}], "]"}], 
+      ";", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{"Abs", "[", 
+           RowBox[{"\[CapitalDelta]m2atm", "[", "t", "]"}], "]"}], 
+          "\[GreaterEqual]", 
+          RowBox[{"2.317", " ", 
+           RowBox[{"10", "^", 
+            RowBox[{"-", "3"}]}]}]}], "&&", 
+         RowBox[{
+          RowBox[{"Abs", "[", 
+           RowBox[{"\[CapitalDelta]m2atm", "[", "t", "]"}], "]"}], 
+          "\[LessEqual]", 
+          RowBox[{"2.607", " ", 
+           RowBox[{"10", "^", 
+            RowBox[{"-", "3"}]}]}]}]}], ",", 
+        RowBox[{"lComp", "=", 
+         RowBox[{"Append", "[", 
+          RowBox[{"lComp", ",", "\"\<\[CapitalDelta]m2atm\>\""}], "]"}]}], 
+        ",", 
+        RowBox[{"lNotComp", "=", 
+         RowBox[{"Append", "[", 
+          RowBox[{"lNotComp", ",", "\"\<\[CapitalDelta]m2atm\>\""}], 
+          "]"}]}]}], "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{"\[CapitalDelta]m2sol", "[", "t", "]"}], "\[GreaterEqual]", 
+          
+          RowBox[{"7.02", " ", 
+           RowBox[{"10", "^", 
+            RowBox[{"-", "5"}]}]}]}], "&&", 
+         RowBox[{
+          RowBox[{"\[CapitalDelta]m2sol", "[", "t", "]"}], "\[LessEqual]", 
+          RowBox[{"8.09", " ", 
+           RowBox[{"10", "^", 
+            RowBox[{"-", "5"}]}]}]}]}], ",", 
+        RowBox[{"lComp", "=", 
+         RowBox[{"Append", "[", 
+          RowBox[{"lComp", ",", "\"\<\[CapitalDelta]m2sol\>\""}], "]"}]}], 
+        ",", 
+        RowBox[{"lNotComp", "=", 
+         RowBox[{"Append", "[", 
+          RowBox[{"lNotComp", ",", "\"\<\[CapitalDelta]m2sol\>\""}], 
+          "]"}]}]}], "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"Print", "[", 
+       RowBox[{
+       "\"\<The following parameters are compatible with the experimental \
+data at the 3\[Sigma] CL:\>\"", ",", "lComp"}], "]"}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"Length", "[", "lNotComp", "]"}], "\[Equal]", "0"}], ",", 
+        RowBox[{"Return", "[", "1", "]"}], ",", 
+        RowBox[{"Return", "[", "0", "]"}]}], "]"}], ";"}]}], 
+    "\[IndentingNewLine]", "]"}]}], ";"}], "\n", 
+ RowBox[{"IsCompatibleWithExp", ":=", 
+  RowBox[{"CompareToExperiment", "[", 
+   RowBox[{"Log", "[", 
+    RowBox[{"10", ",", "MZ"}], "]"}], "]"}]}]}], "Input",
+ CellChangeTimes->{{3.6464565955445137`*^9, 3.646456710381075*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["Majorana Neutrinos mit rechtsh\[ADoubleDot]ndigen Neutrinos", \
+"Subsection"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ClearAll", "[", 
+   RowBox[{"Mnu", ",", "Ye"}], "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Mnu", "[", "mu_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{"RGEGetSolution", "[", 
+    RowBox[{"mu", ",", "RGEM\[Nu]"}], "]"}], "//", 
+   "Chop"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Ye", "[", "mu_", "]"}], ":=", 
+   RowBox[{
+    RowBox[{"RGEGetSolution", "[", 
+     RowBox[{"mu", ",", "RGEYe"}], "]"}], "//", "Chop"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{"ClearAll", "[", 
+  RowBox[{
+  "MixingPars", ",", "MixingParsLogScale", ",", "NuMasses", ",", 
+   "NuMassesLogScale"}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"MixingPars", "[", "mu_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{"MNSParameters", "[", 
+    RowBox[{
+     RowBox[{"Mnu", "[", "mu", "]"}], ",", 
+     RowBox[{"Ye", "[", "mu", "]"}]}], "]"}], "\[LeftDoubleBracket]", "1", 
+   "\[RightDoubleBracket]"}]}], "\n", 
+ RowBox[{
+  RowBox[{"MixingParsLogScale", "[", "x_", "]"}], ":=", 
+  RowBox[{"MixingPars", "[", 
+   RowBox[{"10", "^", "x"}], "]"}]}], "\n", 
+ RowBox[{
+  RowBox[{"NuMasses", "[", "mu_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{"MNSParameters", "[", 
+    RowBox[{
+     RowBox[{"Mnu", "[", "mu", "]"}], ",", 
+     RowBox[{"Ye", "[", "mu", "]"}]}], "]"}], "\[LeftDoubleBracket]", "2", 
+   "\[RightDoubleBracket]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"NuMassesLogScale", "[", "x_", "]"}], ":=", 
+  RowBox[{"NuMasses", "[", 
+   RowBox[{"10", "^", "x"}], "]"}]}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"ClearAll", "[", 
+  RowBox[{
+  "\[Theta]12", ",", "\[Theta]13", ",", "\[Theta]23", ",", "\[Delta]", ",", 
+   "\[CurlyPhi]1", ",", "\[CurlyPhi]2", ",", "m1", ",", "m2", ",", "m3", ",", 
+   "\[CapitalDelta]m2sol", ",", "\[CapitalDelta]m2atm"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"\[Theta]12", "[", "t_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"MixingParsLogScale", "[", "t", "]"}], "\[LeftDoubleBracket]", 
+    "1", "\[RightDoubleBracket]"}], "/", "Degree"}]}], "\n", 
+ RowBox[{
+  RowBox[{"\[Theta]13", "[", "t_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"MixingParsLogScale", "[", "t", "]"}], "\[LeftDoubleBracket]", 
+    "2", "\[RightDoubleBracket]"}], "/", "Degree"}]}], "\n", 
+ RowBox[{
+  RowBox[{"\[Theta]23", "[", "t_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"MixingParsLogScale", "[", "t", "]"}], "\[LeftDoubleBracket]", 
+    "3", "\[RightDoubleBracket]"}], "/", 
+   "Degree"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"\[Delta]", "[", "t_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"MixingParsLogScale", "[", "t", "]"}], "\[LeftDoubleBracket]", 
+    "4", "\[RightDoubleBracket]"}], "/", "Degree"}]}], "\n", 
+ RowBox[{
+  RowBox[{"\[CurlyPhi]1", "[", "t_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"MixingParsLogScale", "[", "t", "]"}], "\[LeftDoubleBracket]", 
+    "8", "\[RightDoubleBracket]"}], "/", 
+   "Degree"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"\[CurlyPhi]2", "[", "t_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"MixingParsLogScale", "[", "t", "]"}], "\[LeftDoubleBracket]", 
+    "9", "\[RightDoubleBracket]"}], "/", 
+   "Degree"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"m1", "[", "t_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{"NuMassesLogScale", "[", "t", "]"}], "\[LeftDoubleBracket]", "1", 
+   "\[RightDoubleBracket]"}]}], "\n", 
+ RowBox[{
+  RowBox[{"m2", "[", "t_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{"NuMassesLogScale", "[", "t", "]"}], "\[LeftDoubleBracket]", "2", 
+   "\[RightDoubleBracket]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"m3", "[", "t_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{"NuMassesLogScale", "[", "t", "]"}], "\[LeftDoubleBracket]", "3", 
+   "\[RightDoubleBracket]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"\[CapitalDelta]m2sol", "[", "t_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"m2", "[", "t", "]"}], "^", "2"}], "-", 
+   RowBox[{
+    RowBox[{"m1", "[", "t", "]"}], "^", "2"}]}]}], "\n", 
+ RowBox[{
+  RowBox[{"\[CapitalDelta]m2atm", "[", "t_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"m3", "[", "t", "]"}], "^", "2"}], "-", 
+   RowBox[{
+    RowBox[{"m2", "[", "t", "]"}], "^", "2"}]}]}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGEReset", "[", "]"}]], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"RGEAdd", "[", "\"\<MSSM\>\"", "]"}], "\[IndentingNewLine]", 
+ RowBox[{"RGEAdd", "[", 
+  RowBox[{"\"\<SM\>\"", ",", 
+   RowBox[{"RGECutoff", "\[Rule]", "200"}]}], "]"}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGESetInitial", "[", 
+  RowBox[{"2", "*", 
+   RowBox[{"10", "^", "16"}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGESolve", "[", 
+  RowBox[{"MZ", ",", 
+   RowBox[{"2", "*", 
+    RowBox[{"10", "^", "16"}]}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.6464563248545513`*^9, 3.6464563435272303`*^9}, 
+   3.6464565117655563`*^9}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["IsCompatibleWithExp"], "Input"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The following parameters are compatible with the experimental \
+data at the 3\[Sigma] CL:\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"\<\"\[Theta]12\"\>", ",", "\<\"\[Theta]23\"\>"}], "}"}]}],
+  SequenceForm[
+  "The following parameters are compatible with the experimental data at the \
+3\[Sigma] CL:", {"\[Theta]12", "\[Theta]23"}],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.646456335518394*^9, 3.6464563529734783`*^9}, 
+   3.646456530770396*^9, 3.6464567320575666`*^9}],
+
+Cell[BoxData["0"], "Output",
+ CellChangeTimes->{
+  3.646456181734499*^9, 3.646456305224517*^9, {3.646456335519372*^9, 
+   3.6464563529746227`*^9}, 3.6464565307715597`*^9, 3.6464567320587263`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"MNSParameters", "[", 
+     RowBox[{
+      RowBox[{"RGEGetSolution", "[", 
+       RowBox[{"MZ", ",", "RGEM\[Nu]"}], "]"}], ",", 
+      RowBox[{"RGEGetSolution", "[", 
+       RowBox[{"MZ", ",", "RGEYe"}], "]"}]}], "]"}], "[", 
+    RowBox[{"[", "1", "]"}], "]"}], "/", "Degree"}], 
+  "\[IndentingNewLine]"}]], "Input",
+ CellChangeTimes->{{3.646456490249144*^9, 3.646456490250122*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "32.781674794752696`", ",", "0.10023415534638574`", ",", 
+   "47.05300931799217`", ",", "1.8673669590904442`*^-13", ",", "360.`", ",", 
+   "179.99999999999997`", ",", "7.55109461786031`*^-15", ",", "0.`", ",", 
+   "0.`"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.646456181854107*^9, 3.6464563052598267`*^9, {3.646456335566485*^9, 
+   3.6464563530331507`*^9}, 3.64645653100242*^9, 3.64645673209237*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[CapitalDelta]m2sol", "[", 
+   RowBox[{"Log", "[", 
+    RowBox[{"10", ",", "MZ"}], "]"}], "]"}], "*", 
+  RowBox[{"10", "^", "5"}]}]], "Input",
+ CellChangeTimes->{3.6464564902513647`*^9}],
+
+Cell[BoxData["8.091604500070146`"], "Output",
+ CellChangeTimes->{
+  3.6464561819782553`*^9, 3.646456305295986*^9, {3.646456335606147*^9, 
+   3.646456353091455*^9}, 3.6464565315260363`*^9, 3.646456732123569*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Abs", "[", 
+  RowBox[{
+   RowBox[{"\[CapitalDelta]m2atm", "[", 
+    RowBox[{"Log", "[", 
+     RowBox[{"10", ",", "MZ"}], "]"}], "]"}], "*", 
+   RowBox[{"10", "^", "3"}]}], "]"}]], "Input",
+ CellChangeTimes->{3.6464564902525587`*^9}],
+
+Cell[BoxData["2.202751063678954`"], "Output",
+ CellChangeTimes->{
+  3.646456182105095*^9, 3.646456305329307*^9, {3.6464563356483727`*^9, 
+   3.6464563531525793`*^9}, 3.646456532602683*^9, 3.6464567321552563`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"MNSParameters", "[", 
+   RowBox[{
+    RowBox[{"RGEGetSolution", "[", 
+     RowBox[{"MZ", ",", "RGEM\[Nu]"}], "]"}], ",", 
+    RowBox[{"RGEGetSolution", "[", 
+     RowBox[{"MZ", ",", "RGEYe"}], "]"}]}], "]"}], "[", 
+  RowBox[{"[", "2", "]"}], "]"}]], "Input",
+ CellChangeTimes->{{3.646456490253765*^9, 3.646456490254435*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "0.015239576985421473`", ",", "0.017696348541303357`", ",", 
+   "0.05015886577041234`"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.646456182449257*^9, 3.646456305362545*^9, {3.646456335688587*^9, 
+   3.6464563532087183`*^9}, 3.6464565326914263`*^9, 3.646456732185341*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"RGEReset", "[", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGEAdd", "[", "\"\<SM\>\"", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGESetInitial", "[", 
+  RowBox[{"2", "*", 
+   RowBox[{"10", "^", "16"}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGESolve", "[", 
+  RowBox[{"MZ", ",", 
+   RowBox[{"2", "*", 
+    RowBox[{"10", "^", "16"}]}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.6464563615109167`*^9, 3.6464563629176073`*^9}, 
+   3.646456512484478*^9}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["IsCompatibleWithExp"], "Input"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The following parameters are compatible with the experimental \
+data at the 3\[Sigma] CL:\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"\<\"\[Theta]12\"\>", ",", "\<\"\[Theta]23\"\>", 
+     ",", "\<\"\[CapitalDelta]m2sol\"\>"}], "}"}]}],
+  SequenceForm[
+  "The following parameters are compatible with the experimental data at the \
+3\[Sigma] CL:", {"\[Theta]12", "\[Theta]23", "\[CapitalDelta]m2sol"}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.646456367163776*^9, 3.646456533070993*^9, 
+  3.64645673250931*^9}],
+
+Cell[BoxData["0"], "Output",
+ CellChangeTimes->{
+  3.646456183218441*^9, 3.646456305687344*^9, {3.646456336137793*^9, 
+   3.6464563671649523`*^9}, 3.646456533071864*^9, 3.6464567325105543`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"MNSParameters", "[", 
+     RowBox[{
+      RowBox[{"RGEGetSolution", "[", 
+       RowBox[{"MZ", ",", "RGEM\[Nu]"}], "]"}], ",", 
+      RowBox[{"RGEGetSolution", "[", 
+       RowBox[{"MZ", ",", "RGEYe"}], "]"}]}], "]"}], "[", 
+    RowBox[{"[", "1", "]"}], "]"}], "/", "Degree"}], 
+  "\[IndentingNewLine]"}]], "Input",
+ CellChangeTimes->{{3.646456490255602*^9, 3.646456490256403*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "33.366162221704016`", ",", "0.014056458105310142`", ",", 
+   "45.56569595614599`", ",", "3.9181227901704316`*^-31", ",", "360.`", ",", 
+   "180.`", ",", "180.`", ",", "0.`", ",", "0.`"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.646456183332128*^9, 3.646456305852593*^9, {3.646456336181572*^9, 
+   3.646456368064472*^9}, 3.646456533181184*^9, 3.646456732546894*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[CapitalDelta]m2sol", "[", 
+   RowBox[{"Log", "[", 
+    RowBox[{"10", ",", "MZ"}], "]"}], "]"}], "*", 
+  RowBox[{"10", "^", "5"}]}]], "Input",
+ CellChangeTimes->{3.646456490257584*^9}],
+
+Cell[BoxData["7.877958680943109`"], "Output",
+ CellChangeTimes->{
+  3.646456183420332*^9, 3.646456305886327*^9, {3.646456336223084*^9, 
+   3.646456368764122*^9}, 3.646456533272813*^9, 3.6464567326022387`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[CapitalDelta]m2atm", "[", 
+   RowBox[{"Log", "[", 
+    RowBox[{"10", ",", "MZ"}], "]"}], "]"}], "*", 
+  RowBox[{"10", "^", "3"}]}]], "Input",
+ CellChangeTimes->{3.646456490258727*^9}],
+
+Cell[BoxData["2.250752830051851`"], "Output",
+ CellChangeTimes->{
+  3.646456183522744*^9, 3.64645630591682*^9, {3.64645633626324*^9, 
+   3.6464563694769897`*^9}, 3.646456533418962*^9, 3.646456732703744*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"MNSParameters", "[", 
+   RowBox[{
+    RowBox[{"RGEGetSolution", "[", 
+     RowBox[{"MZ", ",", "RGEM\[Nu]"}], "]"}], ",", 
+    RowBox[{"RGEGetSolution", "[", 
+     RowBox[{"MZ", ",", "RGEYe"}], "]"}]}], "]"}], "[", 
+  RowBox[{"[", "2", "]"}], "]"}]], "Input",
+ CellChangeTimes->{{3.646456490259922*^9, 3.646456490260585*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "0.03378915223799177`", ",", "0.03493546043451573`", ",", 
+   "0.0589172235074215`"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.646456183625958*^9, 3.646456305947105*^9, {3.6464563363045397`*^9, 
+   3.646456370249928*^9}, 3.646456533564354*^9, 3.6464567328207283`*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"RGEReset", "[", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGEAdd", "[", "\"\<2HDM\>\"", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGESetInitial", "[", 
+  RowBox[{"2", "*", 
+   RowBox[{"10", "^", "16"}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGESolve", "[", 
+  RowBox[{"MZ", ",", 
+   RowBox[{"2", "*", 
+    RowBox[{"10", "^", "16"}]}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.646456376643509*^9, 3.646456377343833*^9}, 
+   3.646456513242572*^9}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["IsCompatibleWithExp"], "Input"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The following parameters are compatible with the experimental \
+data at the 3\[Sigma] CL:\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", "\<\"\[Theta]23\"\>", "}"}]}],
+  SequenceForm[
+  "The following parameters are compatible with the experimental data at the \
+3\[Sigma] CL:", {"\[Theta]23"}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.646456378604723*^9, 3.646456534590212*^9, 
+  3.6464567333951178`*^9}],
+
+Cell[BoxData["0"], "Output",
+ CellChangeTimes->{
+  3.646456184818639*^9, 3.646456306351644*^9, {3.6464563367900667`*^9, 
+   3.646456378605879*^9}, 3.646456534591547*^9, 3.6464567333962393`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"MNSParameters", "[", 
+     RowBox[{
+      RowBox[{"RGEGetSolution", "[", 
+       RowBox[{"MZ", ",", "RGEM\[Nu]"}], "]"}], ",", 
+      RowBox[{"RGEGetSolution", "[", 
+       RowBox[{"MZ", ",", "RGEYe"}], "]"}]}], "]"}], "[", 
+    RowBox[{"[", "1", "]"}], "]"}], "/", "Degree"}], 
+  "\[IndentingNewLine]"}]], "Input",
+ CellChangeTimes->{{3.646456490261682*^9, 3.646456490262372*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "30.36902236523211`", ",", "0.11718075340777978`", ",", 
+   "48.28706225992906`", ",", "3.4068386887511297`*^-28", ",", 
+   "2.0862217609831354`*^-26", ",", "180.`", ",", "180.`", ",", "0.`", ",", 
+   "0.`"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.646456184929325*^9, 3.646456306388711*^9, {3.6464563368691807`*^9, 
+   3.646456379570077*^9}, 3.646456535089813*^9, 3.6464567334458427`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[CapitalDelta]m2sol", "[", 
+   RowBox[{"Log", "[", 
+    RowBox[{"10", ",", "MZ"}], "]"}], "]"}], "*", 
+  RowBox[{"10", "^", "5"}]}]], "Input",
+ CellChangeTimes->{3.646456490263473*^9}],
+
+Cell[BoxData["8.151930291646925`"], "Output",
+ CellChangeTimes->{
+  3.646456185060367*^9, 3.6464563064214907`*^9, {3.646456336914186*^9, 
+   3.646456380417308*^9}, 3.6464565352405643`*^9, 3.646456733490973*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[CapitalDelta]m2atm", "[", 
+   RowBox[{"Log", "[", 
+    RowBox[{"10", ",", "MZ"}], "]"}], "]"}], "*", 
+  RowBox[{"10", "^", "3"}]}]], "Input",
+ CellChangeTimes->{3.6464564902646093`*^9}],
+
+Cell[BoxData["2.1987056472274893`"], "Output",
+ CellChangeTimes->{
+  3.646456185170129*^9, 3.646456306453923*^9, {3.64645633695509*^9, 
+   3.646456381064383*^9}, 3.64645653534365*^9, 3.646456733544043*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"MNSParameters", "[", 
+   RowBox[{
+    RowBox[{"RGEGetSolution", "[", 
+     RowBox[{"MZ", ",", "RGEM\[Nu]"}], "]"}], ",", 
+    RowBox[{"RGEGetSolution", "[", 
+     RowBox[{"MZ", ",", "RGEYe"}], "]"}]}], "]"}], "[", 
+  RowBox[{"[", "2", "]"}], "]"}]], "Input",
+ CellChangeTimes->{{3.6464564902657843`*^9, 3.6464564902664537`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "0.01924650722580288`", ",", "0.021259053208206417`", ",", 
+   "0.05148449271903961`"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.646456185293119*^9, 3.646456306486362*^9, {3.64645633699446*^9, 
+   3.6464563819197693`*^9}, 3.6464565354471607`*^9, 3.6464567335888643`*^9}]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Majorana Neutrinos ohne rechtsh\[ADoubleDot]ndige Neutrinos", \
+"Subsection",
+ CellChangeTimes->{{3.646456382399424*^9, 3.6464563832923307`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"RGEReset", "[", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGEAdd", "[", "\"\<SM0N\>\"", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGESetInitial", "[", 
+  RowBox[{"2", "*", 
+   RowBox[{"10", "^", "16"}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGESolve", "[", 
+  RowBox[{"MZ", ",", 
+   RowBox[{"2", "*", 
+    RowBox[{"10", "^", "16"}]}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.646456390131586*^9, 3.646456390915556*^9}, 
+   3.646456513881352*^9}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["IsCompatibleWithExp"], "Input"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The following parameters are compatible with the experimental \
+data at the 3\[Sigma] CL:\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"\<\"\[Theta]12\"\>", ",", "\<\"\[Theta]23\"\>", 
+     ",", "\<\"\[CapitalDelta]m2sol\"\>"}], "}"}]}],
+  SequenceForm[
+  "The following parameters are compatible with the experimental data at the \
+3\[Sigma] CL:", {"\[Theta]12", "\[Theta]23", "\[CapitalDelta]m2sol"}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.646456535767837*^9, 3.646456733692258*^9}],
+
+Cell[BoxData["0"], "Output",
+ CellChangeTimes->{
+  3.6464561856770773`*^9, 3.646456306589912*^9, {3.646456337172962*^9, 
+   3.646456354621998*^9}, 3.6464565357696447`*^9, 3.646456733693431*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"MNSParameters", "[", 
+     RowBox[{
+      RowBox[{"RGEGetSolution", "[", 
+       RowBox[{"MZ", ",", "RGEM\[Nu]"}], "]"}], ",", 
+      RowBox[{"RGEGetSolution", "[", 
+       RowBox[{"MZ", ",", "RGEYe"}], "]"}]}], "]"}], "[", 
+    RowBox[{"[", "1", "]"}], "]"}], "/", "Degree"}], 
+  "\[IndentingNewLine]"}]], "Input",
+ CellChangeTimes->{{3.646456490267555*^9, 3.646456490268243*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "32.976343534096266`", ",", "0.0001152069536986561`", ",", 
+   "44.99621042541856`", ",", "180.`", ",", "180.`", ",", "180.`", ",", 
+   "180.`", ",", "0.`", ",", "0.`"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.64645618580791*^9, 3.6464563066519537`*^9, {3.646456337223029*^9, 
+   3.6464563546741943`*^9}, 3.646456535894917*^9, 3.6464567337408*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[CapitalDelta]m2sol", "[", 
+   RowBox[{"Log", "[", 
+    RowBox[{"10", ",", "MZ"}], "]"}], "]"}], "*", 
+  RowBox[{"10", "^", "5"}]}]], "Input",
+ CellChangeTimes->{3.646456490269294*^9}],
+
+Cell[BoxData["7.817619575093207`"], "Output",
+ CellChangeTimes->{
+  3.6464561859358473`*^9, 3.646456306761188*^9, {3.6464563372624702`*^9, 
+   3.646456354715968*^9}, 3.646456536011922*^9, 3.6464567337831373`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[CapitalDelta]m2atm", "[", 
+   RowBox[{"Log", "[", 
+    RowBox[{"10", ",", "MZ"}], "]"}], "]"}], "*", 
+  RowBox[{"10", "^", "3"}]}]], "Input",
+ CellChangeTimes->{3.646456490270422*^9}],
+
+Cell[BoxData["1.953775181470438`"], "Output",
+ CellChangeTimes->{
+  3.646456186046648*^9, 3.646456306902738*^9, {3.646456337383515*^9, 
+   3.6464563547540417`*^9}, 3.646456536154643*^9, 3.64645673383141*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"MNSParameters", "[", 
+   RowBox[{
+    RowBox[{"RGEGetSolution", "[", 
+     RowBox[{"MZ", ",", "RGEM\[Nu]"}], "]"}], ",", 
+    RowBox[{"RGEGetSolution", "[", 
+     RowBox[{"MZ", ",", "RGEYe"}], "]"}]}], "]"}], "[", 
+  RowBox[{"[", "2", "]"}], "]"}]], "Input",
+ CellChangeTimes->{{3.6464564902715816`*^9, 3.646456490272234*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "0.031254261683817314`", ",", "0.032480841570862416`", ",", 
+   "0.054852349545137104`"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.646456186172068*^9, 3.6464563069358263`*^9, {3.6464563374272003`*^9, 
+   3.646456354791279*^9}, 3.6464565362624197`*^9, 3.646456733840163*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"RGEReset", "[", "]"}]], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"RGEAdd", "[", "\"\<MSSM0N\>\"", "]"}], "\[IndentingNewLine]", 
+ RowBox[{"RGEAdd", "[", 
+  RowBox[{"\"\<SM0N\>\"", ",", 
+   RowBox[{"RGECutoff", "\[Rule]", "200"}]}], "]"}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGESetInitial", "[", 
+  RowBox[{"2", "*", 
+   RowBox[{"10", "^", "16"}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGESolve", "[", 
+  RowBox[{"MZ", ",", 
+   RowBox[{"2", "*", 
+    RowBox[{"10", "^", "16"}]}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.646456396804887*^9, 3.6464563976115723`*^9}, 
+   3.646456514545909*^9}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["IsCompatibleWithExp"], "Input"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The following parameters are compatible with the experimental \
+data at the 3\[Sigma] CL:\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"\<\"\[Theta]12\"\>", ",", "\<\"\[Theta]23\"\>", 
+     ",", "\<\"\[CapitalDelta]m2sol\"\>"}], "}"}]}],
+  SequenceForm[
+  "The following parameters are compatible with the experimental data at the \
+3\[Sigma] CL:", {"\[Theta]12", "\[Theta]23", "\[CapitalDelta]m2sol"}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.646456536513013*^9, 3.6464567340033493`*^9}],
+
+Cell[BoxData["0"], "Output",
+ CellChangeTimes->{
+  3.6464561864968243`*^9, 3.6464563072867613`*^9, {3.646456337566166*^9, 
+   3.646456354935012*^9}, 3.6464565365138617`*^9, 3.646456734004723*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"MNSParameters", "[", 
+     RowBox[{
+      RowBox[{"RGEGetSolution", "[", 
+       RowBox[{"MZ", ",", "RGEM\[Nu]"}], "]"}], ",", 
+      RowBox[{"RGEGetSolution", "[", 
+       RowBox[{"MZ", ",", "RGEYe"}], "]"}]}], "]"}], "[", 
+    RowBox[{"[", "1", "]"}], "]"}], "/", "Degree"}], 
+  "\[IndentingNewLine]"}]], "Input",
+ CellChangeTimes->{{3.646456490273375*^9, 3.646456490274156*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "34.591229097345675`", ",", "0.11902638532057315`", ",", 
+   "48.378611291438226`", ",", "8.463506559016929`*^-13", ",", 
+   "180.00000000000006`", ",", "179.99999999999994`", ",", 
+   "34.22444033848993`", ",", "9.26298886546647`*^-14", ",", "0.`"}], 
+  "}"}]], "Output",
+ CellChangeTimes->{
+  3.64645618681994*^9, 3.646456307324933*^9, {3.646456337611352*^9, 
+   3.646456354974415*^9}, 3.646456536616534*^9, 3.646456734054029*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[CapitalDelta]m2sol", "[", 
+   RowBox[{"Log", "[", 
+    RowBox[{"10", ",", "MZ"}], "]"}], "]"}], "*", 
+  RowBox[{"10", "^", "5"}]}]], "Input",
+ CellChangeTimes->{3.646456490275247*^9}],
+
+Cell[BoxData["8.006089991081824`"], "Output",
+ CellChangeTimes->{
+  3.646456186927044*^9, 3.646456307427762*^9, {3.6464563376610413`*^9, 
+   3.646456355027011*^9}, 3.646456536718689*^9, 3.646456734105904*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[CapitalDelta]m2atm", "[", 
+   RowBox[{"Log", "[", 
+    RowBox[{"10", ",", "MZ"}], "]"}], "]"}], "*", 
+  RowBox[{"10", "^", "3"}]}]], "Input",
+ CellChangeTimes->{3.646456490276382*^9}],
+
+Cell[BoxData["1.7025620449398164`"], "Output",
+ CellChangeTimes->{
+  3.646456187023514*^9, 3.646456307495193*^9, {3.646456337702333*^9, 
+   3.646456355063672*^9}, 3.646456536820945*^9, 3.646456734153574*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"MNSParameters", "[", 
+   RowBox[{
+    RowBox[{"RGEGetSolution", "[", 
+     RowBox[{"MZ", ",", "RGEM\[Nu]"}], "]"}], ",", 
+    RowBox[{"RGEGetSolution", "[", 
+     RowBox[{"MZ", ",", "RGEYe"}], "]"}]}], "]"}], "[", 
+  RowBox[{"[", "2", "]"}], "]"}]], "Input",
+ CellChangeTimes->{{3.646456490277568*^9, 3.6464564902782373`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "0.03083001543165879`", ",", "0.03210219231496716`", ",", 
+   "0.052279181290136464`"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.6464561871342173`*^9, 3.646456307539299*^9, {3.6464563377408047`*^9, 
+   3.646456355111495*^9}, 3.646456536961412*^9, 3.646456734162653*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"RGEReset", "[", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGEAdd", "[", "\"\<2HDM0N\>\"", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGESetInitial", "[", 
+  RowBox[{"2", "*", 
+   RowBox[{"10", "^", "16"}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGESolve", "[", 
+  RowBox[{"MZ", ",", 
+   RowBox[{"2", "*", 
+    RowBox[{"10", "^", "16"}]}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.646456405716213*^9, 3.646456406566319*^9}, 
+   3.646456515229985*^9}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["IsCompatibleWithExp"], "Input"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The following parameters are compatible with the experimental \
+data at the 3\[Sigma] CL:\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"\<\"\[Theta]12\"\>", ",", "\<\"\[Theta]23\"\>"}], "}"}]}],
+  SequenceForm[
+  "The following parameters are compatible with the experimental data at the \
+3\[Sigma] CL:", {"\[Theta]12", "\[Theta]23"}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.64645653718954*^9, 3.646456734309601*^9}],
+
+Cell[BoxData["0"], "Output",
+ CellChangeTimes->{
+  3.646456187516817*^9, 3.646456307668844*^9, {3.646456337876396*^9, 
+   3.6464563552378273`*^9}, 3.6464565371905327`*^9, 3.6464567343110867`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"MNSParameters", "[", 
+     RowBox[{
+      RowBox[{"RGEGetSolution", "[", 
+       RowBox[{"MZ", ",", "RGEM\[Nu]"}], "]"}], ",", 
+      RowBox[{"RGEGetSolution", "[", 
+       RowBox[{"MZ", ",", "RGEYe"}], "]"}]}], "]"}], "[", 
+    RowBox[{"[", "1", "]"}], "]"}], "/", "Degree"}], 
+  "\[IndentingNewLine]"}]], "Input",
+ CellChangeTimes->{{3.646456490279324*^9, 3.6464564902800217`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "32.936920548329034`", ",", "0.09185484646722611`", ",", 
+   "47.18912045275264`", ",", "360.`", ",", "180.`", ",", "180.`", ",", 
+   "180.`", ",", "1.4033418597032032`*^-14", ",", 
+   "1.4033418597032043`*^-14"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.646456187599825*^9, 3.6464563077104588`*^9, {3.646456337925338*^9, 
+   3.646456355282206*^9}, 3.646456537330875*^9, 3.646456734395829*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[CapitalDelta]m2sol", "[", 
+   RowBox[{"Log", "[", 
+    RowBox[{"10", ",", "MZ"}], "]"}], "]"}], "*", 
+  RowBox[{"10", "^", "5"}]}]], "Input",
+ CellChangeTimes->{3.646456490281056*^9}],
+
+Cell[BoxData["8.782898571780992`"], "Output",
+ CellChangeTimes->{
+  3.646456187713078*^9, 3.6464563077531853`*^9, {3.646456337970833*^9, 
+   3.6464563553310204`*^9}, 3.646456537460781*^9, 3.6464567344779577`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[CapitalDelta]m2atm", "[", 
+   RowBox[{"Log", "[", 
+    RowBox[{"10", ",", "MZ"}], "]"}], "]"}], "*", 
+  RowBox[{"10", "^", "3"}]}]], "Input",
+ CellChangeTimes->{3.6464564902821836`*^9}],
+
+Cell[BoxData["2.037084413443312`"], "Output",
+ CellChangeTimes->{
+  3.6464561878086233`*^9, 3.6464563077980213`*^9, {3.646456338020958*^9, 
+   3.646456355368908*^9}, 3.646456537588097*^9, 3.646456734587343*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"MNSParameters", "[", 
+   RowBox[{
+    RowBox[{"RGEGetSolution", "[", 
+     RowBox[{"MZ", ",", "RGEM\[Nu]"}], "]"}], ",", 
+    RowBox[{"RGEGetSolution", "[", 
+     RowBox[{"MZ", ",", "RGEYe"}], "]"}]}], "]"}], "[", 
+  RowBox[{"[", "2", "]"}], "]"}]], "Input",
+ CellChangeTimes->{{3.646456490283367*^9, 3.646456490284081*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "0.0220568871544318`", ",", "0.02396529275141759`", ",", 
+   "0.051102051525398276`"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.646456187920388*^9, 3.6464563078437843`*^9, {3.646456338076805*^9, 
+   3.646456355424889*^9}, 3.646456537714637*^9, 3.646456734708191*^9}]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Hochlaufen Majorana Neutrinos ohne rechtsh\[ADoubleDot]ndige \
+Neutrinos", "Subsection"],
+
+Cell[BoxData[
+ RowBox[{"RGEReset", "[", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGEAdd", "[", "\"\<SM0N\>\"", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGESetInitial", "[", 
+  RowBox[{"MZ", ",", 
+   RowBox[{"RGESuggestion", "->", "\"\<MZ\>\""}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGESolve", "[", 
+  RowBox[{"MZ", ",", 
+   RowBox[{"2", "*", 
+    RowBox[{"10", "^", "16"}]}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.646456421792879*^9, 3.646456422524147*^9}, 
+   3.646456515931089*^9}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["IsCompatibleWithExp"], "Input"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The following parameters are compatible with the experimental \
+data at the 3\[Sigma] CL:\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"\<\"\[Theta]12\"\>", ",", "\<\"\[Theta]13\"\>", 
+     ",", "\<\"\[Theta]23\"\>", ",", "\<\"\[CapitalDelta]m2atm\"\>", 
+     ",", "\<\"\[CapitalDelta]m2sol\"\>"}], "}"}]}],
+  SequenceForm[
+  "The following parameters are compatible with the experimental data at the \
+3\[Sigma] CL:", {
+   "\[Theta]12", "\[Theta]13", "\[Theta]23", "\[CapitalDelta]m2atm", 
+    "\[CapitalDelta]m2sol"}],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.646456188479464*^9, 3.6464563079504223`*^9, {3.6464563381926603`*^9, 
+   3.646456355558276*^9}, 3.646456538580751*^9, 3.646456734821899*^9}],
+
+Cell[BoxData["1"], "Output",
+ CellChangeTimes->{
+  3.646456188479792*^9, 3.6464563079510527`*^9, {3.646456338193119*^9, 
+   3.646456355558885*^9}, 3.646456538581546*^9, 3.646456734822908*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"MNSParameters", "[", 
+     RowBox[{
+      RowBox[{"RGEGetSolution", "[", 
+       RowBox[{"MZ", ",", "RGEM\[Nu]"}], "]"}], ",", 
+      RowBox[{"RGEGetSolution", "[", 
+       RowBox[{"MZ", ",", "RGEYe"}], "]"}]}], "]"}], "[", 
+    RowBox[{"[", "1", "]"}], "]"}], "/", "Degree"}], 
+  "\[IndentingNewLine]"}]], "Input",
+ CellChangeTimes->{{3.6464564902851553`*^9, 3.6464564902858458`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "33.56999999999983`", ",", "8.750000000000004`", ",", "41.399999999999984`",
+    ",", "341.`", ",", "359.99999999999994`", ",", "360.`", ",", 
+   "8.444730179629899`*^-17", ",", "359.99999999999994`", ",", "0.`"}], 
+  "}"}]], "Output",
+ CellChangeTimes->{
+  3.646456188684926*^9, 3.64645630799137*^9, {3.646456338237954*^9, 
+   3.646456355799835*^9}, 3.6464565388065643`*^9, 3.646456734865492*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[CapitalDelta]m2sol", "[", 
+   RowBox[{"Log", "[", 
+    RowBox[{"10", ",", "MZ"}], "]"}], "]"}], "*", 
+  RowBox[{"10", "^", "5"}]}]], "Input",
+ CellChangeTimes->{{3.646456414442465*^9, 3.6464564145297337`*^9}}],
+
+Cell[BoxData["7.450000000000295`"], "Output",
+ CellChangeTimes->{
+  3.646456188852105*^9, 3.646456308000031*^9, {3.646456338281335*^9, 
+   3.646456355852537*^9}, 3.646456538932763*^9, 3.646456734905415*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[CapitalDelta]m2atm", "[", 
+   RowBox[{"Log", "[", 
+    RowBox[{"10", ",", "MZ"}], "]"}], "]"}], "*", 
+  RowBox[{"10", "^", "3"}]}]], "Input",
+ CellChangeTimes->{{3.646456418089385*^9, 3.646456418193878*^9}}],
+
+Cell[BoxData["2.4209999999999967`"], "Output",
+ CellChangeTimes->{
+  3.646456189020143*^9, 3.646456308009075*^9, {3.64645633832286*^9, 
+   3.646456355892725*^9}, 3.646456539143239*^9, 3.6464567349451714`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"MNSParameters", "[", 
+   RowBox[{
+    RowBox[{"RGEGetSolution", "[", 
+     RowBox[{"MZ", ",", "RGEM\[Nu]"}], "]"}], ",", 
+    RowBox[{"RGEGetSolution", "[", 
+     RowBox[{"MZ", ",", "RGEYe"}], "]"}]}], "]"}], "[", 
+  RowBox[{"[", "2", "]"}], "]"}]], "Input",
+ CellChangeTimes->{{3.646456490286895*^9, 3.646456490287558*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "0.04999999999999999`", ",", "0.05073953093988948`", ",", 
+   "0.07067885115082162`"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.6464561893074913`*^9, 3.646456308017837*^9, {3.646456338363727*^9, 
+   3.646456356007729*^9}, 3.646456539245943*^9, 3.646456734984511*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"RGEReset", "[", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGEAdd", "[", "\"\<2HDM0N\>\"", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGESetInitial", "[", 
+  RowBox[{"MZ", ",", 
+   RowBox[{"RGESuggestion", "->", "\"\<MZ\>\""}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGESolve", "[", 
+  RowBox[{"MZ", ",", 
+   RowBox[{"10", "^", "12"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.646456427662231*^9, 3.646456428345778*^9}, 
+   3.646456507667104*^9}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["IsCompatibleWithExp"], "Input"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The following parameters are compatible with the experimental \
+data at the 3\[Sigma] CL:\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"\<\"\[Theta]12\"\>", ",", "\<\"\[Theta]23\"\>", 
+     ",", "\<\"\[CapitalDelta]m2atm\"\>", 
+     ",", "\<\"\[CapitalDelta]m2sol\"\>"}], "}"}]}],
+  SequenceForm[
+  "The following parameters are compatible with the experimental data at the \
+3\[Sigma] CL:", {
+   "\[Theta]12", "\[Theta]23", "\[CapitalDelta]m2atm", 
+    "\[CapitalDelta]m2sol"}],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.6464561902378817`*^9, 3.646456308182438*^9, {3.6464563384788113`*^9, 
+   3.646456356127489*^9}, 3.646456539399931*^9, 3.6464567351307583`*^9}],
+
+Cell[BoxData["1"], "Output",
+ CellChangeTimes->{
+  3.646456190238183*^9, 3.6464563081832848`*^9, {3.6464563384793987`*^9, 
+   3.646456356128159*^9}, 3.6464565394014187`*^9, 3.646456735131629*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"MNSParameters", "[", 
+     RowBox[{
+      RowBox[{"RGEGetSolution", "[", 
+       RowBox[{"MZ", ",", "RGEM\[Nu]"}], "]"}], ",", 
+      RowBox[{"RGEGetSolution", "[", 
+       RowBox[{"MZ", ",", "RGEYe"}], "]"}]}], "]"}], "[", 
+    RowBox[{"[", "1", "]"}], "]"}], "/", "Degree"}], 
+  "\[IndentingNewLine]"}]], "Input",
+ CellChangeTimes->{{3.6464564466319933`*^9, 3.646456450358186*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "33.00000000000089`", ",", "1.3370297685608457`*^-15", ",", 
+   "44.99999999999998`", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0", 
+   ",", "0"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.646456190762068*^9, 3.646456308224019*^9, {3.6464563385195007`*^9, 
+   3.646456356169424*^9}, 3.6464565395615997`*^9, 3.646456735312508*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[CapitalDelta]m2sol", "[", 
+   RowBox[{"Log", "[", 
+    RowBox[{"10", ",", "MZ"}], "]"}], "]"}], "*", 
+  RowBox[{"10", "^", "5"}]}]], "Input",
+ CellChangeTimes->{{3.646456432731082*^9, 3.6464564328064957`*^9}}],
+
+Cell[BoxData["7.999999999999934`"], "Output",
+ CellChangeTimes->{
+  3.646456190882759*^9, 3.6464563082353992`*^9, {3.646456338563114*^9, 
+   3.6464563562080183`*^9}, 3.646456540412964*^9, 3.646456735369433*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[CapitalDelta]m2atm", "[", 
+   RowBox[{"Log", "[", 
+    RowBox[{"10", ",", "MZ"}], "]"}], "]"}], "*", 
+  RowBox[{"10", "^", "3"}]}]], "Input",
+ CellChangeTimes->{{3.646456435591016*^9, 3.6464564356854477`*^9}}],
+
+Cell[BoxData["2.4999999999999982`"], "Output",
+ CellChangeTimes->{
+  3.6464561910028152`*^9, 3.646456308245249*^9, {3.646456338615061*^9, 
+   3.646456356252985*^9}, 3.64645654090238*^9, 3.646456735418385*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"MNSParameters", "[", 
+   RowBox[{
+    RowBox[{"RGEGetSolution", "[", 
+     RowBox[{"MZ", ",", "RGEM\[Nu]"}], "]"}], ",", 
+    RowBox[{"RGEGetSolution", "[", 
+     RowBox[{"MZ", ",", "RGEYe"}], "]"}]}], "]"}], "[", 
+  RowBox[{"[", "2", "]"}], "]"}]], "Input",
+ CellChangeTimes->{{3.646456438855739*^9, 3.646456442636943*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "0.05000000000000002`", ",", "0.050793700396801186`", ",", 
+   "0.07127411872482184`"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.6464561911305637`*^9, 3.64645630825394*^9, {3.646456338656098*^9, 
+   3.6464563563027887`*^9}, 3.6464565410124693`*^9, 3.646456735468237*^9}]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Dirac Neutrinos", "Subsection"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ClearAll", "[", 
+   RowBox[{"Mnu", ",", "Ye"}], "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Mnu", "[", "mu_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{"RGEGetSolution", "[", 
+    RowBox[{"mu", ",", "RGEM\[Nu]"}], "]"}], "//", 
+   "Chop"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Ye", "[", "mu_", "]"}], ":=", 
+   RowBox[{
+    RowBox[{"RGEGetSolution", "[", 
+     RowBox[{"mu", ",", "RGEYe"}], "]"}], "//", "Chop"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{"ClearAll", "[", 
+  RowBox[{
+  "MixingPars", ",", "MixingParsLogScale", ",", "NuMasses", ",", 
+   "NuMassesLogScale"}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"MixingPars", "[", "mu_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{"DiracMNSParameters", "[", 
+    RowBox[{
+     RowBox[{"Mnu", "[", "mu", "]"}], ",", 
+     RowBox[{"Ye", "[", "mu", "]"}]}], "]"}], "\[LeftDoubleBracket]", "1", 
+   "\[RightDoubleBracket]"}]}], "\n", 
+ RowBox[{
+  RowBox[{"MixingParsLogScale", "[", "x_", "]"}], ":=", 
+  RowBox[{"MixingPars", "[", 
+   RowBox[{"10", "^", "x"}], "]"}]}], "\n", 
+ RowBox[{
+  RowBox[{"NuMasses", "[", "mu_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{"DiracMNSParameters", "[", 
+    RowBox[{
+     RowBox[{"Mnu", "[", "mu", "]"}], ",", 
+     RowBox[{"Ye", "[", "mu", "]"}]}], "]"}], "\[LeftDoubleBracket]", "2", 
+   "\[RightDoubleBracket]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"NuMassesLogScale", "[", "x_", "]"}], ":=", 
+  RowBox[{"NuMasses", "[", 
+   RowBox[{"10", "^", "x"}], "]"}]}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"ClearAll", "[", 
+  RowBox[{
+  "\[Theta]12", ",", "\[Theta]13", ",", "\[Theta]23", ",", "\[Delta]", ",", 
+   "\[CurlyPhi]1", ",", "\[CurlyPhi]2", ",", "m1", ",", "m2", ",", "m3", ",", 
+   "\[CapitalDelta]m2sol", ",", "\[CapitalDelta]m2atm"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"\[Theta]12", "[", "t_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"MixingParsLogScale", "[", "t", "]"}], "\[LeftDoubleBracket]", 
+    "1", "\[RightDoubleBracket]"}], "/", "Degree"}]}], "\n", 
+ RowBox[{
+  RowBox[{"\[Theta]13", "[", "t_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"MixingParsLogScale", "[", "t", "]"}], "\[LeftDoubleBracket]", 
+    "2", "\[RightDoubleBracket]"}], "/", "Degree"}]}], "\n", 
+ RowBox[{
+  RowBox[{"\[Theta]23", "[", "t_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"MixingParsLogScale", "[", "t", "]"}], "\[LeftDoubleBracket]", 
+    "3", "\[RightDoubleBracket]"}], "/", 
+   "Degree"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"\[Delta]", "[", "t_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"MixingParsLogScale", "[", "t", "]"}], "\[LeftDoubleBracket]", 
+    "4", "\[RightDoubleBracket]"}], "/", "Degree"}]}], "\n", 
+ RowBox[{
+  RowBox[{"\[CurlyPhi]1", "[", "t_", "]"}], ":=", 
+  "0"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"\[CurlyPhi]2", "[", "t_", "]"}], ":=", 
+  "0"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"m1", "[", "t_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{"NuMassesLogScale", "[", "t", "]"}], "\[LeftDoubleBracket]", "1", 
+   "\[RightDoubleBracket]"}]}], "\n", 
+ RowBox[{
+  RowBox[{"m2", "[", "t_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{"NuMassesLogScale", "[", "t", "]"}], "\[LeftDoubleBracket]", "2", 
+   "\[RightDoubleBracket]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"m3", "[", "t_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{"NuMassesLogScale", "[", "t", "]"}], "\[LeftDoubleBracket]", "3", 
+   "\[RightDoubleBracket]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"\[CapitalDelta]m2sol", "[", "t_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"m2", "[", "t", "]"}], "^", "2"}], "-", 
+   RowBox[{
+    RowBox[{"m1", "[", "t", "]"}], "^", "2"}]}]}], "\n", 
+ RowBox[{
+  RowBox[{"\[CapitalDelta]m2atm", "[", "t_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"m3", "[", "t", "]"}], "^", "2"}], "-", 
+   RowBox[{
+    RowBox[{"m2", "[", "t", "]"}], "^", "2"}]}]}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGEReset", "[", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGEAdd", "[", "\"\<SMDirac\>\"", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGESetInitial", "[", 
+  RowBox[{"2", "*", 
+   RowBox[{"10", "^", "16"}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGESolve", "[", 
+  RowBox[{"MZ", ",", 
+   RowBox[{"2", "*", 
+    RowBox[{"10", "^", "16"}]}]}], "]"}]], "Input",
+ CellChangeTimes->{3.646456474528227*^9}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["IsCompatibleWithExp"], "Input"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The following parameters are compatible with the experimental \
+data at the 3\[Sigma] CL:\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"\<\"\[Theta]12\"\>", ",", "\<\"\[Theta]23\"\>"}], "}"}]}],
+  SequenceForm[
+  "The following parameters are compatible with the experimental data at the \
+3\[Sigma] CL:", {"\[Theta]12", "\[Theta]23"}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.646456541236307*^9, 3.646456735601553*^9}],
+
+Cell[BoxData["0"], "Output",
+ CellChangeTimes->{
+  3.646456191936388*^9, 3.646456308346327*^9, {3.646456339146656*^9, 
+   3.646456356431509*^9}, 3.646456541237699*^9, 3.646456735602981*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"DiracMNSParameters", "[", 
+     RowBox[{
+      RowBox[{"RGEGetSolution", "[", 
+       RowBox[{"MZ", ",", "RGEM\[Nu]"}], "]"}], ",", 
+      RowBox[{"RGEGetSolution", "[", 
+       RowBox[{"MZ", ",", "RGEYe"}], "]"}]}], "]"}], "[", 
+    RowBox[{"[", "1", "]"}], "]"}], "/", "Degree"}], 
+  "\[IndentingNewLine]"}]], "Input",
+ CellChangeTimes->{{3.646456482648878*^9, 3.646456488415797*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "32.97678960496125`", ",", "0.00009903804097485748`", ",", 
+   "44.996500696088084`", ",", "180.`"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.646456192061068*^9, 3.646456308384714*^9, {3.6464563391832447`*^9, 
+   3.6464563564817667`*^9}, 3.6464565415239077`*^9, 3.646456735673183*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[CapitalDelta]m2sol", "[", 
+   RowBox[{"Log", "[", 
+    RowBox[{"10", ",", "MZ"}], "]"}], "]"}], "*", 
+  RowBox[{"10", "^", "5"}]}]], "Input",
+ CellChangeTimes->{3.6464564884487343`*^9}],
+
+Cell[BoxData["8.202922255166499`"], "Output",
+ CellChangeTimes->{
+  3.646456192413336*^9, 3.646456308420253*^9, {3.6464563392177553`*^9, 
+   3.6464563565215063`*^9}, 3.646456541658873*^9, 3.646456735719961*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[CapitalDelta]m2atm", "[", 
+   RowBox[{"Log", "[", 
+    RowBox[{"10", ",", "MZ"}], "]"}], "]"}], "*", 
+  RowBox[{"10", "^", "3"}]}]], "Input",
+ CellChangeTimes->{3.6464564884737988`*^9}],
+
+Cell[BoxData["1.6400426546789326`"], "Output",
+ CellChangeTimes->{
+  3.6464561925135307`*^9, 3.6464563084560328`*^9, {3.6464563392525253`*^9, 
+   3.646456356568262*^9}, 3.6464565417977667`*^9, 3.646456735772715*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"DiracMNSParameters", "[", 
+   RowBox[{
+    RowBox[{"RGEGetSolution", "[", 
+     RowBox[{"MZ", ",", "RGEM\[Nu]"}], "]"}], ",", 
+    RowBox[{"RGEGetSolution", "[", 
+     RowBox[{"MZ", ",", "RGEYe"}], "]"}]}], "]"}], "[", 
+  RowBox[{"[", "2", "]"}], "]"}]], "Input",
+ CellChangeTimes->{{3.6464564884997272`*^9, 3.646456488511669*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "0.04527665659187502`", ",", "0.04617363809242505`", ",", 
+   "0.06141699690939942`"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.646456192627564*^9, 3.64645630849463*^9, {3.646456339289465*^9, 
+   3.6464563566267853`*^9}, 3.646456541917069*^9, 3.646456735825375*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"RGEReset", "[", "]"}]], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"RGEAdd", "[", "\"\<MSSMDirac\>\"", "]"}], "\[IndentingNewLine]", 
+ RowBox[{"RGEAdd", "[", 
+  RowBox[{"\"\<SMDirac\>\"", ",", 
+   RowBox[{"RGECutoff", "\[Rule]", "200"}]}], "]"}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGESetInitial", "[", 
+  RowBox[{"2", "*", 
+   RowBox[{"10", "^", "16"}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGESolve", "[", 
+  RowBox[{"MZ", ",", 
+   RowBox[{"2", "*", 
+    RowBox[{"10", "^", "16"}]}]}], "]"}]], "Input",
+ CellChangeTimes->{3.646456488530943*^9}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["IsCompatibleWithExp"], "Input"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The following parameters are compatible with the experimental \
+data at the 3\[Sigma] CL:\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"\<\"\[Theta]12\"\>", ",", "\<\"\[Theta]23\"\>"}], "}"}]}],
+  SequenceForm[
+  "The following parameters are compatible with the experimental data at the \
+3\[Sigma] CL:", {"\[Theta]12", "\[Theta]23"}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.6464565421556883`*^9, 3.646456735979533*^9}],
+
+Cell[BoxData["0"], "Output",
+ CellChangeTimes->{
+  3.646456192951229*^9, 3.6464563086882687`*^9, {3.646456339431385*^9, 
+   3.646456356796624*^9}, 3.646456542156739*^9, 3.646456735980502*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"DiracMNSParameters", "[", 
+     RowBox[{
+      RowBox[{"RGEGetSolution", "[", 
+       RowBox[{"MZ", ",", "RGEM\[Nu]"}], "]"}], ",", 
+      RowBox[{"RGEGetSolution", "[", 
+       RowBox[{"MZ", ",", "RGEYe"}], "]"}]}], "]"}], "[", 
+    RowBox[{"[", "1", "]"}], "]"}], "/", "Degree"}], 
+  "\[IndentingNewLine]"}]], "Input",
+ CellChangeTimes->{{3.646456488548283*^9, 3.646456488549337*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "33.60253681691665`", ",", "0.04444523984605746`", ",", 
+   "46.762518513683524`", ",", "0.`"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.646456193061358*^9, 3.6464563087329607`*^9, {3.646456339469056*^9, 
+   3.646456356840959*^9}, 3.646456542263069*^9, 3.646456736030281*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[CapitalDelta]m2sol", "[", 
+   RowBox[{"Log", "[", 
+    RowBox[{"10", ",", "MZ"}], "]"}], "]"}], "*", 
+  RowBox[{"10", "^", "5"}]}]], "Input",
+ CellChangeTimes->{3.6464564885601463`*^9}],
+
+Cell[BoxData["8.676273113422043`"], "Output",
+ CellChangeTimes->{
+  3.646456193161283*^9, 3.646456308768704*^9, {3.646456339504589*^9, 
+   3.64645635688733*^9}, 3.6464565423644743`*^9, 3.646456736071562*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[CapitalDelta]m2atm", "[", 
+   RowBox[{"Log", "[", 
+    RowBox[{"10", ",", "MZ"}], "]"}], "]"}], "*", 
+  RowBox[{"10", "^", "3"}]}]], "Input",
+ CellChangeTimes->{3.646456488568933*^9}],
+
+Cell[BoxData["2.2703364357761924`"], "Output",
+ CellChangeTimes->{
+  3.646456193258733*^9, 3.646456308807139*^9, {3.646456339539568*^9, 
+   3.646456356939722*^9}, 3.646456542509264*^9, 3.646456736117594*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"DiracMNSParameters", "[", 
+   RowBox[{
+    RowBox[{"RGEGetSolution", "[", 
+     RowBox[{"MZ", ",", "RGEM\[Nu]"}], "]"}], ",", 
+    RowBox[{"RGEGetSolution", "[", 
+     RowBox[{"MZ", ",", "RGEYe"}], "]"}]}], "]"}], "[", 
+  RowBox[{"[", "2", "]"}], "]"}]], "Input",
+ CellChangeTimes->{{3.6464564885803213`*^9, 3.6464564885813427`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "0.03522209254946538`", ",", "0.03643293200796945`", ",", 
+   "0.0599807883448819`"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.6464561933672953`*^9, 3.646456308865608*^9, {3.6464563395804167`*^9, 
+   3.646456356992146*^9}, 3.646456543074497*^9, 3.64645673616217*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"RGEReset", "[", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGEAdd", "[", "\"\<2HDMDirac\>\"", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGESetInitial", "[", 
+  RowBox[{"2", "*", 
+   RowBox[{"10", "^", "16"}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGESolve", "[", 
+  RowBox[{"MZ", ",", 
+   RowBox[{"2", "*", 
+    RowBox[{"10", "^", "16"}]}]}], "]"}]], "Input",
+ CellChangeTimes->{3.64645648858945*^9}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["IsCompatibleWithExp"], "Input"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The following parameters are compatible with the experimental \
+data at the 3\[Sigma] CL:\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"\<\"\[Theta]12\"\>", ",", "\<\"\[Theta]23\"\>", 
+     ",", "\<\"\[CapitalDelta]m2atm\"\>"}], "}"}]}],
+  SequenceForm[
+  "The following parameters are compatible with the experimental data at the \
+3\[Sigma] CL:", {"\[Theta]12", "\[Theta]23", "\[CapitalDelta]m2atm"}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.646456544062791*^9, 3.646456736292597*^9}],
+
+Cell[BoxData["0"], "Output",
+ CellChangeTimes->{
+  3.646456193713431*^9, 3.646456309025558*^9, {3.646456339702663*^9, 
+   3.646456357149762*^9}, 3.64645654406371*^9, 3.64645673629357*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"DiracMNSParameters", "[", 
+     RowBox[{
+      RowBox[{"RGEGetSolution", "[", 
+       RowBox[{"MZ", ",", "RGEM\[Nu]"}], "]"}], ",", 
+      RowBox[{"RGEGetSolution", "[", 
+       RowBox[{"MZ", ",", "RGEYe"}], "]"}]}], "]"}], "[", 
+    RowBox[{"[", "1", "]"}], "]"}], "/", "Degree"}], 
+  "\[IndentingNewLine]"}]], "Input",
+ CellChangeTimes->{{3.646456488600852*^9, 3.646456488601808*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "34.13880753029891`", ",", "0.048533642589954365`", ",", 
+   "47.22973838312888`", ",", "0.`"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.646456193814376*^9, 3.646456309068503*^9, {3.6464563397421207`*^9, 
+   3.646456357195354*^9}, 3.646456544183626*^9, 3.646456736347484*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[CapitalDelta]m2sol", "[", 
+   RowBox[{"Log", "[", 
+    RowBox[{"10", ",", "MZ"}], "]"}], "]"}], "*", 
+  RowBox[{"10", "^", "5"}]}]], "Input",
+ CellChangeTimes->{3.646456488603017*^9}],
+
+Cell[BoxData["8.4729778763126`"], "Output",
+ CellChangeTimes->{
+  3.646456193915141*^9, 3.646456309106244*^9, {3.6464563397790747`*^9, 
+   3.64645635725574*^9}, 3.646456544322003*^9, 3.6464567363992157`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[CapitalDelta]m2atm", "[", 
+   RowBox[{"Log", "[", 
+    RowBox[{"10", ",", "MZ"}], "]"}], "]"}], "*", 
+  RowBox[{"10", "^", "3"}]}]], "Input",
+ CellChangeTimes->{3.646456488604272*^9}],
+
+Cell[BoxData["2.412074630322924`"], "Output",
+ CellChangeTimes->{
+  3.64645619425161*^9, 3.646456309149951*^9, {3.6464563398138113`*^9, 
+   3.6464563572982683`*^9}, 3.646456544446453*^9, 3.646456736497011*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Eigenvalues", "[", 
+  RowBox[{"(", 
+   RowBox[{"RGEY\[Nu]", "/.", 
+    RowBox[{
+     RowBox[{"RGEGetInitial", "[", "]"}], "[", 
+     RowBox[{"[", "2", "]"}], "]"}]}], ")"}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "4.3220616379417853`*^-13", ",", "2.959986083611908`*^-13", ",", 
+   "2.8749926357864924`*^-13"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.646456194258019*^9, 3.646456309189966*^9, {3.6464563398192577`*^9, 
+   3.64645635734827*^9}, 3.646456544588653*^9, 3.6464567366649313`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Eigenvalues", "[", 
+  RowBox[{"RGEGetSolution", "[", 
+   RowBox[{
+    RowBox[{"2", " ", 
+     RowBox[{"10", "^", "16"}]}], ",", "RGEM\[Nu]"}], "]"}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "0.07516648189186456`", ",", "0.051478150704935006`", ",", 
+   "0.05000000000000002`"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.64645619440939*^9, 3.646456309227654*^9, {3.64645633985428*^9, 
+   3.646456357393282*^9}, 3.646456544733451*^9, 3.6464567368656673`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"DiracMNSParameters", "[", 
+   RowBox[{
+    RowBox[{"RGEGetSolution", "[", 
+     RowBox[{"MZ", ",", "RGEM\[Nu]"}], "]"}], ",", 
+    RowBox[{"RGEGetSolution", "[", 
+     RowBox[{"MZ", ",", "RGEYe"}], "]"}]}], "]"}], "[", 
+  RowBox[{"[", "2", "]"}], "]"}]], "Input",
+ CellChangeTimes->{{3.646456488605592*^9, 3.64645648860632*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "0.045394982573515846`", ",", "0.046318832256577167`", ",", 
+   "0.06750932418515132`"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.6464561945596457`*^9, 3.6464563092681923`*^9, {3.646456339890958*^9, 
+   3.646456357446486*^9}, 3.646456544852392*^9, 3.6464567369510393`*^9}]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Hochlaufen Dirac", "Subsection"],
+
+Cell[BoxData[
+ RowBox[{"RGEReset", "[", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGEAdd", "[", "\"\<SMDirac\>\"", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGESetInitial", "[", 
+  RowBox[{"MZ", ",", 
+   RowBox[{"RGESuggestion", "->", "\"\<MZ\>\""}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGESolve", "[", 
+  RowBox[{"MZ", ",", 
+   RowBox[{"2", "*", 
+    RowBox[{"10", "^", "16"}]}]}], "]"}]], "Input",
+ CellChangeTimes->{3.6464564887077627`*^9}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["IsCompatibleWithExp"], "Input"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The following parameters are compatible with the experimental \
+data at the 3\[Sigma] CL:\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"\<\"\[Theta]12\"\>", ",", "\<\"\[Theta]23\"\>", 
+     ",", "\<\"\[CapitalDelta]m2atm\"\>", 
+     ",", "\<\"\[CapitalDelta]m2sol\"\>"}], "}"}]}],
+  SequenceForm[
+  "The following parameters are compatible with the experimental data at the \
+3\[Sigma] CL:", {
+   "\[Theta]12", "\[Theta]23", "\[CapitalDelta]m2atm", 
+    "\[CapitalDelta]m2sol"}],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.646456195314727*^9, 3.646456309391939*^9, {3.6464563400241823`*^9, 
+   3.6464563575804577`*^9}, 3.6464565450802107`*^9, 3.646456737148913*^9}],
+
+Cell[BoxData["1"], "Output",
+ CellChangeTimes->{
+  3.64645619531511*^9, 3.646456309392543*^9, {3.646456340024692*^9, 
+   3.6464563575810413`*^9}, 3.646456545080871*^9, 3.646456737149454*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"DiracMNSParameters", "[", 
+     RowBox[{
+      RowBox[{"RGEGetSolution", "[", 
+       RowBox[{"MZ", ",", "RGEM\[Nu]"}], "]"}], ",", 
+      RowBox[{"RGEGetSolution", "[", 
+       RowBox[{"MZ", ",", "RGEYe"}], "]"}]}], "]"}], "[", 
+    RowBox[{"[", "1", "]"}], "]"}], "/", "Degree"}], 
+  "\[IndentingNewLine]"}]], "Input",
+ CellChangeTimes->{{3.6464564888551807`*^9, 3.646456488948901*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "33.`", ",", "1.73934319460962`*^-16", ",", "44.99999999999998`", ",", 
+   "0"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.646456195616909*^9, 3.646456309438945*^9, {3.646456340067214*^9, 
+   3.646456357662993*^9}, 3.6464565452225323`*^9, 3.646456737188612*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[CapitalDelta]m2sol", "[", 
+   RowBox[{"Log", "[", 
+    RowBox[{"10", ",", "MZ"}], "]"}], "]"}], "*", 
+  RowBox[{"10", "^", "5"}]}]], "Input",
+ CellChangeTimes->{3.646456489046417*^9}],
+
+Cell[BoxData["7.999999999999934`"], "Output",
+ CellChangeTimes->{
+  3.646456196027062*^9, 3.6464563094509487`*^9, {3.646456340109963*^9, 
+   3.646456357712637*^9}, 3.646456545394413*^9, 3.6464567372258368`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[CapitalDelta]m2atm", "[", 
+   RowBox[{"Log", "[", 
+    RowBox[{"10", ",", "MZ"}], "]"}], "]"}], "*", 
+  RowBox[{"10", "^", "3"}]}]], "Input",
+ CellChangeTimes->{3.646456489194865*^9}],
+
+Cell[BoxData["2.4999999999999982`"], "Output",
+ CellChangeTimes->{
+  3.646456196184799*^9, 3.646456309461553*^9, {3.64645634017511*^9, 
+   3.6464563577572393`*^9}, 3.646456545517074*^9, 3.6464567372630177`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"DiracMNSParameters", "[", 
+   RowBox[{
+    RowBox[{"RGEGetSolution", "[", 
+     RowBox[{"MZ", ",", "RGEM\[Nu]"}], "]"}], ",", 
+    RowBox[{"RGEGetSolution", "[", 
+     RowBox[{"MZ", ",", "RGEYe"}], "]"}]}], "]"}], "[", 
+  RowBox[{"[", "2", "]"}], "]"}]], "Input",
+ CellChangeTimes->{{3.646456489336989*^9, 3.646456489435897*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "0.05000000000000002`", ",", "0.050793700396801186`", ",", 
+   "0.07127411872482184`"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.646456196492161*^9, 3.646456309472912*^9, {3.646456340211597*^9, 
+   3.6464563578010798`*^9}, 3.646456545651775*^9, 3.64645673730241*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"RGEReset", "[", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGEAdd", "[", "\"\<2HDMDirac\>\"", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGESetInitial", "[", 
+  RowBox[{"MZ", ",", 
+   RowBox[{"RGESuggestion", "->", "\"\<MZ\>\""}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"RGESolve", "[", 
+  RowBox[{"MZ", ",", 
+   RowBox[{"10", "^", "12"}]}], "]"}]], "Input",
+ CellChangeTimes->{3.646456489531721*^9}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["IsCompatibleWithExp"], "Input"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The following parameters are compatible with the experimental \
+data at the 3\[Sigma] CL:\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"\<\"\[Theta]12\"\>", ",", "\<\"\[Theta]23\"\>", 
+     ",", "\<\"\[CapitalDelta]m2atm\"\>", 
+     ",", "\<\"\[CapitalDelta]m2sol\"\>"}], "}"}]}],
+  SequenceForm[
+  "The following parameters are compatible with the experimental data at the \
+3\[Sigma] CL:", {
+   "\[Theta]12", "\[Theta]23", "\[CapitalDelta]m2atm", 
+    "\[CapitalDelta]m2sol"}],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.646456197151483*^9, 3.646456309589835*^9, {3.646456340365411*^9, 
+   3.64645635793462*^9}, 3.646456545867051*^9, 3.646456737438691*^9}],
+
+Cell[BoxData["1"], "Output",
+ CellChangeTimes->{
+  3.646456197151924*^9, 3.6464563095905523`*^9, {3.646456340365856*^9, 
+   3.646456357935108*^9}, 3.6464565458674498`*^9, 3.646456737439315*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"DiracMNSParameters", "[", 
+     RowBox[{
+      RowBox[{"RGEGetSolution", "[", 
+       RowBox[{"MZ", ",", "RGEM\[Nu]"}], "]"}], ",", 
+      RowBox[{"RGEGetSolution", "[", 
+       RowBox[{"MZ", ",", "RGEYe"}], "]"}]}], "]"}], "[", 
+    RowBox[{"[", "1", "]"}], "]"}], "/", "Degree"}], 
+  "\[IndentingNewLine]"}]], "Input",
+ CellChangeTimes->{{3.646456489674362*^9, 3.646456489773444*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "33.00000000000069`", ",", "7.45432797689837`*^-17", ",", 
+   "45.000000000000014`", ",", 
+   FractionBox["\[Pi]", "\[Degree]"]}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.646456197308504*^9, 3.646456309630596*^9, {3.646456340407699*^9, 
+   3.646456357997539*^9}, 3.646456545990937*^9, 3.6464567375218143`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[CapitalDelta]m2sol", "[", 
+   RowBox[{"Log", "[", 
+    RowBox[{"10", ",", "MZ"}], "]"}], "]"}], "*", 
+  RowBox[{"10", "^", "5"}]}]], "Input",
+ CellChangeTimes->{3.646456489867141*^9}],
+
+Cell[BoxData["7.999999999999847`"], "Output",
+ CellChangeTimes->{
+  3.646456197607353*^9, 3.64645630964222*^9, {3.6464563404557257`*^9, 
+   3.6464563580460253`*^9}, 3.646456546129315*^9, 3.646456737692919*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[CapitalDelta]m2atm", "[", 
+   RowBox[{"Log", "[", 
+    RowBox[{"10", ",", "MZ"}], "]"}], "]"}], "*", 
+  RowBox[{"10", "^", "3"}]}]], "Input",
+ CellChangeTimes->{3.646456490006136*^9}],
+
+Cell[BoxData["2.5000000000000004`"], "Output",
+ CellChangeTimes->{
+  3.646456197761324*^9, 3.646456309656143*^9, {3.6464563404940968`*^9, 
+   3.646456358104045*^9}, 3.64645654626484*^9, 3.646456737815362*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"DiracMNSParameters", "[", 
+   RowBox[{
+    RowBox[{"RGEGetSolution", "[", 
+     RowBox[{"MZ", ",", "RGEM\[Nu]"}], "]"}], ",", 
+    RowBox[{"RGEGetSolution", "[", 
+     RowBox[{"MZ", ",", "RGEYe"}], "]"}]}], "]"}], "[", 
+  RowBox[{"[", "2", "]"}], "]"}]], "Input",
+ CellChangeTimes->{{3.646456490150226*^9, 3.646456490247307*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "0.05`", ",", "0.050793700396801165`", ",", "0.07127411872482184`"}], 
+  "}"}]], "Output",
+ CellChangeTimes->{
+  3.6464561980675077`*^9, 3.646456309668724*^9, {3.646456340532056*^9, 
+   3.64645635815701*^9}, 3.646456546394498*^9, 3.646456737857589*^9}]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{956, 1041},
+WindowMargins->{{960, Automatic}, {Automatic, 18}},
+FrontEndVersion->"10.0 for Linux x86 (64-bit) (December 4, 2014)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 50, 0, 91, "Title"],
+Cell[633, 24, 92, 2, 31, "Text"],
+Cell[728, 28, 167, 3, 55, "Input"],
+Cell[898, 33, 145, 3, 32, "Input"],
+Cell[1046, 38, 138, 3, 32, "Input"],
+Cell[1187, 43, 301, 6, 51, "Text"],
+Cell[1491, 51, 5460, 145, 451, "Input"],
+Cell[CellGroupData[{
+Cell[6976, 200, 83, 1, 44, "Subsection"],
+Cell[7062, 203, 1548, 44, 209, "Input"],
+Cell[8613, 249, 2690, 74, 275, "Input"],
+Cell[11306, 325, 56, 1, 32, "Input"],
+Cell[11365, 328, 204, 4, 55, "Input"],
+Cell[11572, 334, 115, 3, 32, "Input"],
+Cell[11690, 339, 234, 6, 32, "Input"],
+Cell[CellGroupData[{
+Cell[11949, 349, 45, 0, 32, "Input"],
+Cell[11997, 351, 545, 11, 23, "Print"],
+Cell[12545, 364, 195, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[12777, 372, 441, 12, 55, "Input"],
+Cell[13221, 386, 445, 9, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[13703, 400, 222, 6, 32, "Input"],
+Cell[13928, 408, 210, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[14175, 416, 256, 7, 32, "Input"],
+Cell[14434, 425, 212, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[14683, 433, 359, 9, 32, "Input"],
+Cell[15045, 444, 314, 7, 32, "Output"]
+}, Open  ]],
+Cell[15374, 454, 56, 1, 32, "Input"],
+Cell[15433, 457, 68, 1, 32, "Input"],
+Cell[15504, 460, 115, 3, 32, "Input"],
+Cell[15622, 465, 232, 6, 32, "Input"],
+Cell[CellGroupData[{
+Cell[15879, 475, 45, 0, 32, "Input"],
+Cell[15927, 477, 582, 12, 23, "Print"],
+Cell[16512, 491, 193, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[16742, 499, 441, 12, 55, "Input"],
+Cell[17186, 513, 409, 8, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[17632, 526, 220, 6, 32, "Input"],
+Cell[17855, 534, 208, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[18100, 542, 220, 6, 32, "Input"],
+Cell[18323, 550, 206, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[18566, 558, 359, 9, 32, "Input"],
+Cell[18928, 569, 311, 7, 32, "Output"]
+}, Open  ]],
+Cell[19254, 579, 56, 1, 32, "Input"],
+Cell[19313, 582, 70, 1, 32, "Input"],
+Cell[19386, 585, 115, 3, 32, "Input"],
+Cell[19504, 590, 228, 6, 32, "Input"],
+Cell[CellGroupData[{
+Cell[19757, 600, 45, 0, 32, "Input"],
+Cell[19805, 602, 462, 10, 23, "Print"],
+Cell[20270, 614, 193, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[20500, 622, 441, 12, 55, "Input"],
+Cell[20944, 636, 434, 9, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[21415, 650, 220, 6, 32, "Input"],
+Cell[21638, 658, 210, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[21885, 666, 222, 6, 32, "Input"],
+Cell[22110, 674, 205, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[22352, 682, 363, 9, 32, "Input"],
+Cell[22718, 693, 314, 7, 32, "Output"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[23081, 706, 151, 2, 44, "Subsection"],
+Cell[23235, 710, 56, 1, 32, "Input"],
+Cell[23294, 713, 70, 1, 32, "Input"],
+Cell[23367, 716, 115, 3, 32, "Input"],
+Cell[23485, 721, 228, 6, 32, "Input"],
+Cell[CellGroupData[{
+Cell[23738, 731, 45, 0, 32, "Input"],
+Cell[23786, 733, 558, 11, 23, "Print"],
+Cell[24347, 746, 193, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[24577, 754, 441, 12, 55, "Input"],
+Cell[25021, 768, 392, 8, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[25450, 781, 220, 6, 32, "Input"],
+Cell[25673, 789, 212, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[25922, 797, 220, 6, 32, "Input"],
+Cell[26145, 805, 207, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[26389, 813, 361, 9, 32, "Input"],
+Cell[26753, 824, 317, 7, 32, "Output"]
+}, Open  ]],
+Cell[27085, 834, 56, 1, 32, "Input"],
+Cell[27144, 837, 208, 4, 55, "Input"],
+Cell[27355, 843, 115, 3, 32, "Input"],
+Cell[27473, 848, 230, 6, 32, "Input"],
+Cell[CellGroupData[{
+Cell[27728, 858, 45, 0, 32, "Input"],
+Cell[27776, 860, 560, 11, 23, "Print"],
+Cell[28339, 873, 195, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[28571, 881, 441, 12, 55, "Input"],
+Cell[29015, 895, 474, 10, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[29526, 910, 220, 6, 32, "Input"],
+Cell[29749, 918, 208, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[29994, 926, 220, 6, 32, "Input"],
+Cell[30217, 934, 207, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[30461, 942, 361, 9, 32, "Input"],
+Cell[30825, 953, 313, 7, 32, "Output"]
+}, Open  ]],
+Cell[31153, 963, 56, 1, 32, "Input"],
+Cell[31212, 966, 72, 1, 32, "Input"],
+Cell[31287, 969, 115, 3, 32, "Input"],
+Cell[31405, 974, 228, 6, 32, "Input"],
+Cell[CellGroupData[{
+Cell[31658, 984, 45, 0, 32, "Input"],
+Cell[31706, 986, 490, 10, 23, "Print"],
+Cell[32199, 998, 195, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[32431, 1006, 443, 12, 55, "Input"],
+Cell[32877, 1020, 437, 9, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[33351, 1034, 220, 6, 32, "Input"],
+Cell[33574, 1042, 212, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[33823, 1050, 222, 6, 32, "Input"],
+Cell[34048, 1058, 210, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[34295, 1066, 359, 9, 32, "Input"],
+Cell[34657, 1077, 310, 7, 32, "Output"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[35016, 1090, 94, 1, 44, "Subsection"],
+Cell[35113, 1093, 56, 1, 32, "Input"],
+Cell[35172, 1096, 70, 1, 32, "Input"],
+Cell[35245, 1099, 136, 3, 32, "Input"],
+Cell[35384, 1104, 228, 6, 32, "Input"],
+Cell[CellGroupData[{
+Cell[35637, 1114, 45, 0, 32, "Input"],
+Cell[35685, 1116, 776, 16, 43, "Print"],
+Cell[36464, 1134, 191, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[36692, 1142, 445, 12, 55, "Input"],
+Cell[37140, 1156, 439, 9, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[37616, 1170, 246, 6, 32, "Input"],
+Cell[37865, 1178, 206, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[38108, 1186, 244, 6, 32, "Input"],
+Cell[38355, 1194, 208, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[38600, 1202, 359, 9, 32, "Input"],
+Cell[38962, 1213, 310, 7, 32, "Output"]
+}, Open  ]],
+Cell[39287, 1223, 56, 1, 32, "Input"],
+Cell[39346, 1226, 72, 1, 32, "Input"],
+Cell[39421, 1229, 136, 3, 32, "Input"],
+Cell[39560, 1234, 203, 5, 32, "Input"],
+Cell[CellGroupData[{
+Cell[39788, 1243, 45, 0, 32, "Input"],
+Cell[39836, 1245, 737, 16, 43, "Print"],
+Cell[40576, 1263, 195, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[40808, 1271, 443, 12, 55, "Input"],
+Cell[41254, 1285, 376, 8, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[41667, 1298, 246, 6, 32, "Input"],
+Cell[41916, 1306, 210, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[42163, 1314, 246, 6, 32, "Input"],
+Cell[42412, 1322, 208, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[42657, 1330, 359, 9, 32, "Input"],
+Cell[43019, 1341, 314, 7, 32, "Output"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[43382, 1354, 37, 0, 43, "Subsection"],
+Cell[43422, 1356, 1558, 44, 209, "Input"],
+Cell[44983, 1402, 2392, 66, 275, "Input"],
+Cell[47378, 1470, 56, 1, 32, "Input"],
+Cell[47437, 1473, 73, 1, 32, "Input"],
+Cell[47513, 1476, 115, 3, 32, "Input"],
+Cell[47631, 1481, 178, 5, 32, "Input"],
+Cell[CellGroupData[{
+Cell[47834, 1490, 45, 0, 32, "Input"],
+Cell[47882, 1492, 491, 10, 23, "Print"],
+Cell[48376, 1504, 189, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[48602, 1512, 446, 12, 55, "Input"],
+Cell[49051, 1526, 328, 7, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[49416, 1538, 222, 6, 32, "Input"],
+Cell[49641, 1546, 210, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[49888, 1554, 222, 6, 32, "Input"],
+Cell[50113, 1562, 215, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[50365, 1570, 366, 9, 32, "Input"],
+Cell[50734, 1581, 309, 7, 32, "Output"]
+}, Open  ]],
+Cell[51058, 1591, 56, 1, 32, "Input"],
+Cell[51117, 1594, 214, 4, 55, "Input"],
+Cell[51334, 1600, 115, 3, 32, "Input"],
+Cell[51452, 1605, 178, 5, 32, "Input"],
+Cell[CellGroupData[{
+Cell[51655, 1614, 45, 0, 32, "Input"],
+Cell[51703, 1616, 493, 10, 23, "Print"],
+Cell[52199, 1628, 191, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[52427, 1636, 446, 12, 55, "Input"],
+Cell[52876, 1650, 319, 7, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[53232, 1662, 222, 6, 32, "Input"],
+Cell[53457, 1670, 207, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[53701, 1678, 220, 6, 32, "Input"],
+Cell[53924, 1686, 207, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[54168, 1694, 368, 9, 32, "Input"],
+Cell[54539, 1705, 310, 7, 32, "Output"]
+}, Open  ]],
+Cell[54864, 1715, 56, 1, 32, "Input"],
+Cell[54923, 1718, 75, 1, 32, "Input"],
+Cell[55001, 1721, 115, 3, 32, "Input"],
+Cell[55119, 1726, 177, 5, 32, "Input"],
+Cell[CellGroupData[{
+Cell[55321, 1735, 45, 0, 32, "Input"],
+Cell[55369, 1737, 558, 11, 23, "Print"],
+Cell[55930, 1750, 187, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[56154, 1758, 446, 12, 55, "Input"],
+Cell[56603, 1772, 319, 7, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[56959, 1784, 220, 6, 32, "Input"],
+Cell[57182, 1792, 207, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[57426, 1800, 220, 6, 32, "Input"],
+Cell[57649, 1808, 209, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[57895, 1816, 214, 6, 32, "Input"],
+Cell[58112, 1824, 322, 7, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[58471, 1836, 190, 5, 32, "Input"],
+Cell[58664, 1843, 309, 7, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[59010, 1855, 363, 9, 32, "Input"],
+Cell[59376, 1866, 316, 7, 32, "Output"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[59741, 1879, 38, 0, 43, "Subsection"],
+Cell[59782, 1881, 56, 1, 32, "Input"],
+Cell[59841, 1884, 73, 1, 32, "Input"],
+Cell[59917, 1887, 136, 3, 32, "Input"],
+Cell[60056, 1892, 180, 5, 32, "Input"],
+Cell[CellGroupData[{
+Cell[60261, 1901, 45, 0, 32, "Input"],
+Cell[60309, 1903, 737, 16, 43, "Print"],
+Cell[61049, 1921, 190, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[61276, 1929, 448, 12, 55, "Input"],
+Cell[61727, 1943, 304, 7, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[62068, 1955, 220, 6, 32, "Input"],
+Cell[62291, 1963, 210, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[62538, 1971, 220, 6, 32, "Input"],
+Cell[62761, 1979, 210, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[63008, 1987, 364, 9, 32, "Input"],
+Cell[63375, 1998, 310, 7, 32, "Output"]
+}, Open  ]],
+Cell[63700, 2008, 56, 1, 32, "Input"],
+Cell[63759, 2011, 75, 1, 32, "Input"],
+Cell[63837, 2014, 136, 3, 32, "Input"],
+Cell[63976, 2019, 153, 4, 32, "Input"],
+Cell[CellGroupData[{
+Cell[64154, 2027, 45, 0, 32, "Input"],
+Cell[64202, 2029, 730, 16, 43, "Print"],
+Cell[64935, 2047, 193, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[65165, 2055, 446, 12, 55, "Input"],
+Cell[65614, 2069, 353, 8, 44, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[66004, 2082, 220, 6, 32, "Input"],
+Cell[66227, 2090, 209, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[66473, 2098, 220, 6, 32, "Input"],
+Cell[66696, 2106, 208, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[66941, 2114, 364, 9, 32, "Input"],
+Cell[67308, 2125, 294, 7, 32, "Output"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

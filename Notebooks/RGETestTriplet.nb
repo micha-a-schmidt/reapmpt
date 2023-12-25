@@ -1,0 +1,685 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     23006,        557]*)
+(*NotebookOutlinePosition[     23655,        580]*)
+(*  CellTagsIndexPosition[     23611,        576]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Test of Model Predictions", "Title"],
+
+Cell["\<\
+This Notebook shows how REAP can be used to test how the \
+predictions of a given model change during the RG evolution to low \
+energy.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<REAP`RGEMSSMTriplet`\>"];\)\), "\n", 
+    \(\(Needs["\<REAP`RGEPlotUtilities`\>"];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(MZ = RGEMass["\<Z\>"];\)\), "\[IndentingNewLine]", 
+    \(\(GUT = 2\ 10^16;\)\)}], "Input"],
+
+Cell["\<\
+RGEReset is used in order to set all variables of RGESolver to \
+their default values, if the notebook is executed several times.\
+\>", "Text"],
+
+Cell[BoxData[
+    \(\(RGEReset[];\)\)], "Input"],
+
+Cell[CellGroupData[{
+
+Cell["Definition of the model", "Section"],
+
+Cell["\<\
+We assume a supersymmetric model.  Below the SUSY-breaking scale \
+(taken to be 1 TeV), the SM is used as an effective theory.\
+\>", "Text"],
+
+Cell[BoxData[
+    \(\(\[CapitalDelta]Scale = 10^11;\)\)], "Input"],
+
+Cell[BoxData[{
+    \(\(RGEAdd["\<MSSMTriplet0N\>", 
+        RGEtan\[Beta] \[Rule] 10];\)\), "\[IndentingNewLine]", 
+    \(\(RGEAdd["\<MSSM0N\>", RGECutoff \[Rule] \[CapitalDelta]Scale, 
+        RGEtan\[Beta] \[Rule] 10];\)\), "\[IndentingNewLine]", 
+    \(\(RGEAdd["\<SM0N\>", RGECutoff \[Rule] 1000];\)\)}], "Input"],
+
+Cell[TextData[{
+  "All couplings are given explicitly and no default values of the REAP \
+package are used. The Yukawa couplings are given in \"RL convention\".  The \
+neutrino masses are determined by ",
+  Cell[BoxData[
+      \(TraditionalForm\`Y\_\[Nu]\)]],
+  "and ",
+  Cell[BoxData[
+      \(TraditionalForm\`M\)]],
+  ".\n\[Kappa] is set to 0. In a type II see-saw scenario, \[Kappa] is \
+different from 0 below the mass threshold of the Higgs triplet."
+}], "Text"],
+
+Cell[BoxData[
+    \(RGESetInitial[GUT, RGE\[CapitalLambda]u \[Rule] 10^\(-5\), \ 
+      RGEM\[CapitalDelta] \[Rule] \[CapitalDelta]Scale, 
+      RGEMlightest \[Rule] 0, RGEMassHierarchy -> "\<i\>", 
+      RGE\[Theta]13 \[Rule] 0, RGE\[Theta]23 \[Rule] 45\ Degree]\)], "Input"],
+
+Cell[BoxData[
+    \(RGEGetInitial[] // N\)], "Input"],
+
+Cell[BoxData[
+    \(\(RGESolve[MZ, GUT];\)\)], "Input"],
+
+Cell[BoxData[
+    \(\[CapitalDelta]2 = 
+      Re[Sqrt[RGEGetSolution[\[CapitalDelta]Scale + 1, \ 
+            RGEM\[CapitalDelta]]]]\)], "Input"],
+
+Cell[BoxData[
+    \( (*RGEReset[]; \[IndentingNewLine]RGEAdd["\<SMTriplet0N\>"]; \n
+      RGEAdd["\<SM0N\>", 
+        RGECutoff \[Rule] \[CapitalDelta]2]; \[IndentingNewLine]RGESetInitial[
+        GUT, RGE\[CapitalLambda]6 \[Rule] \[CapitalDelta]Scale/10000, \ 
+        RGEM\[CapitalDelta]2 \[Rule] \[CapitalDelta]Scale^2, 
+        RGEMlightest \[Rule] 0, RGEMassHierarchy -> "\<i\>", 
+        RGE\[Theta]13 \[Rule] 0, 
+        RGE\[Theta]23 \[Rule] 45\ Degree]; \[IndentingNewLine]RGESolve[MZ, 
+        GUT];*) \)], "Input"],
+
+Cell[BoxData[
+    \(1 - 
+      Re[Sqrt[RGEGetSolution[\[CapitalDelta]2 + 1, \ 
+              RGEM\[CapitalDelta]]]]/\[CapitalDelta]2\)], "Input"],
+
+Cell[BoxData[""], "Input"],
+
+Cell[BoxData[
+    \(RGEGetSolution[\(RGEGetTransitions[]\)[\([2, 1]\)] - 1, RGEM\[Nu]] // 
+      MatrixForm\)], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Plots", "Section"],
+
+Cell[CellGroupData[{
+
+Cell["Definitions", "Subsection"],
+
+Cell["Define the plot region", "Text"],
+
+Cell[BoxData[{
+    \(\(ClearAll[tmin, tmax];\)\), "\[IndentingNewLine]", 
+    \(\(tmin = Log[10, MZ];\)\), "\[IndentingNewLine]", 
+    \(\(tmax = Log[10, GUT];\)\)}], "Input"],
+
+Cell["Define the functions that should be plotted", "Text"],
+
+Cell[BoxData[{
+    \(\(ClearAll[Mnu, Ye];\)\), "\[IndentingNewLine]", 
+    \(Mnu[mu_] := 
+      RGEGetSolution[mu, RGEM\[Nu]] // Chop\), "\[IndentingNewLine]", 
+    \(\(\(Ye[mu_] := 
+      RGEGetSolution[mu, RGEYe] // Chop\)\(\[IndentingNewLine]\)
+    \)\), "\[IndentingNewLine]", 
+    \(ClearAll[MixingPars, MixingParsLogScale, NuMasses, 
+      NuMassesLogScale]\), "\[IndentingNewLine]", 
+    \(MixingPars[
+        mu_] := \(MNSParameters[Mnu[mu], 
+          Ye[mu]]\)\[LeftDoubleBracket]1\[RightDoubleBracket]\), "\n", 
+    \(MixingParsLogScale[x_] := MixingPars[10^x]\), "\n", 
+    \(NuMasses[
+        mu_] := \(MNSParameters[Mnu[mu], 
+          Ye[mu]]\)\[LeftDoubleBracket]2\[RightDoubleBracket]\), "\
+\[IndentingNewLine]", 
+    \(\(\(NuMassesLogScale[x_] := NuMasses[10^x]\)\(\[IndentingNewLine]\)
+    \)\), "\[IndentingNewLine]", 
+    \(ClearAll[\[Theta]12, \[Theta]13, \[Theta]23, \[Delta], \[CurlyPhi]1, \
+\[CurlyPhi]2, m1, m2, 
+      m3, \[CapitalDelta]m2sol, \[CapitalDelta]m2atm]\), \
+"\[IndentingNewLine]", 
+    \(\[Theta]12[
+        t_] := \(MixingParsLogScale[
+            t]\)\[LeftDoubleBracket]1\[RightDoubleBracket]/Degree\), "\n", 
+    \(\[Theta]13[
+        t_] := \(MixingParsLogScale[
+            t]\)\[LeftDoubleBracket]2\[RightDoubleBracket]/Degree\), "\n", 
+    \(\[Theta]23[
+        t_] := \(MixingParsLogScale[
+            t]\)\[LeftDoubleBracket]3\[RightDoubleBracket]/
+        Degree\), "\[IndentingNewLine]", 
+    \(\[Delta][
+        t_] := \(MixingParsLogScale[
+            t]\)\[LeftDoubleBracket]4\[RightDoubleBracket]/Degree\), "\n", 
+    \(\[CurlyPhi]1[
+        t_] := \(MixingParsLogScale[
+            t]\)\[LeftDoubleBracket]8\[RightDoubleBracket]/
+        Degree\), "\[IndentingNewLine]", 
+    \(\[CurlyPhi]2[
+        t_] := \(MixingParsLogScale[
+            t]\)\[LeftDoubleBracket]9\[RightDoubleBracket]/
+        Degree\), "\[IndentingNewLine]", 
+    \(m1[t_] := \(NuMassesLogScale[
+          t]\)\[LeftDoubleBracket]1\[RightDoubleBracket]\), "\n", 
+    \(m2[t_] := \(NuMassesLogScale[
+          t]\)\[LeftDoubleBracket]2\[RightDoubleBracket]\), "\
+\[IndentingNewLine]", 
+    \(m3[t_] := \(NuMassesLogScale[
+          
+          t]\)\[LeftDoubleBracket]3\[RightDoubleBracket]\), "\
+\[IndentingNewLine]", 
+    \(\[CapitalDelta]m2sol[t_] := m2[t]^2 - m1[t]^2\), "\n", 
+    \(\[CapitalDelta]m2atm[t_] := 
+      m3[t]^2 - m2[t]^2\), "\[IndentingNewLine]", 
+    \(\)}], "Input"],
+
+Cell["\<\
+Test for compatibility with the experimental data
+(allowed regions at the 3\[Sigma] CL as given in Maltoni et al., \
+hep-ph/0405172v4)\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(ClearAll[CompareToExperiment, 
+        IsCompatibleWithExp];\)\), "\[IndentingNewLine]", 
+    \(\(CompareToExperiment[t_] := 
+        Module[{lNotComp, 
+            lComp}, \[IndentingNewLine]lComp = {}; \
+\[IndentingNewLine]lNotComp = {}; \[IndentingNewLine]If[
+            Sin[\[Theta]12[t]\ Degree]^2 \[GreaterEqual] 0.23 && 
+              Sin[\[Theta]12[t]\ Degree]^2 \[LessEqual] 0.38, 
+            lComp = Append[lComp, "\<\[Theta]12\>"], 
+            lNotComp = 
+              Append[lNotComp, "\<\[Theta]12\>"]]; \[IndentingNewLine]If[
+            Sin[\[Theta]13[t]\ Degree]^2 \[LessEqual] 0.051, 
+            lComp = Append[lComp, "\<\[Theta]13\>"], 
+            lNotComp[lNotComp, "\<\[Theta]13\>"]]; \[IndentingNewLine]If[
+            Sin[\[Theta]23[t]\ Degree]^2 \[GreaterEqual] 0.34 && 
+              Sin[\[Theta]23[t]\ Degree]^2 \[LessEqual] 0.68, 
+            lComp = Append[lComp, "\<\[Theta]23\>"], 
+            lNotComp = Append[lNotComp, "\<\[Theta]23\>"]]; 
+          If[Abs[\[CapitalDelta]m2atm[t]] \[GreaterEqual] 1.3\ 10^\(-3\) && 
+              Abs[\[CapitalDelta]m2atm[t]] \[LessEqual] 3.2\ 10^\(-3\), 
+            lComp = Append[lComp, "\<\[CapitalDelta]m2atm\>"], 
+            lNotComp = 
+              Append[lNotComp, "\<\[CapitalDelta]m2atm\>"]]; \
+\[IndentingNewLine]If[\[CapitalDelta]m2sol[t] \[GreaterEqual] 
+                7.1\ 10^\(-5\) && \[CapitalDelta]m2sol[t] \[LessEqual] 
+                8.9\ 10^\(-5\), 
+            lComp = Append[lComp, "\<\[CapitalDelta]m2sol\>"], 
+            lNotComp = 
+              Append[lNotComp, "\<\[CapitalDelta]m2sol\>"]]; \
+\[IndentingNewLine]Print["\<The following parameters are compatible with the \
+experimental data at the 3\[Sigma] CL:\>", lComp]; \[IndentingNewLine]If[
+            Length[lNotComp] \[Equal] 0, Return[1], 
+            Return[0]];\[IndentingNewLine]];\)\), "\n", 
+    \(IsCompatibleWithExp := CompareToExperiment[Log[10, MZ]]\)}], "Input"],
+
+Cell["Positions of the thresholds", "Text"],
+
+Cell[BoxData[{
+    \(ClearAll[M1, M2, M3, ShadowEFT]\), "\n", 
+    \(\(M\[CapitalDelta] = \(RGEGetTransitions[]\)\[LeftDoubleBracket]2, 
+          1\[RightDoubleBracket];\)\), "\n", 
+    \(\(ShadowEFT = RGEShadowEFT[M\[CapitalDelta], 10\^17];\)\)}], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Compatibility to the experimental data", "Subsection"],
+
+Cell[BoxData[
+    \(\(IsCompatibleWithExp;\)\)], "Input"],
+
+Cell["The low energy parameters are", "Text"],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<\!\(\[Theta]\_12\)(\!\(M\_Z\))=\>\"", \[Theta]12[
+          Log[10, MZ]], "\<\[Degree]\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Theta]\_13\)(\!\(M\_Z\))=\>\"", \[Theta]13[
+          Log[10, MZ]], "\<\[Degree]\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Theta]\_23\)(\!\(M\_Z\))=\>\"", \[Theta]23[
+          Log[10, MZ]], "\<\[Degree]\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\(\[CapitalDelta]m\^2\)\_atm\)(\!\(M\_Z\))=\>\"", \
+\[CapitalDelta]m2atm[
+          Log[10, MZ]], \*"\"\<\!\(eV\^2\)\>\""];\)\), "\[IndentingNewLine]", \
+
+    \(\(Print[\*"\"\<\!\(\(\[CapitalDelta]m\^2\)\_sol\)(\!\(M\_Z\))=\>\"", \
+\[CapitalDelta]m2sol[
+          Log[10, MZ]], \*"\"\<\!\(eV\^2\)\>\""];\)\), "\[IndentingNewLine]", \
+
+    \(\(Print[\*"\"\<\!\(m\_1\)(\!\(M\_Z\))=\>\"", 
+        m1[Log[10, MZ]], "\<eV\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(m\_2\)(\!\(M\_Z\))=\>\"", 
+        m2[Log[10, MZ]], "\<eV\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(m\_3\)(\!\(M\_Z\))=\>\"", 
+        m3[Log[10, MZ]], "\<eV\>"];\)\)}], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Mixing Angles", "Subsection"],
+
+Cell["Draw the plot for the mixing angles", "Text"],
+
+Cell[BoxData[
+    \(\(Show[
+        Plot[\[IndentingNewLine]{\[Theta]12[t], \[Theta]13[t], \[Theta]23[
+              t]}, {t, tmin, tmax}, \[IndentingNewLine]ImageSize \[Rule] 400, 
+          FrameLabel -> {\*"\"\<\!\(log\_10\)(\[Mu]/GeV)\>\"", "\<\>"}, 
+          FrameTicks \[Rule] {RGELogTicksLabeled[2, 19], 
+              Table[{i*15, ToString[i*15] <> "\<\[Degree]\>"}, {i, 0, 3}], 
+              RGELogTicks[2, 19], 
+              Table[{i*15, "\<\>"}, {i, 0, 
+                  3}]}, \[IndentingNewLine]PlotRange \[Rule] {All, All}, 
+          PlotStyle \[Rule] {Red, ForestGreen, 
+              Blue}, \[IndentingNewLine]Prolog \[Rule] {ShadowEFT}, \
+\[IndentingNewLine]Epilog \[Rule] {\[IndentingNewLine]Text[
+                StyleForm[\[Theta]\_12, FontColor \[Rule] Red, 
+                  FontSize \[Rule] 12], {tmin, \[Theta]12[tmin]}, {\(-0.8\), 
+                  1.4}], \[IndentingNewLine]Text[
+                StyleForm[\[Theta]\_13, FontColor \[Rule] ForestGreen, 
+                  FontSize \[Rule] 12], {tmin, \[Theta]13[
+                    tmin]}, {\(-0.8\), \(-1\)}], \[IndentingNewLine]Text[
+                StyleForm[\[Theta]\_23, FontColor \[Rule] Blue, 
+                  FontSize \[Rule] 12], {tmin, \[Theta]23[tmin]}, {\(-0.8\), 
+                  1.4}]}, \[IndentingNewLine]DisplayFunction \[Rule] 
+            Identity\[IndentingNewLine]], AxesFront \[Rule] True, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\)], "Input"],
+
+Cell[CellGroupData[{
+
+Cell["RG change of the angles:", "Subsubsection"],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<The RG change of \!\(\[Theta]\_12\) is :    \!\(\[Theta]\
+\_12\)(\!\(M\_GUT\))-\!\(\[Theta]\_12\)(\!\(M\_Z\)) = \>\"", \[Theta]12[
+            Log[10, GUT]] - \[Theta]12[
+            Log[10, MZ]], "\<\[Degree]\>"];\)\), "\[IndentingNewLine]", 
+    \(Print[\*"\"\<The RG change of \!\(\[Theta]\_13\) is :    \
+\!\(\[Theta]\_13\)(\!\(M\_GUT\))-\!\(\[Theta]\_13\)(\!\(M\_Z\)) = \>\"", \
+\[Theta]13[Log[10, GUT]] - \[Theta]13[Log[10, MZ]], "\<\[Degree]\>"]; 
+    Print[\*"\"\<The RG change of \!\(\[Theta]\_23\) is :    \!\(\[Theta]\_23\
+\)(\!\(M\_GUT\))-\!\(\[Theta]\_23\)(\!\(M\_Z\)) = \>\"", \[Theta]23[
+          Log[10, GUT]] - \[Theta]23[
+          Log[10, MZ]], "\<\[Degree]\>"];\)}], "Input"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Phases", "Subsection"],
+
+Cell["Draw the plot for the phases", "Text"],
+
+Cell[BoxData[
+    \(\(Show[
+        Plot[\[IndentingNewLine]{\[Delta][t], \[CurlyPhi]1[t], \[CurlyPhi]2[
+              t]}, {t, tmin, tmax}, \[IndentingNewLine]ImageSize \[Rule] 400, 
+          FrameLabel -> {\*"\"\<\!\(log\_10\)(\[Mu]/GeV)\>\"", "\<\>"}, 
+          FrameTicks \[Rule] {RGELogTicksLabeled[2, 19], 
+              Table[{i*45, ToString[i*45] <> "\<\[Degree]\>"}, {i, 0, 8}], 
+              RGELogTicks[2, 19], 
+              Table[{i*45, "\<\>"}, {i, 0, 
+                  12}]}, \[IndentingNewLine]PlotRange \[Rule] {All, All}, 
+          PlotStyle \[Rule] {Red, Blue, 
+              ForestGreen}, \[IndentingNewLine]Prolog \[Rule] {ShadowEFT}, \
+\[IndentingNewLine]Epilog \[Rule] {\[IndentingNewLine]Text[
+                StyleForm[\[Delta], FontColor \[Rule] Red, 
+                  FontSize \[Rule] 12], {tmin, \[Delta][tmin]}, {\(-0.8\), 
+                  1.4}], \[IndentingNewLine]Text[
+                StyleForm[\[CurlyPhi]\_1, FontColor \[Rule] Blue, 
+                  FontSize \[Rule] 12], {tmin, \[CurlyPhi]1[
+                    tmin]}, {\(-0.8\), 1.4}], \[IndentingNewLine]Text[
+                StyleForm[\[CurlyPhi]\_2, FontColor \[Rule] ForestGreen, 
+                  FontSize \[Rule] 12], {tmin, \[CurlyPhi]2[
+                    tmin]}, {\(-0.8\), \(-1\)}]}, \
+\[IndentingNewLine]DisplayFunction \[Rule] Identity\[IndentingNewLine]], 
+        AxesFront \[Rule] True, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\)], "Input"],
+
+Cell[CellGroupData[{
+
+Cell["RG change of the phases:", "Subsubsection"],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<The RG change of \[Delta] is:   \[Delta](\!\(M\_GUT\))-\
+\[Delta](\!\(M\_Z\)) = \>\"", \ \[Delta][Log[10, GUT]] - \[Delta][
+            Log[10, MZ]], "\<\[Degree]\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<The RG change of \!\(\[CurlyPhi]\_1\) is:   \!\(\
+\[CurlyPhi]\_1\)(\!\(M\_GUT\))-\!\(\[CurlyPhi]\_1\)(\!\(M\_Z\)) = \>\"", \ \
+\[CurlyPhi]1[Log[10, GUT]] - \[CurlyPhi]1[
+            Log[10, MZ]], "\<\[Degree]\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<The RG change of \!\(\[CurlyPhi]\_2\) is:   \!\(\
+\[CurlyPhi]\_2\)(\!\(M\_GUT\))-\!\(\[CurlyPhi]\_2\)(\!\(M\_Z\)) = \>\"", \ \
+\[CurlyPhi]2[Log[10, GUT]] - \[CurlyPhi]2[
+            Log[10, MZ]], "\<\[Degree]\>"];\)\)}], "Input"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Masses", "Subsection"],
+
+Cell[CellGroupData[{
+
+Cell["mass eigenvalues", "Subsubsection"],
+
+Cell["Draw the plot for the mass eigenvalues", "Text"],
+
+Cell[BoxData[
+    \(tlabel = 4; \ \ \  (*\ Position\ where\ the\ labels\ m1, m2, 
+      m3\ should\ be\ placed\ *) \[IndentingNewLine]Show[
+      Plot[\[IndentingNewLine]{m1[t], m2[t], m3[t]}, {t, tmin, 
+          tmax}, \[IndentingNewLine]ImageSize \[Rule] 400, 
+        FrameLabel -> {\*"\"\<\!\(log\_10\)(\[Mu]/GeV)\>\"", \
+\*"\"\<\!\(m\_i\) [eV]\>\""}, 
+        FrameTicks \[Rule] {RGELogTicksLabeled[2, 19], 
+            Table[{i*0.01, PaddedForm[i*0.01, {3, 2}]}, {i, 0, 50}], 
+            RGELogTicks[2, 19], 
+            Table[{i*0.01, "\<\>"}, {i, 0, 
+                50}]}, \[IndentingNewLine]PlotRange \[Rule] {All, All}, 
+        PlotStyle \[Rule] {Red, Blue, 
+            ForestGreen}, \[IndentingNewLine]Prolog \[Rule] {ShadowEFT}, \
+\[IndentingNewLine]Epilog \[Rule] {\[IndentingNewLine]Text[
+              StyleForm[m\_1, FontColor \[Rule] Red, 
+                FontSize \[Rule] 12], {tlabel, m1[tlabel]}, {\(-0.8\), 
+                1.4}], \[IndentingNewLine]Text[
+              StyleForm[m\_2, FontColor \[Rule] Blue, 
+                FontSize \[Rule] 12], {tlabel, 
+                m2[tlabel]}, {\(-0.8\), \(-2\)}], \[IndentingNewLine]Text[
+              StyleForm[m\_3, FontColor \[Rule] ForestGreen, 
+                FontSize \[Rule] 12], {tlabel, m3[tlabel]}, {\(-0.8\), 
+                1.4}]}, \[IndentingNewLine]DisplayFunction \[Rule] 
+          Identity\[IndentingNewLine]], AxesFront \[Rule] True, 
+      DisplayFunction \[Rule] $DisplayFunction];\)], "Input"],
+
+Cell["RG change of the masses:", "Text"],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<The RG change of \!\(m\_1\) is:   \
+\!\(m\_1\)(\!\(M\_GUT\))-\!\(m\_1\)(\!\(M\_Z\)) = \>\"", 
+        m1[Log[10, GUT]] - 
+          m1[Log[10, MZ]], "\< eV\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<The RG change of \!\(m\_2\) is:   \
+\!\(m\_2\)(\!\(M\_GUT\))-\!\(m\_2\)(\!\(M\_Z\)) = \>\"", 
+        m2[Log[10, GUT]] - 
+          m2[Log[10, MZ]], "\< eV\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<The RG change of \!\(m\_3\) is:   \
+\!\(m\_3\)(\!\(M\_GUT\))-\!\(m\_3\)(\!\(M\_Z\)) = \>\"", 
+        m3[Log[10, GUT]] - m3[Log[10, MZ]], "\< eV\>"];\)\)}], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["mass squared differences", "Subsubsection"],
+
+Cell["\<\
+Draw the plot for the mass squared differences (on a logarithmic \
+scale)\
+\>", "Text"],
+
+Cell[BoxData[
+    \(\(Show[
+        Plot[\[IndentingNewLine]{Log[10, Abs[\[CapitalDelta]m2sol[t]]], 
+            Log[10, Abs[\[CapitalDelta]m2atm[t]]]}, {t, tmin, 
+            tmax}, \[IndentingNewLine]ImageSize \[Rule] 400, 
+          FrameLabel -> {\*"\"\<\!\(log\_10\)(\[Mu]/GeV)\>\"", \*"\"\<\!\(\
+\[CapitalDelta]m\_i\%2\) [\!\(eV\^2\)]\>\""}, 
+          FrameTicks \[Rule] {RGELogTicksLabeled[2, 19], 
+              RGELogTicksLabeledNegExp[\(-6\), \(-1\)], RGELogTicks[2, 19], 
+              RGELogTicks[\(-6\), \(-1\)]}, \[IndentingNewLine]PlotRange \
+\[Rule] {All, All}, 
+          PlotStyle \[Rule] {ForestGreen, 
+              Blue}, \[IndentingNewLine]Prolog \[Rule] {ShadowEFT}, \
+\[IndentingNewLine]Epilog \[Rule] {\[IndentingNewLine]Text[
+                StyleForm[\[CapitalDelta]m\_sol\%2, 
+                  FontColor \[Rule] ForestGreen, FontSize \[Rule] 12], {tmin, 
+                  Log[10, 
+                    Abs[\[CapitalDelta]m2sol[
+                        tmin]]]}, {\(-0.8\), \(-2\)}], \
+\[IndentingNewLine]Text[
+                StyleForm[\[CapitalDelta]m\_atm\%2, FontColor \[Rule] Blue, 
+                  FontSize \[Rule] 12], {tmin, 
+                  Log[10, Abs[\[CapitalDelta]m2atm[tmin]]]}, {\(-0.8\), 
+                  1.4}]}, \[IndentingNewLine]DisplayFunction \[Rule] 
+            Identity\[IndentingNewLine]], AxesFront \[Rule] True, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\)], "Input"],
+
+Cell["\<\
+Draw the plot for the solar mass squared difference (on a linear \
+scale)\
+\>", "Text"],
+
+Cell[BoxData[
+    \(\(Show[
+        Plot[\[IndentingNewLine]\[CapitalDelta]m2sol[t]*10^5, {t, tmin, 
+            tmax}, \[IndentingNewLine]ImageSize \[Rule] 400, 
+          FrameLabel -> {\*"\"\<\!\(log\_10\)(\[Mu]/GeV)\>\"", \*"\"\<\!\(\
+\[CapitalDelta]m\_sol\%2\) [\!\(10\^\(-5\)\)\[ThinSpace]\!\(eV\^2\)]\>\""}, 
+          FrameTicks \[Rule] {RGELogTicksLabeled[2, 19], 
+              Table[{i, i}, {i, \(-100\), 100}], RGELogTicks[2, 19], 
+              Table[{i, "\<\>"}, {i, \(-100\), 
+                  100}]}, \[IndentingNewLine]PlotRange \[Rule] {All, All}, 
+          PlotStyle \[Rule] {ForestGreen}, \[IndentingNewLine]Prolog \[Rule] \
+{ShadowEFT}, \[IndentingNewLine]DisplayFunction \[Rule] 
+            Identity\[IndentingNewLine]], AxesFront \[Rule] True, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\)], "Input"],
+
+Cell["\<\
+Draw the plot for the atmospheric mass squared difference (on a \
+linear scale)\
+\>", "Text"],
+
+Cell[BoxData[
+    \(\(Show[
+        Plot[\[IndentingNewLine]\[CapitalDelta]m2atm[t]*10^3, {t, tmin, 
+            tmax}, \[IndentingNewLine]ImageSize \[Rule] 400, 
+          FrameLabel -> {\*"\"\<\!\(log\_10\)(\[Mu]/GeV)\>\"", \*"\"\<\!\(\
+\[CapitalDelta]m\_atm\%2\) [\!\(10\^\(-3\)\)\[ThinSpace]\!\(eV\^2\)]\>\""}, 
+          FrameTicks \[Rule] {RGELogTicksLabeled[2, 19], 
+              Table[{i*0.2, PaddedForm[i*0.2, {2, 1}]}, {i, \(-50\), 50}], 
+              RGELogTicks[2, 19], 
+              Table[{i*0.2, "\<\>"}, {i, 0, 
+                  50}]}, \[IndentingNewLine]PlotRange \[Rule] {All, All}, 
+          PlotStyle \[Rule] {Blue}, \[IndentingNewLine]Prolog \[Rule] \
+{ShadowEFT}, \[IndentingNewLine]DisplayFunction \[Rule] 
+            Identity\[IndentingNewLine]], AxesFront \[Rule] True, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\)], "Input"],
+
+Cell["RG change of the mass squared differences:", "Text"],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<The RG change of \!\(\(\[CapitalDelta]m\^2\)\_sol\) is:  \
+   \!\(\(\[CapitalDelta]m\^2\)\_sol\)(\!\(M\_GUT\))-\!\(\(\[CapitalDelta]m\^2\
+\)\_sol\)(\!\(M\_Z\)) = \>\"", \[CapitalDelta]m2sol[
+            Log[10, GUT]] - \[CapitalDelta]m2sol[
+            Log[10, MZ]], \*"\"\< \!\(eV\^2\)\>\""];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<The RG change of \!\(\(\[CapitalDelta]m\^2\)\_atm\) is:  \
+   \!\(\(\[CapitalDelta]m\^2\)\_atm\)(\!\(M\_GUT\))-\!\(\(\[CapitalDelta]m\^2\
+\)\_atm\)(\!\(M\_Z\)) = \>\"", \[CapitalDelta]m2atm[
+            Log[10, GUT]] - \[CapitalDelta]m2atm[
+            Log[10, MZ]], \*"\"\< \!\(eV\^2\)\>\""];\)\)}], "Input"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+FrontEndVersion->"5.2 for X",
+ScreenRectangle->{{0, 1280}, {0, 1024}},
+WindowSize->{605, 867},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+ShowSelection->True
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 42, 0, 95, "Title"],
+Cell[1821, 55, 159, 4, 50, "Text"],
+Cell[1983, 61, 130, 2, 43, "Input"],
+Cell[2116, 65, 114, 2, 43, "Input"],
+Cell[2233, 69, 153, 3, 50, "Text"],
+Cell[2389, 74, 48, 1, 27, "Input"],
+
+Cell[CellGroupData[{
+Cell[2462, 79, 42, 0, 72, "Section"],
+Cell[2507, 81, 150, 3, 50, "Text"],
+Cell[2660, 86, 66, 1, 27, "Input"],
+Cell[2729, 89, 317, 5, 59, "Input"],
+Cell[3049, 96, 467, 11, 104, "Text"],
+Cell[3519, 109, 276, 4, 43, "Input"],
+Cell[3798, 115, 53, 1, 27, "Input"],
+Cell[3854, 118, 55, 1, 27, "Input"],
+Cell[3912, 121, 145, 3, 27, "Input"],
+Cell[4060, 126, 525, 9, 123, "Input"],
+Cell[4588, 137, 145, 3, 27, "Input"],
+Cell[4736, 142, 26, 0, 27, "Input"],
+Cell[4765, 144, 120, 2, 43, "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[4922, 151, 24, 0, 72, "Section"],
+
+Cell[CellGroupData[{
+Cell[4971, 155, 33, 0, 38, "Subsection"],
+Cell[5007, 157, 38, 0, 32, "Text"],
+Cell[5048, 159, 175, 3, 59, "Input"],
+Cell[5226, 164, 59, 0, 32, "Text"],
+Cell[5288, 166, 2414, 56, 395, "Input"],
+Cell[7705, 224, 158, 4, 50, "Text"],
+Cell[7866, 230, 1959, 34, 347, "Input"],
+Cell[9828, 266, 43, 0, 32, "Text"],
+Cell[9874, 268, 258, 4, 63, "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[10169, 277, 60, 0, 38, "Subsection"],
+Cell[10232, 279, 57, 1, 27, "Input"],
+Cell[10292, 282, 45, 0, 32, "Text"],
+Cell[10340, 284, 1138, 20, 148, "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[11515, 309, 35, 0, 38, "Subsection"],
+Cell[11553, 311, 51, 0, 32, "Text"],
+Cell[11607, 313, 1462, 23, 285, "Input"],
+
+Cell[CellGroupData[{
+Cell[13094, 340, 49, 0, 28, "Subsubsection"],
+Cell[13146, 342, 732, 11, 107, "Input"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[13927, 359, 28, 0, 38, "Subsection"],
+Cell[13958, 361, 44, 0, 32, "Text"],
+Cell[14005, 363, 1467, 24, 285, "Input"],
+
+Cell[CellGroupData[{
+Cell[15497, 391, 49, 0, 28, "Subsubsection"],
+Cell[15549, 393, 747, 11, 107, "Input"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[16345, 410, 28, 0, 38, "Subsection"],
+
+Cell[CellGroupData[{
+Cell[16398, 414, 41, 0, 28, "Subsubsection"],
+Cell[16442, 416, 54, 0, 32, "Text"],
+Cell[16499, 418, 1488, 25, 317, "Input"],
+Cell[17990, 445, 40, 0, 32, "Text"],
+Cell[18033, 447, 623, 11, 107, "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[18693, 463, 49, 0, 28, "Subsubsection"],
+Cell[18745, 465, 97, 3, 32, "Text"],
+Cell[18845, 470, 1440, 25, 296, "Input"],
+Cell[20288, 497, 97, 3, 32, "Text"],
+Cell[20388, 502, 836, 13, 198, "Input"],
+Cell[21227, 517, 103, 3, 32, "Text"],
+Cell[21333, 522, 866, 14, 198, "Input"],
+Cell[22202, 538, 58, 0, 32, "Text"],
+Cell[22263, 540, 691, 11, 91, "Input"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

@@ -1,0 +1,229 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.0'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[      7213,        182]*)
+(*NotebookOutlinePosition[      7841,        204]*)
+(*  CellTagsIndexPosition[      7797,        200]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+Cell["The ususal stuff to load the package", "Text"],
+
+Cell[BoxData[{
+    \(\(Remove["\<Global`*\>"];\)\), "\n", 
+    \(\(Needs["\<REAP`RGESMDirac`\>"];\)\), "\n", 
+    \(\(Needs["\<Graphics`Graphics`\>"];\)\), "\n", 
+    \( (*Needs["\<Utilities`ShowTime`\>"]; \
+\[IndentingNewLine]Needs["\<AnalyticRGEvolution`\>"];*) \)}], "Input"],
+
+Cell[TextData[{
+  "Habe versucht, die ",
+  Cell[BoxData[
+      \(TraditionalForm\`\[CapitalDelta]m\^2\)]],
+  "zu setzen..."
+}], "Text"],
+
+Cell[BoxData[
+    \(\(Dagger[M_] := Transpose[Conjugate[M]];\)\)], "Input"],
+
+Cell[BoxData[{
+    \(\(RGEReset[];\)\), "\n", 
+    \(\(RGEAdd["\<MSSMDirac\>", RGEtan\[Beta] \[Rule] 58];\)\), "\n", 
+    \(\(RGEAdd["\<SMDirac\>", 
+        RGECutoff \[Rule] 1000];\)\), "\[IndentingNewLine]", 
+    \(\(MZ = RGEMass["\<Z\>"];\)\), "\[IndentingNewLine]", 
+    \(\(MGUT = 3\ 10\^16;\)\), "\[IndentingNewLine]", 
+    \(\(RGESetInitial[MZ, RGEMlightest \[Rule] 0.2, 
+        RGE\[CapitalDelta]m2atm \[Rule] 0.00485, 
+        RGE\[CapitalDelta]m2sol \[Rule] 8\ 10\^\(-5\), 
+        RGE\[Theta]12 \[Rule] 33\ Degree, 
+        RGE\[Theta]13 \[Rule] 10\ \ Degree, \ 
+        RGE\[Theta]23 \[Rule] 45\ Degree, \ RGE\[Delta] \[Rule] 30\ Degree, 
+        RGEMassHierarchy -> "\<i\>"];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(RGESolve[MZ, 3\ 10^16, \ 
+        Method \[Rule] StiffnessSwitching];\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(Y = RGEGetSolution[3\ 10^16, \ RGEY\[Nu]]*10^9;\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(DiracMNSParameters[RGEGetSolution[3\ 10^16, RGEY\[Nu]], 
+        RGEGetSolution[3\ 10^16, RGEYe]]\)[\([1]\)]\)], "Input"],
+
+Cell[BoxData[
+    \(Chop[
+      DiracMNSMatrix[RGEGetSolution[MGUT, RGEY\[Nu]], 
+        RGEGetSolution[MGUT, RGEYe]]]\)], "Input"],
+
+Cell[BoxData[
+    \(Print["\<MNS parameters at MGUT:\>", \(DiracMNSParameters[
+            RGEGetSolution[MGUT, RGEY\[Nu]], 
+            RGEGetSolution[MGUT, RGEYe]]\)[\([1]\)]/
+        Degree, "\<, \>", \(DiracMNSParameters[
+          RGEGetSolution[MGUT, RGEY\[Nu]], 
+          RGEGetSolution[MGUT, RGEYe]]\)[\([2]\)]]; 
+    Print["\<MNS parameters at MZ:\>", \(DiracMNSParameters[
+            RGEGetSolution[MZ, RGEY\[Nu]], 
+            RGEGetSolution[MZ, RGEYe]]\)[\([1]\)]/
+        Degree, "\<, \>", \(DiracMNSParameters[RGEGetSolution[MZ, RGEY\[Nu]], 
+          RGEGetSolution[MZ, RGEYe]]\)[\([2]\)]];\)], "Input"],
+
+Cell[BoxData[{
+    \(\(Print["\<M\[Nu](MZ)=\>", 
+        Chop[RGEGetSolution[MZ, RGEM\[Nu]]] // 
+          MatrixForm];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Me(MZ)=\>", 
+        Chop[RGEGetSolution[MZ, RGEMe]] // 
+          MatrixForm];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Mu(MZ)=\>", 
+        Chop[RGEGetSolution[MZ, RGEMu]] // 
+          MatrixForm];\)\), "\[IndentingNewLine]", 
+    \(\(\(Print["\<Md(MZ)=\>", 
+        Chop[RGEGetSolution[MZ, RGEMd]] // 
+          MatrixForm];\)\(\[IndentingNewLine]\)
+    \)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(Y\_\[Nu]\)(\!\(10\^16\)\[ThinSpace]GeV)=\>\"", 
+        RGEGetSolution[\ 10\^16, RGEY\[Nu]] // 
+          MatrixForm];\)\), "\[IndentingNewLine]", 
+    \(\(\(Print[\*"\"\<\!\(Y\_e\)(\!\(10\^16\)\[ThinSpace]GeV)=\>\"", \
+\@2\/\(Cos[ArcTan[20]]\ 246\)\ Chop[RGEGetSolution[\ 10\^16, RGEMe]] // 
+          MatrixForm];\)\(\[IndentingNewLine]\)
+    \)\), "\[IndentingNewLine]", 
+    \(Print[\*"\"\<\!\(m\_\[Nu]\)(\!\(10\^16\)\[ThinSpace]GeV)=\>\"", 
+      Chop[RGEGetSolution[10^16, RGEM\[Nu]]] // 
+        MatrixForm, "\<\[ThinSpace]eV\>"]; 
+    Print[\*"\"\<Eigenvalues of \!\(m\_\[Nu]\)(\!\(10\^16\)\[ThinSpace]GeV) \
+in eV:\>\"", 
+      Chop[Eigenvalues[
+          RGEGetSolution[\ 10\^16, RGEM\[Nu]]]]];\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Eigenvalues of \!\(m\_\[Nu]\)(MZ) in eV:\>\"", 
+        Chop[Eigenvalues[
+            RGEGetSolution[\ MZ, RGEM\[Nu]]]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[
+        DiracMNSParameters[RGEGetSolution[10^2, RGEY\[Nu]], 
+          RGEGetSolution[10^2, RGEYe]]];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(DiracMNSParameters[RGEGetSolution[10^2, RGEY\[Nu]], 
+          RGEGetSolution[10^2, RGEYe]]\)[\([1]\)]/
+      Degree\), "\[IndentingNewLine]", 
+    \(\(DiracMNSParameters[RGEGetSolution[3\ 10^16, RGEY\[Nu]], 
+          RGEGetSolution[3\ 10^16, RGEYe]]\)[\([1]\)]/
+      Degree\), "\[IndentingNewLine]", 
+    \(\(Chop[Eigenvalues[RGEGetSolution[\ MZ, RGEM\[Nu]]]]\)[\([1]\)]\^2 - \
+\(Chop[Eigenvalues[RGEGetSolution[\ MZ, RGEM\[Nu]]]]\)[\([2]\)]\^2\), "\
+\[IndentingNewLine]", 
+    \(\(Chop[Eigenvalues[RGEGetSolution[\ MZ, RGEM\[Nu]]]]\)[\([2]\)]\^2 - \
+\(Chop[Eigenvalues[RGEGetSolution[\ MZ, RGEM\[Nu]]]]\)[\([3]\)]\^2\)}], \
+"Input"],
+
+Cell[BoxData[{
+    \(\(ClearAll[tstMNSParameters];\)\), "\[IndentingNewLine]", 
+    \(\(tstMNSParameters[
+          t_] := \((DiracMNSParameters[RGEGetSolution[Exp[t], RGEY\[Nu]], 
+                RGEGetSolution[Exp[t], RGEYe]]/
+              Degree)\)[\([1]\)];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(Plot[{\(tstMNSParameters[
+              t\ Log[10]]\)\[LeftDoubleBracket]1\[RightDoubleBracket], \
+\(tstMNSParameters[
+              t\ Log[10]]\)\[LeftDoubleBracket]2\[RightDoubleBracket], \
+\(tstMNSParameters[
+              t\ Log[10]]\)\[LeftDoubleBracket]3\[RightDoubleBracket]}, {t, 
+          2, 16}, FrameLabel \[Rule] {\*"\"\<\!\(log\_10\)\[Mu]\>\"", \*"\"\<\
+\!\(\[Theta]\_ij\)\>\""}, 
+        PlotStyle \[Rule] {GrayLevel[0], Hue[0], GrayLevel[0.4]}, 
+        PlotRange \[Rule] All];\)\)], "Input"]
+},
+FrontEndVersion->"5.0 for X",
+ScreenRectangle->{{0, 1280}, {0, 1024}},
+WindowSize->{609, 757},
+WindowMargins->{{0, Automatic}, {Automatic, 0}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+Cell[1754, 51, 52, 0, 32, "Text"],
+Cell[1809, 53, 278, 5, 91, "Input"],
+Cell[2090, 60, 135, 5, 32, "Text"],
+Cell[2228, 67, 75, 1, 27, "Input"],
+Cell[2306, 70, 705, 13, 149, "Input"],
+Cell[3014, 85, 106, 2, 27, "Input"],
+Cell[3123, 89, 84, 1, 27, "Input"],
+Cell[3210, 92, 143, 2, 43, "Input"],
+Cell[3356, 96, 131, 3, 43, "Input"],
+Cell[3490, 101, 620, 11, 171, "Input"],
+Cell[4113, 114, 1620, 33, 318, "Input"],
+Cell[5736, 149, 659, 12, 147, "Input"],
+Cell[6398, 163, 278, 5, 75, "Input"],
+Cell[6679, 170, 530, 10, 77, "Input"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

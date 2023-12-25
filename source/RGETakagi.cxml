@@ -1,0 +1,112 @@
+#################################################################################################
+# The package `REAP' is written for Mathematica 7 and is distributed under the
+# terms of GNU Public License http://www.gnu.org/copyleft/gpl.html
+#################################################################################################
+
+<function name=Definitions>
+<code>
+ClearAll[Diag,Phase,UTakagi,UTakagiCompiled,TakagiDecompositionStep];
+Diag = DiagonalMatrix;
+
+Phase = If[Chop[#] =!= 0, #/Abs[#], 1] &;
+
+UTakagi[A_, i_, j_, n_] := Block[{
+    U = IdentityMatrix[n],
+    c, t, \[CapitalDelta], D, ei\[CurlyPhi]
+    },
+   If[Chop[A[[i, j]]] === 0,
+    Return[U];
+    ];
+   ei\[CurlyPhi] = 
+    Phase[Conjugate[A[[i, i]]] A[[i, j]] + 
+      A[[j, j]] Conjugate[A[[i, j]]]];
+   \[CapitalDelta] = 
+    1/2 (ei\[CurlyPhi] A[[i, i]] - Conjugate[ei\[CurlyPhi]] A[[j, j]]);
+   D = Sqrt[\[CapitalDelta]^2 + A[[i, j]]^2];
+   If[Abs[\[CapitalDelta] + D] < Abs[\[CapitalDelta] - D], D = -D];
+   t = Re[A[[i, j]]/(\[CapitalDelta] + D)];
+   c = 1/Sqrt[1 + t^2];
+   U[[i, i]] = c;
+   U[[i, j]] = t c ei\[CurlyPhi];
+   U[[j, i]] = -t c Conjugate[ei\[CurlyPhi]];
+   U[[j, j]] = c;
+   Conjugate[U]
+   ];
+
+UTakagiCompiled = Compile[
+  {{A, _Complex, 2}, {i, _Integer}, {j, _Integer}, {n, _Integer}},
+  UTakagi[A, i, j, n]
+  ];
+
+TakagiDecompositionStep[u$_, m$_] := 
+ Block[{d = Length[m$], U, u, m, subU},
+  U = u$;
+  m = m$;
+  subU = If[
+    Precision[m$] > MachinePrecision,
+    UTakagi, (U = N[U]; UTakagi)
+    ];
+  Do[
+   Do[
+    u = subU[m, i, j, d];
+    m = u.m.Transpose[u] // Simplify // Chop;
+    U = u.U // Chop // Simplify;
+    , {j, i - 1, 1, -1}
+    ]
+   , {i, d, 1, -1}
+   ];
+  {U, m}
+  ];
+</code>
+</function>
+
+<function name=RGETakagiDecomposition>
+<head>
+RGETakagiDecomposition::usage="RGETakagiDecomposition[M] performs a Takagi decomposition of M and returns in a list the unitary matrix u and the diagonalised matrix d, i.e. {u,d}.";
+</head>
+<doc level=advanced>
+\function{RGETakagiDecomposition[\param{M}]} performs a Takagi decomposition of \param{M} and returns in a list the unitary matrix \param{u} and the diagonalised matrix \param{d}, i.e. {\param{u},\param{d}} with \param{d}=\param{u}.\param{M}.param{u}$^T$. This was implemented by Vinzenz Maurer following the algorithm described in arXiv:physics/0607103 [physics.comp-ph].
+<example>
+\begin{verbatim}
+  {u,d}=RGETakagiDecomposition[M];
+\end{verbatim}
+</example>
+</doc>
+<code>
+RGETakagiDecomposition[M_] := Block[{u, d, \[CurlyPhi]},
+  {u, d} = FixedPoint[
+    TakagiDecompositionStep[#[[1]], #[[2]]] &,
+    {IdentityMatrix[Length[M]], M},
+    20(*,
+    SameTest\[Rule](True&)*)
+    ];
+  \[CurlyPhi] = DiagonalMatrix[Exp[-(I/2) Arg[Diagonal[d]]]];
+  u = \[CurlyPhi].u;
+  d = \[CurlyPhi].d.\[CurlyPhi];
+  If[Max[Im[Diagonal[d]]]/Max[Re[Diagonal[d]]]>10^-6,Print["Large Imaginary entries on diagonal found"];];
+  {u, Re[d]}
+  ];
+</code>
+
+</function>
+
+
+<function name=RGEEigenvalues>
+<head>
+RGEEigenvalues::usage="RGEEigenvalues[M] returns the eigenvalues of the complex symmetric matrix M. They are calculated using the Takagi factorization.";
+</head>
+<doc level=internal>
+\function{RGEEigenvalues[\param{M}]} returns the eigenvalues of \param{M} after diagonalizing it via a Takagi factorization.
+</doc>
+<code>
+RGEEigenvalues[pM_] := Block[{lU, lM,scale,MM},
+(* returns the eigenvalues of pM  *)
+   scale=Sqrt[Max[Abs[pM]]*Min[Select[Flatten[Abs[pM]], # > 0 &]]];
+  MM=pM/scale;
+  {lU, lM} = RGETakagiDecomposition[MM];
+  lM=lM*scale;
+  Return[Sort[Diagonal[lM],Greater]];
+];
+</code>
+</function>
+

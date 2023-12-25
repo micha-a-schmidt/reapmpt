@@ -1,0 +1,476 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.0'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     17294,        411]*)
+(*NotebookOutlinePosition[     18280,        442]*)
+(*  CellTagsIndexPosition[     18236,        438]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Evolution of Dirac neutrino masses", "Title"],
+
+Cell[BoxData[
+    \(\(Remove["\<Global`*\>"];\)\)], "Input"],
+
+Cell["\<\
+This loads the package as well as some definitions relevant for the \
+production of shaded plots.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<REAP`RGESMDirac`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<REAP`RGEPlotUtilities`\>"];\)\), "\[IndentingNewLine]", 
+    \(\($TextStyle = {FontFamily \[Rule] "\<Times\>", FontSize \[Rule] 12, 
+          SingleLetterItalics \[Rule] False};\)\)}], "Input"],
+
+Cell["\<\
+Here, we set the SUSY breaking scale by defining the model to be \
+below 200\[ThinSpace]GeV to be the SM with Dirac neutrinos, and to be the \
+MSSM above. Further, we specify tan \[Beta].\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(RGEReset[];\)\), "\n", 
+    \(\(RGEAdd["\<MSSMDirac\>", RGEtan\[Beta] \[Rule] 50];\)\), "\n", 
+    \(\(RGEAdd["\<SMDirac\>", RGECutoff \[Rule] 200];\)\)}], "Input"],
+
+Cell[BoxData[
+    RowBox[{
+    "Now", " ", "we", " ", "define", " ", "the", " ", "initial", " ", 
+      "conditions", " ", "at", 
+      RowBox[{
+        FormBox[\(M\_Z\),
+          "TraditionalForm"], "."}]}]], "Text"],
+
+Cell[BoxData[{
+    \(\(MZ = RGEMass["\<Z\>"];\)\), "\[IndentingNewLine]", 
+    \(\(RGESetInitial[MZ, RGESuggestion -> "\<MZ\>", 
+        RGE\[Theta]12 \[Rule] 33  Degree, RGE\[Theta]13 \[Rule] 5\ Degree, 
+        RGE\[Theta]23 \[Rule] 45  Degree, RGE\[Delta] \[Rule] 50\ Degree, 
+        RGE\[Delta]CP \[Rule] 30\ Degree, 
+        RGEMlightest \[Rule] 0.1];\)\)}], "Input"],
+
+Cell["This solves the renormalization group equations.", "Text"],
+
+Cell[BoxData[
+    \(\(RGESolve[MZ, 3\ 10^16, \ 
+        Method \[Rule] StiffnessSwitching];\)\)], "Input"],
+
+Cell["\<\
+This is a selection of various parameters at low or high \
+scale.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<\!\(M\_\[Nu]\)(MZ)=\>\"", 
+        Chop[RGEGetSolution[MZ, RGEM\[Nu]]] // 
+          MatrixForm];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(M\_e\)(MZ)=\>\"", 
+        Chop[RGEGetSolution[MZ, RGEMe]] // 
+          MatrixForm];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(M\_u\)(MZ)=\>\"", 
+        Chop[RGEGetSolution[MZ, RGEMu]] // 
+          MatrixForm];\)\), "\[IndentingNewLine]", 
+    \(\(\(Print[\*"\"\<\!\(M\_d\)(MZ)=\>\"", 
+        Chop[RGEGetSolution[MZ, RGEMd]] // 
+          MatrixForm];\)\(\[IndentingNewLine]\)
+    \)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(Y\_\[Nu]\)(\!\(10\^16\)\[ThinSpace]GeV)=\>\"", 
+        RGEGetSolution[\ 10\^16, RGEY\[Nu]] // 
+          MatrixForm];\)\), "\[IndentingNewLine]", 
+    \(\(\(Print[\*"\"\<\!\(Y\_e\)(\!\(10\^16\)\[ThinSpace]GeV)=\>\"", \
+\@2\/\(Cos[ArcTan[20]]\ 246\)\ Chop[RGEGetSolution[\ 10\^16, RGEMe]] // 
+          MatrixForm];\)\(\[IndentingNewLine]\)
+    \)\), "\[IndentingNewLine]", 
+    \(Print[\*"\"\<\!\(m\_\[Nu]\)(\!\(10\^16\)\[ThinSpace]GeV)=\>\"", 
+      Chop[RGEGetSolution[10^16, RGEM\[Nu]]] // 
+        MatrixForm, "\<\[ThinSpace]eV\>"]; 
+    Print[\*"\"\<Eigenvalues of \!\(m\_\[Nu]\)(\!\(10\^16\)\[ThinSpace]GeV) \
+in eV:\>\"", 
+      Chop[Eigenvalues[
+          RGEGetSolution[\ 10\^16, RGEM\[Nu]]]]];\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Eigenvalues of \!\(m\_\[Nu]\)(MZ) in eV:\>\"", 
+        Chop[Eigenvalues[
+            RGEGetSolution[\ MZ, RGEM\[Nu]]]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Dirac MNS parameters at \!\(M\_Z\): \>\"", 
+        DiracMNSParameters[RGEGetSolution[MZ, RGEY\[Nu]], 
+          RGEGetSolution[MZ, RGEYe]]];\)\), "\[IndentingNewLine]", 
+    \(\)}], "Input"],
+
+Cell["Now define running quantities:", "Text"],
+
+Cell[BoxData[{
+    \(\(ClearAll[running\[Theta]12, running\[Theta]13, 
+        running\[CapitalTheta]23, running\[Delta], runningye, runningy\[Mu], 
+        runningy\[Tau], runningm1, runningm2, runningm3, 
+        running\[CapitalDelta]m2sol, running\[CapitalDelta]m2atm, 
+        running\[Theta]12quark, running\[Theta]13quark, 
+        running\[CapitalTheta]23quark, running\[Delta]quark, runningyu, 
+        runningyc, runningyt, runningyd, runningys, 
+        runningyb];\)\), "\[IndentingNewLine]", 
+    \(\(running\[Theta]12[
+          scale_] := \(Catch[
+            DiracMNSParameters[RGEGetSolution[scale, RGEM\[Nu]], 
+              RGEGetSolution[scale, RGEYe]]]\)[\([1, 
+            1]\)];\)\), "\[IndentingNewLine]", 
+    \(\(running\[Theta]13[
+          scale_] := \(Catch[
+            DiracMNSParameters[RGEGetSolution[scale, RGEM\[Nu]], 
+              RGEGetSolution[scale, RGEYe]]]\)[\([1, 
+            2]\)];\)\), "\[IndentingNewLine]", 
+    \(\(running\[Theta]23[
+          scale_] := \(Catch[
+            DiracMNSParameters[RGEGetSolution[scale, RGEM\[Nu]], 
+              RGEGetSolution[scale, RGEYe]]]\)[\([1, 
+            3]\)];\)\), "\[IndentingNewLine]", 
+    \(\(running\[Delta][
+          scale_] := \(Catch[
+            DiracMNSParameters[RGEGetSolution[scale, RGEM\[Nu]], 
+              RGEGetSolution[scale, RGEYe]]]\)[\([1, 
+            4]\)];\)\), "\[IndentingNewLine]", 
+    \(\(runningye[
+          scale_] := \(Catch[
+            DiracMNSParameters[RGEGetSolution[scale, RGEY\[Nu]], 
+              RGEGetSolution[scale, RGEYe]]]\)[\([3, 
+            1]\)];\)\), "\[IndentingNewLine]", 
+    \(\(runningy\[Mu][
+          scale_] := \(Catch[
+            DiracMNSParameters[RGEGetSolution[scale, RGEY\[Nu]], 
+              RGEGetSolution[scale, RGEYe]]]\)[\([3, 
+            2]\)];\)\), "\[IndentingNewLine]", 
+    \(\(runningy\[Tau][
+          scale_] := \(Catch[
+            DiracMNSParameters[RGEGetSolution[scale, RGEY\[Nu]], 
+              RGEGetSolution[scale, RGEYe]]]\)[\([3, 
+            3]\)];\)\), "\[IndentingNewLine]", 
+    \(\(runningm1[
+          scale_] := \(Catch[
+            DiracMNSParameters[RGEGetSolution[scale, RGEM\[Nu]], 
+              RGEGetSolution[scale, RGEYe]]]\)[\([2, 1]\)];\)\), "\n", 
+    \(\(runningm2[
+          scale_] := \(Catch[
+            DiracMNSParameters[RGEGetSolution[scale, RGEM\[Nu]], 
+              RGEGetSolution[scale, RGEYe]]]\)[\([2, 2]\)];\)\), "\n", 
+    \(\(runningm3[
+          scale_] := \(Catch[
+            DiracMNSParameters[RGEGetSolution[scale, RGEM\[Nu]], 
+              RGEGetSolution[scale, RGEYe]]]\)[\([2, 
+            3]\)];\)\), "\[IndentingNewLine]", 
+    \(\(running\[CapitalDelta]m2sol[scale_] := 
+        runningm2[scale]\^2 - 
+          runningm1[scale]\^2;\)\), "\[IndentingNewLine]", 
+    \(\(running\[CapitalDelta]m2atm[scale_] := 
+        runningm3[scale]\^2 - 
+          runningm2[scale]\^2;\)\), "\[IndentingNewLine]", 
+    \(\(running\[Theta]12quark[
+          scale_] := \(Catch[
+            CKMParameters[RGEGetSolution[scale, RGEYu], 
+              RGEGetSolution[scale, RGEYd]]]\)[\([1, 1]\)];\)\), "\n", 
+    \(\(running\[Theta]13quark[
+          scale_] := \(Catch[
+            CKMParameters[RGEGetSolution[scale, RGEYu], 
+              RGEGetSolution[scale, RGEYd]]]\)[\([1, 2]\)];\)\), "\n", 
+    \(\(running\[Theta]23quark[
+          scale_] := \(Catch[
+            CKMParameters[RGEGetSolution[scale, RGEYu], 
+              RGEGetSolution[scale, RGEYd]]]\)[\([1, 
+            3]\)];\)\), "\[IndentingNewLine]", 
+    \(\(runninng\[Delta]quark[
+          scale_] := \(Catch[
+            CKMParameters[RGEGetSolution[scale, RGEYu], 
+              RGEGetSolution[scale, RGEYd]]]\)[\([1, 
+            4]\)];\)\), "\[IndentingNewLine]", 
+    \(\(runningyu[
+          scale_] := \(Catch[
+            CKMParameters[RGEGetSolution[scale, RGEYu], 
+              RGEGetSolution[scale, RGEYd]]]\)[\([2, 
+            1]\)];\)\), "\[IndentingNewLine]", 
+    \(\(runningyc[
+          scale_] := \(Catch[
+            CKMParameters[RGEGetSolution[scale, RGEYu], 
+              RGEGetSolution[scale, RGEYd]]]\)[\([2, 
+            2]\)];\)\), "\[IndentingNewLine]", 
+    \(\(runningyt[
+          scale_] := \(Catch[
+            CKMParameters[RGEGetSolution[scale, RGEYu], 
+              RGEGetSolution[scale, RGEYd]]]\)[\([2, 
+            3]\)];\)\), "\[IndentingNewLine]", 
+    \(\(runningyd[
+          scale_] := \(Catch[
+            CKMParameters[RGEGetSolution[scale, RGEYu], 
+              RGEGetSolution[scale, RGEYd]]]\)[\([3, 
+            1]\)];\)\), "\[IndentingNewLine]", 
+    \(\(runningys[
+          scale_] := \(Catch[
+            CKMParameters[RGEGetSolution[scale, RGEYu], 
+              RGEGetSolution[scale, RGEYd]]]\)[\([3, 
+            2]\)];\)\), "\[IndentingNewLine]", 
+    \(\(runningyb[
+          scale_] := \(Catch[
+            CKMParameters[RGEGetSolution[scale, RGEYu], 
+              RGEGetSolution[scale, RGEYd]]]\)[\([3, 3]\)];\)\)}], "Input"],
+
+Cell[TextData[{
+  "This plots the mass eigenvalues. We choose to show the ratios ",
+  Cell[BoxData[
+      \(TraditionalForm\`\(\(m\_i\)(\[Mu])\)\/\(\(m\_i\)(m\_z)\)\)]],
+  "."
+}], "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{"Plot", "[", 
+        RowBox[{\({runningm1[10\^x]\/runningm1[MZ], 
+            runningm2[10\^x]\/runningm2[MZ], 
+            runningm3[10\^x]\/runningm3[MZ]}\), 
+          ",", \({x, Log[10, MZ], Log[10, 3\ 10\^16]}\), 
+          ",", \(PlotStyle \[Rule] {Red, ForestGreen, Blue}\), 
+          ",", \(FrameTicks \[Rule] {RGELogTicksLabeled[1, 17], Automatic, 
+              RGELogTicks[1, 17], Automatic}\), 
+          ",", \(PlotRange \[Rule] All\), ",", \(ImageSize \[Rule] 400\), ",",
+           
+          RowBox[{"Epilog", "\[Rule]", 
+            RowBox[{"{", 
+              RowBox[{
+                RowBox[{"Text", "[", 
+                  RowBox[{
+                    RowBox[{"StyleForm", "[", 
+                      RowBox[{"\"\<\!\(\(\*
+StyleBox[\"m\",\nFontSlant->\"Italic\"]\)\_1\)(\[Mu])/\!\(\(\*
+StyleBox[\"m\",\nFontSlant->\"Italic\"]\)\_1\)(\!\(\(\*
+StyleBox[\"m\",\nFontSlant->\"Italic\"]\)\_\(\*
+StyleBox[\"Z\",\nFontSlant->\"Italic\"]\)\))\>\"", 
+                        ",", \(FontColor \[Rule] Red\), 
+                        ",", \(FontSize \[Rule] 12\)}], "]"}], 
+                    ",", \({14, runningm1[10\^14]\/runningm1[MZ]}\), 
+                    ",", \({\(-0.2\), 3}\)}], "]"}], ",", 
+                "\[IndentingNewLine]", 
+                RowBox[{"Text", "[", 
+                  RowBox[{
+                    RowBox[{"StyleForm", "[", 
+                      RowBox[{"\"\<\!\(\(\*
+StyleBox[\"m\",\nFontSlant->\"Italic\"]\)\_3\)(\[Mu])/\!\(\(\*
+StyleBox[\"m\",\nFontSlant->\"Italic\"]\)\_3\)(\!\(\(\*
+StyleBox[\"m\",\nFontSlant->\"Italic\"]\)\_\(\*
+StyleBox[\"Z\",\nFontSlant->\"Italic\"]\)\))\>\"", 
+                        ",", \(FontColor \[Rule] Blue\), 
+                        ",", \(FontSize \[Rule] 12\)}], "]"}], 
+                    ",", \({13, runningm3[10\^13]\/runningm3[MZ]}\), 
+                    ",", \({1, \(-2\)}\)}], "]"}]}], "}"}]}], ",", 
+          RowBox[{"FrameLabel", "\[Rule]", 
+            RowBox[{"{", 
+              RowBox[{
+              "\"\<\!\(log\_10\)\[ThinSpace]\[Mu] [GeV]\>\"", ",", 
+                "\"\<\!\(\*
+StyleBox[\(m\_i\),\nFontSlant->\"Italic\"]\)(\[Mu])/\!\(\*
+StyleBox[\(m\_i\),\nFontSlant->\"Italic\"]\)(\!\(\*
+StyleBox[\(m\_Z\),\nFontSlant->\"Italic\"]\))\>\""}], "}"}]}]}], "]"}], 
+      ";"}]], "Input"],
+
+Cell[TextData[{
+  "Plot of the ",
+  Cell[BoxData[
+      FormBox[
+        SuperscriptBox[
+          StyleBox[
+            RowBox[{"\[CapitalDelta]", 
+              StyleBox["m",
+                FontSlant->"Italic"]}]], "2"], TraditionalForm]]],
+  "s."
+}], "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{"Plot", "[", 
+        RowBox[{\({running\[CapitalDelta]m2sol[10\^x]\/running\[CapitalDelta]\
+m2sol[MZ], 
+            running\[CapitalDelta]m2atm[10\^x]\/running\[CapitalDelta]m2atm[\
+MZ]}\), ",", \({x, Log[10, MZ], Log[10, 3\ 10\^16]}\), 
+          ",", \(PlotStyle \[Rule] {Red, Blue}\), 
+          ",", \(FrameTicks \[Rule] {RGELogTicksLabeled[1, 17], Automatic, 
+              RGELogTicks[1, 17], Automatic}\), 
+          ",", \(PlotRange \[Rule] All\), ",", \(ImageSize \[Rule] 400\), ",",
+           
+          RowBox[{"Epilog", "\[Rule]", 
+            RowBox[{"{", 
+              RowBox[{
+                RowBox[{"Text", "[", 
+                  RowBox[{
+                    RowBox[{"StyleForm", "[", 
+                      RowBox[{"\"\<\!\(\*
+StyleBox[\(\[CapitalDelta]\(\*
+StyleBox[\"m\",\nFontSlant->\"Italic\"]\)\)]\_sol\%2\)(\[Mu])/\!\(\*
+StyleBox[\(\[CapitalDelta]\(\*
+StyleBox[\"m\",\nFontSlant->\"Italic\"]\)\)]\_sol\%2\)(\!\(\(\*
+StyleBox[\"m\",\nFontSlant->\"Italic\"]\)\_\(\*
+StyleBox[\"Z\",\nFontSlant->\"Italic\"]\)\))\>\"", 
+                        ",", \(FontColor \[Rule] Red\), 
+                        ",", \(FontSize \[Rule] 12\)}], "]"}], 
+                    ",", \({14, 
+                      running\[CapitalDelta]m2sol[10\^14]\/running\
+\[CapitalDelta]m2sol[MZ]}\), ",", \({1, \(-2\)}\)}], "]"}], ",", 
+                "\[IndentingNewLine]", 
+                RowBox[{"Text", "[", 
+                  RowBox[{
+                    RowBox[{"StyleForm", "[", 
+                      RowBox[{"\"\<\!\(\*
+StyleBox[\(\[CapitalDelta]\(\*
+StyleBox[\"m\",\nFontSlant->\"Italic\"]\)\)]\_atm\%2\)(\[Mu])/\!\(\*
+StyleBox[\(\[CapitalDelta]\(\*
+StyleBox[\"m\",\nFontSlant->\"Italic\"]\)\)]\_atm\%2\)(\!\(\(\*
+StyleBox[\"m\",\nFontSlant->\"Italic\"]\)\_\(\*
+StyleBox[\"Z\",\nFontSlant->\"Italic\"]\)\))\>\"", 
+                        ",", \(FontColor \[Rule] Blue\), 
+                        ",", \(FontSize \[Rule] 12\)}], "]"}], 
+                    ",", \({13, 
+                      running\[CapitalDelta]m2atm[10\^13]\/running\
+\[CapitalDelta]m2atm[MZ]}\), ",", \({0, \(-2\)}\)}], "]"}]}], "}"}]}], ",", 
+          RowBox[{"FrameLabel", "\[Rule]", 
+            RowBox[{"{", 
+              RowBox[{
+              "\"\<\!\(log\_10\)\[ThinSpace]\[Mu] [GeV]\>\"", ",", 
+                "\"\<\!\(\*
+StyleBox[\(m\_i\),\nFontSlant->\"Italic\"]\)(\[Mu])/\!\(\*
+StyleBox[\(m\_i\),\nFontSlant->\"Italic\"]\)(\!\(\*
+StyleBox[\(m\_Z\),\nFontSlant->\"Italic\"]\))\>\""}], "}"}]}]}], "]"}], 
+      ";"}]], "Input"],
+
+Cell["This plots the evolution of the leptonic mixing parameters:", "Text"],
+
+Cell[BoxData[
+    \(\(Plot[{running\[Theta]12[10\^x]/Degree, 
+          running\[Theta]13[10\^x]/Degree, running\[Theta]23[10\^x]/Degree, 
+          running\[Delta][10\^x]/Degree}, {x, Log[10, MZ], 
+          Log[10, 3\ 10\^16]}, 
+        PlotStyle \[Rule] {Red, ForestGreen, Blue, Magenta}, 
+        FrameTicks \[Rule] {RGELogTicksLabeled[1, 17], Automatic, 
+            RGELogTicks[1, 17], Automatic}, 
+        PlotRange \[Rule] {All, {\(-5\), 55}}, ImageSize \[Rule] 400, 
+        FrameLabel \[Rule] {\*"\"\<\!\(log\_10\)\[ThinSpace]\[Mu] [GeV]\>\"", \
+\*"\"\<\!\(\[Theta]\_ij\) [\[Degree]]\>\""}, 
+        Epilog \[Rule] {Text[
+              StyleForm[\*"\"\<\!\(\[Theta]\_12\)\>\"", 
+                FontColor \[Rule] Red, FontSize \[Rule] 12], {14, 
+                running\[Theta]12[10\^14]/Degree}, {\(-0.5\), \(-2.5\)}], 
+            Text[StyleForm[\*"\"\<\!\(\[Theta]\_13\)\>\"", 
+                FontColor \[Rule] ForestGreen, FontSize \[Rule] 12], {14, 
+                running\[Theta]13[10\^14]/Degree}, {\(-0.5\), 
+                2}], \[IndentingNewLine]Text[
+              StyleForm[\*"\"\<\!\(\[Theta]\_23\)\>\"", 
+                FontColor \[Rule] Blue, FontSize \[Rule] 12], {14, 
+                running\[Theta]23[10\^14]/Degree}, {\(-0.5\), \(-2\)}], 
+            Text[StyleForm["\<\[Delta]\>", FontColor \[Rule] Magenta, 
+                FontSize \[Rule] 12], {14, 
+                running\[Delta][10\^14]/Degree}, {\(-0.5\), 
+                2}]}];\)\)], "Input"]
+}, Open  ]]
+},
+FrontEndVersion->"5.0 for X",
+ScreenRectangle->{{0, 1280}, {0, 1024}},
+WindowSize->{718, 662},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+PrintingPageRange->{Automatic, Automatic},
+PrintingOptions->{"PaperSize"->{612, 792},
+"PaperOrientation"->"Portrait",
+"FirstPageHeader"->False,
+"FirstPageFooter"->False,
+"PostScriptOutputFile":>FrontEnd`FileName[{$RootDirectory, "users", "mratz", \
+"mathematica", "Notebooks", "MassRen"}, "mist.ps", CharacterEncoding -> \
+"iso8859-1"],
+"Magnification"->1}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 51, 0, 94, "Title"],
+Cell[1830, 55, 60, 1, 27, "Input"],
+Cell[1893, 58, 121, 3, 32, "Text"],
+Cell[2017, 63, 294, 4, 59, "Input"],
+Cell[2314, 69, 211, 4, 50, "Text"],
+Cell[2528, 75, 187, 3, 59, "Input"],
+Cell[2718, 80, 218, 6, 29, "Text"],
+Cell[2939, 88, 373, 6, 59, "Input"],
+Cell[3315, 96, 64, 0, 32, "Text"],
+Cell[3382, 98, 106, 2, 27, "Input"],
+Cell[3491, 102, 89, 3, 32, "Text"],
+Cell[3583, 107, 1756, 34, 317, "Input"],
+Cell[5342, 143, 46, 0, 32, "Text"],
+Cell[5391, 145, 4977, 109, 1071, "Input"],
+Cell[10371, 256, 187, 5, 40, "Text"],
+Cell[10561, 263, 2325, 48, 224, "Input"],
+Cell[12889, 313, 262, 10, 32, "Text"],
+Cell[13154, 325, 2557, 54, 242, "Input"],
+Cell[15714, 381, 75, 0, 32, "Text"],
+Cell[15792, 383, 1486, 25, 255, "Input"]
+}, Open  ]]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

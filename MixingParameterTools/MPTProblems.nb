@@ -1,0 +1,1251 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.0'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     42485,       1092]*)
+(*NotebookOutlinePosition[     43113,       1114]*)
+(*  CellTagsIndexPosition[     43069,       1110]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+Cell[BoxData[
+    \(Off[stderr]\)], "Input"],
+
+Cell[BoxData[{
+    \(Needs["\<MixingParameterTools`MPT3x3`\>"]\), "\n", 
+    \(MPTSecureArg[x_] := 
+      Which[x \[NotEqual] 0, Arg[x], x \[Equal] 0, 0]\)}], "Input"],
+
+Cell[CellGroupData[{
+
+Cell["Diagonale Matrizen mit Phasen", "Subsection"],
+
+Cell[TextData[{
+  "Note: In the case of diagonal mass matrices, the phases are mathematically \
+not well-defined.\nHowever, as there is no physical phase in this case, the \
+MNS parameters will be such that only non-zero ",
+  Cell[BoxData[
+      FormBox[
+        RowBox[{
+          FormBox[\(\(\[Delta]\_e\)\(,\)\),
+            "TraditionalForm"], \(\[Delta]\_\[Mu]\)}], TraditionalForm]]],
+  "and ",
+  Cell[BoxData[
+      \(TraditionalForm\`\[Delta]\_\[Tau]\)]],
+  "are returned."
+}], "Text"],
+
+Cell[BoxData[
+    \(<< MixingParameterTools`MPT3x3`\)], "Input"],
+
+Cell[BoxData[{\(ClearAll[tmpM, tmpU];\), "\[IndentingNewLine]", \(tmpM = 
+        IdentityMatrix[3]*Exp[I];\), "\[IndentingNewLine]", \(tmpU = 
+        Chop[Catch[
+            MPT3x3NeutrinoMixingMatrix[tmpM]]];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\*
+StyleBox[\"M\",\nFontSlant->\"Italic\"]\)=\>\"", ",", "tmpM", ",", 
+          "\"\<, \!\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)=\>\"", ",", "tmpU"}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{"\"\<\!\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\^T\)\!\(\*
+StyleBox[\"M\",\nFontSlant->\"Italic\"]\)\[ThinSpace]\!\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)=\>\"", 
+            ",", \(Chop[Transpose[tmpU] . tmpM . tmpU]\)}], "]"}], ";"}], 
+      "\[IndentingNewLine]", \( (*Transpose[
+            MPT3x3NeutrinoMixingMatrix[
+              IdentityMatrix[3]*Exp[I]]] . \((IdentityMatrix[3]*Exp[I])\) . 
+          MPT3x3NeutrinoMixingMatrix[
+            IdentityMatrix[3]*
+              Exp[I]]*) \)}], "\[IndentingNewLine]", \(Print["\<Mixing \
+parameters: \>", 
+        Catch[MPT3x3MixingParameters[
+            MPT3x3NeutrinoMixingMatrix[
+              IdentityMatrix[3]*Exp[I]]]]];\)}], "Input"],
+
+Cell[BoxData[
+    \(MPT3x3UnitaryMatrix[\[Theta]12, \[Theta]13, \[Theta]23, \[Delta], \
+\[Delta]e, \[Delta]\[Mu], \[Delta]\[Tau], \[CurlyPhi]1, \[CurlyPhi]2]\)], \
+"Input"],
+
+Cell[BoxData[
+    \(MNSParameters[IdentityMatrix[3]*Exp[I], IdentityMatrix[3]]\)], "Input"],
+
+Cell[BoxData[
+    \(MNSParameters[DiagonalMatrix[{Exp[I], Exp[\(-\[Pi]\)/4\ I], 1}], 
+      IdentityMatrix[3]]\)], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Entartete Massen", "Subsection"],
+
+Cell[BoxData[
+    \(<< MixingParameterTools`MPT3x3`\)], "Input"],
+
+Cell[BoxData[
+    \(Catch[
+      MPT3x3MixingParameters[
+        MPT3x3UnitaryMatrix[0, \[Pi]/2, 0, 0, 0, 0, 0, 0, 0]]]\)], "Input"],
+
+Cell[BoxData[{\(ClearAll[tmpM, tmpU, tmpV, tmpW, 
+        tstU];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"tmpM", "=", 
+        RowBox[{"(", GridBox[{
+              {\(0.1\ Exp[\[Pi]/4\ I]\), "0", "0"},
+              {"0", "0", "0.13"},
+              {"0", "0.13", "0"}
+              }], ")"}]}], 
+      ";"}], "\[IndentingNewLine]", \({tmpU, tmpW, tmpV} = 
+        SingularValueDecomposition[
+          N[tmpM]];\), "\[IndentingNewLine]", \(Print[
+        N[MatrixForm[tmpM]], \*"\"\<\!\(\( = \&! \)\)\>\"", 
+        MatrixForm[
+          Chop[tmpU . tmpW . 
+              Conjugate[Transpose[tmpV]]]]];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\^\[Dagger]\)\!\(\*
+StyleBox[\"m\",\nFontSlant->\"Italic\"]\)\[ThinSpace]\!\(\*
+StyleBox[\"V\",\nFontSlant->\"Italic\"]\)=\>\"", 
+          ",", \(Chop[
+            MatrixForm[Conjugate[Transpose[tmpU]] . tmpM . tmpV]]\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\*
+StyleBox[\"V\",\nFontSlant->\"Italic\"]\^T\)\!\(\*
+StyleBox[\"m\",\nFontSlant->\"Italic\"]\)\[ThinSpace]\!\(\*
+StyleBox[\"V\",\nFontSlant->\"Italic\"]\)=\>\"", 
+          ",", \(Chop[MatrixForm[Transpose[tmpV] . tmpM . tmpV]]\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\^\[Dagger]\)\!\(\*
+StyleBox[\"m\",\nFontSlant->\"Italic\"]\)\[ThinSpace]\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\^*\)\)=\>\"", 
+          ",", \(Chop[
+            MatrixForm[
+              Conjugate[Transpose[tmpU]] . tmpM . Conjugate[tmpU]]]\)}], 
+        "]"}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\^\[Dagger]\)\!\(\*
+StyleBox[\"m\",\nFontSlant->\"Italic\"]\)\[ThinSpace]\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\^*\)\)=\>\"", 
+          ",", \(Chop[
+            MatrixForm[\((Conjugate[Transpose[tmpU]] + Transpose[tmpV])\) . 
+                tmpM . \((tmpV + Conjugate[tmpU])\)]]\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", \(Print[
+        tmpV . Conjugate[tmpU] - 
+          Conjugate[tmpU] . 
+            tmpV];\), "\[IndentingNewLine]", \(Print["\<U=\>", 
+        Chop[MatrixForm[tmpU]]];\), "\[IndentingNewLine]", \(Print["\<V=\>", 
+        Chop[MatrixForm[tmpV]]];\), "\[IndentingNewLine]", \(Print[
+        Catch[MPT3x3MixingParameters[tmpU]], "\<,\>", 
+        Chop[MPT3x3UnitaryMatrix[
+            Catch[MPT3x3MixingParameters[tmpU]]]], "\<,\>", 
+        tmpU];\), "\[IndentingNewLine]", \(Print[
+        Catch[MPT3x3MixingParameters[tmpV]], "\<,\>", 
+        Chop[MPT3x3UnitaryMatrix[
+            Catch[MPT3x3MixingParameters[tmpV]]]], "\<,\>", 
+        tmpV];\), "\[IndentingNewLine]", \(tstU = 
+        MPT3x3UnitaryMatrix[\[Pi]/4, \[Pi]/2, 0, 0, 0, 0, 0, 0, 
+          0];\), "\[IndentingNewLine]", \(Print[
+        Transpose[tstU] . tmpM . tstU];\), "\[IndentingNewLine]", \(tstU = 
+        MPT3x3UnitaryMatrix[\(-Catch[
+                MPT3x3MixingParameters[Conjugate[tmpU]]]\) + 
+            Catch[MPT3x3MixingParameters[tmpV]]];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print[Chop[Transpose[tstU] . tmpM . tstU]];\), 
+      "\[IndentingNewLine]", \( (*Print[
+          Chop[MatrixForm[tmpU . tmpV]]]; \[IndentingNewLine]Print[
+          Catch[MPT3x3MixingParameters[
+              tmpU . tmpV]]];*) \)}], "\[IndentingNewLine]", 
+    RowBox[{\( (*Print[
+          Chop[MatrixForm[Conjugate[tmpU] . tmpV]]]; \[IndentingNewLine]Print[
+          Chop[MatrixForm[
+              Transpose[Conjugate[tmpU] . tmpV] . tmpM . Conjugate[tmpU] . 
+                tmpV]]]; \[IndentingNewLine]Print[
+          Chop[Conjugate[
+                Transpose[tmpV + Conjugate[tmpU]]] . \((tmpV + 
+                  Conjugate[tmpU])\)]];*) \)}]}], "Input"],
+
+Cell[BoxData[{
+    \(\(ClearAll[tmpU];\)\), "\[IndentingNewLine]", 
+    \(\(tmpU = 
+        MPT3x3UnitaryMatrix[\[Theta]12, \[Pi]/
+            2, \[Theta]23, \[Delta], \[Delta]e, \[Delta]\[Mu], \
+\[Delta]\[Tau], \[CurlyPhi]1, \[CurlyPhi]2];\)\), "\[IndentingNewLine]", 
+    \(\(Print[tmpU];\)\), "\[IndentingNewLine]", 
+    \(Simplify[
+      TrigExpand[
+        ComplexExpand[
+          Conjugate[tmpU\[LeftDoubleBracket]2, 1\[RightDoubleBracket]]*
+            tmpU\[LeftDoubleBracket]2, 2\[RightDoubleBracket]*
+            tmpU\[LeftDoubleBracket]3, 1\[RightDoubleBracket]*
+            Conjugate[tmpU\[LeftDoubleBracket]3, 2\[RightDoubleBracket]]]], 
+      Trig \[Rule] False]\), "\[IndentingNewLine]", 
+    \(\(\(FullSimplify[
+      ComplexExpand[
+        Conjugate[tmpU\[LeftDoubleBracket]2, 1\[RightDoubleBracket]]*
+          tmpU\[LeftDoubleBracket]2, 2\[RightDoubleBracket]*
+          tmpU\[LeftDoubleBracket]3, 1\[RightDoubleBracket]*
+          Conjugate[
+            tmpU\[LeftDoubleBracket]3, 
+              2\[RightDoubleBracket]]]]\)\(\[IndentingNewLine]\)
+    \) (*Solve[
+        FullSimplify[
+            ComplexExpand[
+              Conjugate[tmpU\[LeftDoubleBracket]2, 1\[RightDoubleBracket]]*
+                tmpU\[LeftDoubleBracket]2, 2\[RightDoubleBracket]*
+                tmpU\[LeftDoubleBracket]3, 1\[RightDoubleBracket]*
+                Conjugate[
+                  tmpU\[LeftDoubleBracket]3, 
+                    2\[RightDoubleBracket]]]] \[Equal] 
+          1, \[Theta]12]*) \), "\[IndentingNewLine]", 
+    \(MPT3x3UnitaryMatrix[\[Theta]12, \[Pi]/2, 
+      0, \[Delta], \[Delta]e, \[Delta]\[Mu], \[Delta]\[Tau], \[CurlyPhi]1, \
+\[CurlyPhi]2]\), "\[IndentingNewLine]", 
+    \(Simplify[
+      Det[MPT3x3UnitaryMatrix[\[Theta]12, \[Pi]/2, 
+          0, \[Delta], \[Delta]e, \[Delta]\[Mu], \[Delta]\[Tau], \
+\[CurlyPhi]1, \[CurlyPhi]2]]]\)}], "Input"],
+
+Cell[BoxData[
+    \(Solve[{\[Delta] + \[Delta]\[Tau] - 0  \[CurlyPhi]1\/2 + \[Pi] \[Equal] 
+          a3, \[Delta]\[Mu] - 0  \[CurlyPhi]2\/2 \[Equal] 
+          a2, \[Delta] + \[Delta]\[Tau] - 0  \[CurlyPhi]1\/2 + \[Pi] \[Equal] 
+          a4 (*\(,\)\(\[Delta] + \[Delta]\[Tau] - \[CurlyPhi]2\/2 + \[Pi] \
+\[Equal] a1 - a2 - 
+              a3\)*) }, {\[Delta], \[Delta]\[Mu], \[Delta]\[Tau]}]\)], "Input"],
+
+Cell[BoxData[{
+    \(ClearAll[rndUnitaryMatrix]\), "\[IndentingNewLine]", 
+    \(\(rndUnitaryMatrix := 
+        MPT3x3UnitaryMatrix[Random[Real, {0, 4  \[Pi]}], 
+          Pi/2 + 0  Random[Real, {0, 4  \[Pi]}], Random[Real, {0, 4  \[Pi]}], 
+          Random[Real, {0, 4  \[Pi]}], Random[Real, {0, 4  \[Pi]}], 
+          Random[Real, {0, 4  \[Pi]}], Random[Real, {0, 4  \[Pi]}], 
+          Random[Real, {0, 4  \[Pi]}], 
+          Random[Real, {0, 4  \[Pi]}]];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(tmpMist = Catch[MPT3x3MixingParameters[rndUnitaryMatrix]]\)], "Input"],
+
+Cell[BoxData[
+    RowBox[{"MNSParameters", "[", 
+      RowBox[{
+        RowBox[{"(", GridBox[{
+              {\(0.1\ Exp[\[Pi]/4\ I]\), "0", "0"},
+              {"0", "0", "0.13"},
+              {"0", "0.13", "0"}
+              }], ")"}], ",", \(IdentityMatrix[3]\)}], "]"}]], "Input"],
+
+Cell[BoxData[
+    \(\(?MPT3x3NeutrinoMixingMatrix\)\)], "Input"],
+
+Cell[BoxData[
+    \(mnu = 
+      MPT3x3OrthogonalMatrix[33\ Degree, 0.01, 44\ Degree] . 
+        DiagonalMatrix[{0.1, 0.1, 0.12}] . 
+        Transpose[
+          MPT3x3OrthogonalMatrix[33\ Degree, 0.01, 44\ Degree]]\)], "Input"],
+
+Cell[BoxData[
+    \(\(?MPT3x3MixingMatrixL\)\)], "Input"],
+
+Cell[BoxData[
+    \(MPT3x3MixingParameters[MPT3x3MixingMatrixL[mnu]]\)], "Input"],
+
+Cell[BoxData[{
+    \(\(SingularValueDecomposition[mnu]\)[\([1]\)]\), "\[IndentingNewLine]", 
+    \(invSort[\(SingularValueDecomposition[
+          mnu]\)[\([1]\)]]\), "\[IndentingNewLine]", 
+    \(Det[\(SingularValueDecomposition[
+          mnu]\)[\([1]\)]]\), "\[IndentingNewLine]", 
+    \(Chop[
+      Conjugate[Transpose[\(SingularValueDecomposition[mnu]\)[\([1]\)]]] . 
+        mnu . \(SingularValueDecomposition[
+            mnu]\)[\([3]\)]]\), "\[IndentingNewLine]", 
+    \(Chop[
+      Conjugate[
+          Transpose[invSort[\(SingularValueDecomposition[mnu]\)[\([1]\)]]]] . 
+        mnu . invSort[\(SingularValueDecomposition[
+              mnu]\)[\([3]\)]]]\)}], "Input"],
+
+Cell[BoxData[
+    \(MNSParameters[mnu, IdentityMatrix[3]]/Degree\)], "Input"],
+
+Cell["\<\
+In diesem Fall diagonalisiert die berechnete MNS-Matrix die \
+Neutrinomassenmatrix nicht:\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(U2 = MNSMatrix[mnu, IdentityMatrix[3]];\)\), "\n", 
+    \(Transpose[U2] . mnu . U2\)}], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[Cell[BoxData[
+    \(TraditionalForm\`\[Theta]\_13 = \[Pi]/2\)]]], "Subsection"],
+
+Cell[BoxData[{
+    \(\(<< MixingParameterTools/MPT3x3.m;\)\), "\[IndentingNewLine]", 
+    \(ClearAll[\[Theta]12, \[Theta]12, \[Theta]23, \[Delta], \[Delta]e, \
+\[Delta]\[Mu], \[Delta]\[Tau], \[CurlyPhi]1, \[CurlyPhi]2]\)}], "Input"],
+
+Cell[BoxData[
+    \(\(Print[
+        MatrixForm[
+          MPT3x3UnitaryMatrix[\[Theta]12, \[Theta]13, \[Theta]23, \[Delta], \
+\[Delta]e, \[Delta]\[Mu], \[Delta]\[Tau], \[CurlyPhi]1, \
+\[CurlyPhi]2]]];\)\)], "Input"],
+
+Cell[BoxData[
+    \(MPT3x3UnitaryMatrix[0.3, \[Pi]/2, 0.1, 0.1, 0.2, 0.2, 0.4, 0.1, 
+      0.2]\)], "Input"],
+
+Cell[BoxData[
+    \(MPT3x3MixingParameters[
+      MPT3x3UnitaryMatrix[0.3, \[Pi]/2, 0.1, 0.1, 0.2, 0.2, 0.4, 0.1, 
+        0.2]]\)], "Input"],
+
+Cell[BoxData[{
+    \(\(V = 
+        MPT3x3UnitaryMatrix[\[Theta]12, \[Pi]/
+            2, \[Theta]23, \[Delta], \[Delta]e, \[Delta]\[Mu], \
+\[Delta]\[Tau], \[CurlyPhi]1, \[CurlyPhi]2];\)\), "\[IndentingNewLine]", 
+    \(V // MatrixForm\)}], "Input"],
+
+Cell[BoxData[
+    \(\(\( (*\ 
+      Betraege\ von\ V21\ und\ V32\ *) \)\(\[IndentingNewLine]\)\(\(a = \
+\((\(-Cos[\[Theta]23]\)\ Sin[\[Theta]12] - \
+\[ExponentialE]\^\(\(-\[ImaginaryI]\)\ \[Delta]\)\ Cos[\[Theta]12]\ Sin[\
+\[Theta]23])\)*\((\(-Cos[\[Theta]23]\)\ Sin[\[Theta]12] - \[ExponentialE]\^\(\
+\[ImaginaryI]\ \[Delta]\)\ Cos[\[Theta]12]\ Sin[\[Theta]23])\) // 
+          ComplexExpand;\)\n
+    \(b = \((\(-\[ExponentialE]\^\(\(-\[ImaginaryI]\)\ \[Delta]\)\)\ Cos[\
+\[Theta]23]\ Sin[\[Theta]12] - 
+                Cos[\[Theta]12]\ Sin[\[Theta]23])\)*\((\(-\[ExponentialE]\^\(\
+\[ImaginaryI]\ \[Delta]\)\)\ Cos[\[Theta]23]\ Sin[\[Theta]12] - 
+                Cos[\[Theta]12]\ Sin[\[Theta]23])\) // ComplexExpand;\)\n
+    a - b // Simplify\)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\( (*\ 
+      Betraege\ von\ V31\ und\ V22\ *) \)\(\[IndentingNewLine]\)\(\(c = \
+\((Cos[\[Theta]12]\ Cos[\[Theta]23] - \[ExponentialE]\^\(\(-\[ImaginaryI]\)\ \
+\[Delta]\)\ Sin[\[Theta]12]\ Sin[\[Theta]23])\)*\((Cos[\[Theta]12]\ Cos[\
+\[Theta]23] - \[ExponentialE]\^\(\[ImaginaryI]\ \[Delta]\)\ Sin[\[Theta]12]\ \
+Sin[\[Theta]23])\) // ComplexExpand;\)\n
+    \(d = \((\(-\[ExponentialE]\^\(\(-\[ImaginaryI]\)\ \[Delta]\)\)\ Cos[\
+\[Theta]12]\ Cos[\[Theta]23] + 
+                Sin[\[Theta]12]\ Sin[\[Theta]23])\)*\((\(-\[ExponentialE]\^\(\
+\[ImaginaryI]\ \[Delta]\)\)\ Cos[\[Theta]12]\ Cos[\[Theta]23] + 
+                Sin[\[Theta]12]\ Sin[\[Theta]23])\) // ComplexExpand;\)\n
+    c - d // Simplify\)\)\)], "Input"],
+
+Cell[BoxData[
+    \(a + c // Simplify\)], "Input"],
+
+Cell[TextData[{
+  "=> V laesst sich schreiben als\n",
+  Cell[BoxData[
+      TagBox[
+        RowBox[{"(", "\[NoBreak]", GridBox[{
+              {"0", "0", \(\[ExponentialE]\^\(\[ImaginaryI]\ \[Delta]1\)\)},
+              {\(\(-\[ExponentialE]\^\[ImaginaryI]\[CurlyPhi]21\)\ Sin[\
+\[Theta]]\), \(\[ExponentialE]\^\(\[ImaginaryI]\ \[CurlyPhi]22\)\ \
+Cos[\[Theta]]\), "0"},
+              {\(\(-\[ExponentialE]\^\(\[ImaginaryI]\ \[CurlyPhi]31\)\)\ Cos[\
+\[Theta]]\), \(\(-\[ExponentialE]\^\(\[ImaginaryI]\ \[CurlyPhi]32\)\)\ Sin[\
+\[Theta]]\), "0"}
+              }], "\[NoBreak]", ")"}],
+        Function[ BoxForm`e$, 
+          MatrixForm[ BoxForm`e$]]]], "Text"],
+  "\n(Folgt auch aus der Forderung, dass Zeilen und Spalten normiert sein \
+muessen.  Die Vorzeichen kann man natuerlich aendern und ausserdem Sin und \
+Cos vertauschen.)\nDarueber hinaus folgt aus der Orthogonalitaet der Zeilen \
+und Spalten: ",
+  Cell[BoxData[
+      \(TraditionalForm\`\(V\_21\%*\)\ V\_22 + \(V\_31\%*\) V\_32 = 0\)]],
+  " => \[CurlyPhi]21-\[CurlyPhi]22-\[CurlyPhi]31+\[CurlyPhi]32=n 2\[Pi].\n=> \
+Zur Parametrisierung von V genuegen 4 Phasen und 1 Winkel,\n",
+  Cell[BoxData[
+      RowBox[{"V", "=", 
+        TagBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"0", 
+                  "0", \(\[ExponentialE]\^\(\[ImaginaryI]\ \[Delta]e\)\)},
+                {\(\(-\[ExponentialE]\^\(\[ImaginaryI]\ \[Delta]\[Mu] - \(\
+\[ImaginaryI]\ \[CurlyPhi]1\)\/2\)\)\ Sin[\[Theta]]\), \(\[ExponentialE]\^\(\
+\[ImaginaryI]\ \[Delta]\[Mu] - \(\[ImaginaryI]\ \[CurlyPhi]2\)\/2\)\ Cos[\
+\[Theta]]\), "0"},
+                {\(\(-\[ExponentialE]\^\(\[ImaginaryI]\ \[Delta]\[Tau] - \(\
+\[ImaginaryI]\ \[CurlyPhi]1\)\/2\)\)\ Cos[\[Theta]]\), \(\(-\[ExponentialE]\^\
+\(\[ImaginaryI]\ \[Delta]\[Tau] - \(\[ImaginaryI]\ \[CurlyPhi]2\)\/2\)\)\ \
+Sin[\[Theta]]\), "0"}
+                }], "\[NoBreak]", ")"}],
+          Function[ BoxForm`e$, 
+            MatrixForm[ BoxForm`e$]]]}]], "Output",
+    GeneratedCell->False,
+    CellAutoOverwrite->False],
+  "\nund z.B. \[CurlyPhi]1=0."
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\( (*\ 
+      Nur\ zur\ Sicherheit\ mal\ \(nachrechnen : \ 
+          Die\ Tangense\ der\ Phasen\ von\ V21\), \ V32, \ 
+      V22\ und\ V31\ sind\ *) \)\(\[IndentingNewLine]\)\(\(tp21 := \(Cos[\
+\[Theta]12]\ Sin[\[Delta]]\ Sin[\[Theta]23]\)\/\(Cos[\[Theta]23]\ \
+Sin[\[Theta]12] + Cos[\[Delta]]\ Cos[\[Theta]12]\ Sin[\[Theta]23]\);\)\
+\[IndentingNewLine]
+    \(tp32 := \(Cos[\[Theta]23]\ Sin[\[Delta]]\ Sin[\[Theta]12]\)\/\(Cos[\
+\[Delta]]\ Cos[\[Theta]23]\ Sin[\[Theta]12] + Cos[\[Theta]12]\ \
+Sin[\[Theta]23]\);\)\[IndentingNewLine]
+    \(tp22 := \(\(-Sin[\[Delta]]\)\ Sin[\[Theta]12]\ \
+Sin[\[Theta]23]\)\/\(Cos[\[Theta]12]\ Cos[\[Theta]23] - Cos[\[Delta]]\ Sin[\
+\[Theta]12]\ Sin[\[Theta]23]\);\)\[IndentingNewLine]
+    \(tp31 := \(\(-Cos[\[Theta]12]\)\ Cos[\[Theta]23]\ \
+Sin[\[Delta]]\)\/\(\(-Cos[\[Delta]]\)\ Cos[\[Theta]12]\ Cos[\[Theta]23] + \
+Sin[\[Theta]12]\ Sin[\[Theta]23]\);\)\)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\( (*\ 
+      Linearkombination\ dieser\ Phasen\ \((\[CurlyPhi]21 - \[CurlyPhi]22 - \
+\[CurlyPhi]31 + \[CurlyPhi]32)\)\ *) \)\(\[IndentingNewLine]\)\(sumargs = 
+      FullSimplify[
+        ArcTan[tp21] + ArcTan[tp32] - ArcTan[tp31] - 
+          ArcTan[tp22]]\)\)\)], "Input"],
+
+Cell[BoxData[
+    \(FullSimplify[Sin[sumargs]]\)], "Input"],
+
+Cell[TextData[{
+  "=> ",
+  Cell[BoxData[
+      \(TraditionalForm\`\[CurlyPhi]21 - \[CurlyPhi]22 - \[CurlyPhi]31 + \
+\[CurlyPhi]32 = n\[Pi]\)]]
+}], "Text"],
+
+Cell[BoxData[
+    \(FullSimplify[Cos[sumargs]]\)], "Input"],
+
+Cell["\<\
+=> n=0,\[PlusMinus]1,\[PlusMinus]2, ... moeglich, nicht nur 0,\
+\[PlusMinus]2, ...  Vermutlich liegt das an der Periodizitaet von Tan.\
+\>", \
+"Text"],
+
+Cell["\<\
+Berechnung von \[Theta]23 und der Phasen fuer \[Theta]13=\[Pi]/2 \
+und Zufallszahlen fuer alle anderen Parameter:\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(U = 
+        MPT3x3UnitaryMatrix[Random[Real, \[Pi]/4], \[Pi]/2, 
+          Random[Real, \[Pi]/2], Random[Real, 2\ \[Pi]], 
+          Random[Real, 2\ \[Pi]], Random[Real, 2\ \[Pi]], 
+          Random[Real, 2\ \[Pi]], Random[Real, 2\ \[Pi]], 
+          Random[Real, 2\ \[Pi]]];\)\), "\[IndentingNewLine]", 
+    \(U // MatrixForm\)}], "Input"],
+
+Cell[BoxData[{
+    \(\[Delta]e = Arg[U[\([1, 3]\)]]\), "\n", 
+    \(t23 = ArcTan[Abs[U[\([2, 1]\)]/U[\([3, 1]\)]]]\), "\n", 
+    \(psol = \(Solve[{\[Delta]\[Mu] - \[CurlyPhi]1/2 \[Equal] 
+              Arg[\(-U\[LeftDoubleBracket]2, 
+                    1\[RightDoubleBracket]\)], \[Delta]\[Mu] - \[CurlyPhi]2/
+                  2 \[Equal] 
+              Arg[U\[LeftDoubleBracket]2, 
+                  2\[RightDoubleBracket]], \[Delta]\[Tau] - \[CurlyPhi]1/
+                  2 \[Equal] 
+              Arg[\(-U\[LeftDoubleBracket]3, 
+                    1\[RightDoubleBracket]\)], \[Delta]\[Tau] - \[CurlyPhi]2/
+                  2 \[Equal] 
+              Arg[\(-U\[LeftDoubleBracket]3, 2\[RightDoubleBracket]\)] - 
+                n*2\ \[Pi], \[CurlyPhi]1 \[Equal] 
+              0}, {\[CurlyPhi]1, \[CurlyPhi]2, \[Delta]\[Mu], \[Delta]\[Tau], 
+            n}]\)\[LeftDoubleBracket]1\[RightDoubleBracket]\)}], "Input"],
+
+Cell["\<\
+\[CurlyPhi]1=0 ist Konvention.  Damit kann man das lineare \
+Gleichungssystem natuerlich auch von Hand loesen, ich hab's zum Rumspielen \
+aber mal stehen gelassen.
+Es gibt nur dann eine Loesung, wenn man n*2\[Pi] von der rechten Seite der \
+Gleichung fuer \[Delta]\[Tau]-\[CurlyPhi]2/2 abzieht, was wohl an der \
+Mehrdeutigkeit von Arg liegt.
+n erhaelt man wie folgt:\
+\>", "Text"],
+
+Cell[BoxData[
+    \(\((Arg[\(-U\[LeftDoubleBracket]2, 1\[RightDoubleBracket]\)] - 
+          Arg[U\[LeftDoubleBracket]2, 2\[RightDoubleBracket]] - 
+          Arg[\(-U\[LeftDoubleBracket]3, 1\[RightDoubleBracket]\)] + 
+          Arg[\(-U\[LeftDoubleBracket]3, 
+                2\[RightDoubleBracket]\)])\)/\((2\ \[Pi])\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\( (*\ 
+      Ueberpruefung\ der\ Loesung\ \
+*) \)\(\[IndentingNewLine]\)\(MPT3x3UnitaryMatrix[0, \[Pi]/2, t23, 
+          0, \[Delta]e, \[Delta]\[Mu], \[Delta]\[Tau], \[CurlyPhi]1, \
+\[CurlyPhi]2] /. psol // MatrixForm\)\)\)], "Input"],
+
+Cell["\<\
+Jetzt das Ganze nochmal, aber ohne Solve (die If's werden \
+benoetigt, um die Spezialfaelle \[Theta]23=0,\[Pi]/2 abzufangen):\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(\(MPTSecureArg[x_] := 
+      Which[x \[NotEqual] 0, Arg[x], x \[Equal] 0, 0]\)\(\n\)
+    \)\), "\[IndentingNewLine]", 
+    \(\(\[Delta] = 0;\)\), "\n", 
+    \(\(\[Delta]e = MPTSecureArg[U[\([1, 3]\)]];\)\), "\n", 
+    \(\(\[Theta]12 = 0;\)\), "\n", 
+    \(\(If[
+        U[\([3, 1]\)] \[NotEqual] 0\ , \[IndentingNewLine]\[Theta]23 = 
+          ArcTan[Abs[U[\([2, 1]\)]/U[\([3, 1]\)]]]; \n
+        If[\[Theta]23 \[NotEqual] 0, \[IndentingNewLine]\[Delta]\[Mu] = 
+            MPTSecureArg[\(-U[\([2, 1]\)]\)]; \[IndentingNewLine]\[Phi]2 = 
+            2*\((\[Delta]\[Mu] - 
+                  Arg[U[\([2, 
+                        2]\)]])\);\[IndentingNewLine], \[IndentingNewLine]\
+\[Delta]\[Mu] = MPTSecureArg[U[\([2, 2]\)]]; \[IndentingNewLine]\[Phi]2 = 
+            0;\[IndentingNewLine]]; \[IndentingNewLine]\[Delta]\[Tau] = 
+          MPTSecureArg[\(-U[\([3, 
+                  1]\)]\)];\[IndentingNewLine], \[IndentingNewLine]\[Theta]23 \
+= N[Pi/2]; \[IndentingNewLine]\[Delta]\[Mu] = 
+          MPTSecureArg[\(-U[\([2, 1]\)]\)]; \[IndentingNewLine]\[Phi]2 = 
+          0; \[IndentingNewLine]\[Delta]\[Tau] = 
+          MPTSecureArg[\(-U[\([3, 2]\)]\)];\[IndentingNewLine]];\)\), "\n", 
+    \(\(\[Phi]1 = 0;\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(\( (*\ 
+      Test\ *) \)\(\[IndentingNewLine]\)\(MPT3x3UnitaryMatrix[\[Theta]12, \
+\[Pi]/2, \[Theta]23, \[Delta], \[Delta]e, \[Delta]\[Mu], \[Delta]\[Tau], \
+\[Phi]1, \[Phi]2] - U // Chop\)\)\)], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+``Falsche Hierarchie'' (invertiert, wird durch Laufen normal)\
+\>", \
+"Subsection"],
+
+Cell[BoxData[
+    \(<< MixingParameterTools`MPT3x3`\)], "Input"],
+
+Cell[BoxData[{
+    \(\(Mnu2 = {{\(-0.0216\) - 0.3046\ \[ImaginaryI], 0, 
+            0}, {0, \(-0.00057\) + 0.000177\ \[ImaginaryI], 
+            0.1798 + 0.28\ \[ImaginaryI]}, {0, 
+            0.1798\[InvisibleSpace] + 0.28\ \[ImaginaryI], 0}};\)\), "\n", 
+    \(\(Me = {{0.00045, 0, 0}, {0, 0.0957, 0}, {0, 0, 1.926}};\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(U = 
+        Catch[MPT3x3NeutrinoMixingMatrix[Mnu2]];\)\), "\[IndentingNewLine]", 
+    \(U // MatrixForm\)}], "Input"],
+
+Cell["\<\
+Berechnung der Mischungsparameter mit der Methode aus dem letzten \
+Abschnitt:\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\[Delta]e = Arg[U[\([1, 3]\)]]\), "\n", 
+    \(t23 = ArcTan[Abs[U[\([2, 1]\)]/U[\([3, 1]\)]]]\), "\n", 
+    \(Solve[{\[Delta]\[Mu] - \[CurlyPhi]1/2 \[Equal] 
+          Arg[\(-U\[LeftDoubleBracket]2, 
+                1\[RightDoubleBracket]\)], \[Delta]\[Mu] - \[CurlyPhi]2/
+              2 \[Equal] 
+          Arg[U\[LeftDoubleBracket]2, 
+              2\[RightDoubleBracket]], \[Delta]\[Tau] - \[CurlyPhi]1/
+              2 \[Equal] 
+          Arg[\(-U\[LeftDoubleBracket]3, 
+                1\[RightDoubleBracket]\)], \[Delta]\[Tau] - \[CurlyPhi]2/
+              2 \[Equal] 
+          Arg[\(-U\[LeftDoubleBracket]3, 2\[RightDoubleBracket]\)] - 
+            2  \[Pi], \[CurlyPhi]1 \[Equal] 
+          0}, {\[CurlyPhi]1, \[CurlyPhi]2, \[Delta]\[Mu], \
+\[Delta]\[Tau]}]\)}], "Input"],
+
+Cell[BoxData[
+    \(MPT3x3UnitaryMatrix[0, \[Pi]/2, t23, 0, \[Delta]e, 
+        1.721339211728036`, \(-2.721303638076369`\)\  + \ 2\ \[Pi], 
+        0, \[Pi]] // MatrixForm\)], "Input"],
+
+Cell[BoxData[
+    \(\(\( (*\ 
+      So\ geht' 
+          s\ wohl\ nicht ... \ \
+*) \)\(\[IndentingNewLine]\)\(FindInstance[{Exp[
+            I\ \((\[Delta]\[Mu] - \[CurlyPhi]1/2)\)] \[Equal] 
+          U\[LeftDoubleBracket]2, 1\[RightDoubleBracket]/\((\(-Sin[t23]\))\), 
+        Exp[I\ \((\[Delta]\[Mu] - \[CurlyPhi]2/2)\)] \[Equal] 
+          U\[LeftDoubleBracket]2, 2\[RightDoubleBracket]/Cos[t23], 
+        Exp[I\ \((\[Delta]\[Tau] - \[CurlyPhi]1/2)\)] \[Equal] 
+          U\[LeftDoubleBracket]3, 1\[RightDoubleBracket]/\((\(-Cos[t23]\))\), 
+        Exp[I\ \((\[Delta]\[Tau] - \[CurlyPhi]2/2)\)] \[Equal] 
+          U\[LeftDoubleBracket]3, 
+              2\[RightDoubleBracket]/\((\(-Sin[
+                  t23]\))\)}, {\[CurlyPhi]1, \[CurlyPhi]2, \[Delta]\[Mu], \
+\[Delta]\[Tau]}]\)\)\)], "Input"],
+
+Cell[BoxData[{
+    \(Catch[MNSParameters[Mnu2, Me]]\), "\[IndentingNewLine]", 
+    \(Catch[MNSParameters[Mnu2, Me, "\<n\>"]]\)}], "Input"],
+
+Cell[BoxData[
+    \(Mnu2 // MatrixForm\)], "Input"],
+
+Cell[TextData[{
+  "Alternativer Ansatz:\nDie Matrix laesst sich durch eine Rotation mit \
+\[Theta]23 und ein paar Phasentransformationen diagonalisieren.  Das Problem \
+ist, dass der Eigenwert zum Eigenvektor (1,0,0)^T der kleinste ist und zum \
+groesseren ",
+  Cell[BoxData[
+      \(TraditionalForm\`\[CapitalDelta]m\^2\)]],
+  "gehoert.  Die Software nimmt deswegen eine invertierte Hierarchie an und \
+sortiert die Eigenvektoren so, dass dieser Eigenvektor zur dritten Spalte in \
+der Mischungsmatrix U wird, d.h. wir haben \[Theta]13=\[Pi]/2 und die damit \
+verbundenen Probleme.\nDa in diesem Beispiel die Hierarchie bei niedriger \
+Energie normal ist, ist es sinnvoll, dies vorzugeben:"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Ufix = MPT3x3NeutrinoMixingMatrix[Mnu2, "\<n\>"];\)\), "\n", 
+    \(Ufix // MatrixForm\)}], "Input"],
+
+Cell[TextData[{
+  "Wie erwartet, kommt eine Mischungsmatrix mit endlichem \[Theta]23 und \
+\[Theta]12=\[Theta]13=0 raus.  Das Problem sind jetzt die Phasen, denn wegen \
+",
+  Cell[BoxData[
+      \(TraditionalForm\`U\_12 = \(U\_13 = 0\)\)]],
+  "liefert MPT3x3MixingParameters jetzt ",
+  Cell[BoxData[
+      \(TraditionalForm\`\[Delta]\_e = \(\[CurlyPhi]\_2 = 0\)\)]],
+  ".  Das stimmt aber nicht, weil ",
+  Cell[BoxData[
+      \(TraditionalForm\`\[CurlyPhi]\_2 \[NotEqual] 0\)]],
+  "noetig ist, um die Mischungsmatrix zu reproduzieren.  In diesem Fall kann \
+man dem abhelfen, indem ",
+  Cell[BoxData[
+      \(TraditionalForm\`\[CurlyPhi]\_2\)]],
+  "nicht aus ",
+  Cell[BoxData[
+      \(TraditionalForm\`U\_12\)]],
+  ", sondern aus ",
+  Cell[BoxData[
+      \(TraditionalForm\`U\_22\)]],
+  "bestimmt wird."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\[Delta]\[Mu] = Arg[Ufix[\([2, 3]\)]]\), "\n", 
+    \(\[Delta]\[Tau] = Arg[Ufix[\([3, 3]\)]]\), "\n", 
+    \(\[Delta]e = Arg[Ufix[\([1, 1]\)]]\), "\n", 
+    \(\[CurlyPhi]2 = \(-2\)\ Arg[
+          Exp[\(-I\)\ \[Delta]\[Mu]]*Ufix[\([2, 2]\)]]\), "\n", 
+    \(Exp[\(-I\)\ \[Delta]\[Mu]]*Ufix[\([2, 2]\)]\), "\n", 
+    \(Exp[\(-I\)\ \[Delta]\[Tau]]*Ufix[\([3, 2]\)]\), "\n", 
+    \(Exp[\(-I\)\ \[Delta]\[Tau] + I\ \[CurlyPhi]2/2]*
+      Ufix[\([3, 2]\)]\), "\n", 
+    \(\(t23 = ArcTan[Abs[Ufix[\([2, 3]\)]/Ufix[\([3, 3]\)]]];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(MPT3x3UnitaryMatrix[0, 0, t23, 
+        0, \[Delta]e, \[Delta]\[Mu], \[Delta]\[Tau], 0, 3\ \[Pi]] // 
+      MatrixForm\)], "Input"],
+
+Cell[TextData[{
+  "=> Mit diesem ",
+  Cell[BoxData[
+      \(TraditionalForm\`\[CurlyPhi]\_2\)]],
+  "kommt die richtige Mischungsmatrix raus.  Bei ",
+  Cell[BoxData[
+      \(TraditionalForm\`\[Delta]\_e\)]],
+  "und ",
+  Cell[BoxData[
+      \(TraditionalForm\`\[CurlyPhi]\_1\)]],
+  "gibt's natuerlich eine Ambiguitaet, aber in diesem Fall duerfte es am \
+sinnvollsten sein, ",
+  Cell[BoxData[
+      \(TraditionalForm\`\[Delta]\_e \[NotEqual] 0\)]],
+  "und ",
+  Cell[BoxData[
+      \(TraditionalForm\`\[CurlyPhi]\_1 = 0\)]],
+  "auszugeben."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Die folgende Diskussion ist vermutlich obsolet.  Von den \
+ungerundeten Werten ist keiner exakt 0, deswegen funktioniert das Ablesen der \
+Phasen.",
+    FontSlant->"Italic"],
+  "\nInteressanterweise erhaelt man in diesem Fall ein vernuenftiges \
+Ergebnis, wenn man die ungerundeten Werte aus der Numerik nimmt und die \
+Massenhierarchie fixiert (von daher faende ich's sinnvoll, wenn auch \
+MNSParameters einen Parameter MassHierchie akzeptieren wuerde, analog zu \
+MPT3x3NeutrinoMixingMatrix):"
+}], "Text"],
+
+Cell[BoxData[
+    \(\(Mnu3 = {{\(-0.021603141389316526`\) - 
+              0.3046349689088781`\ \[ImaginaryI], \
+\(-7.307066612346882`*^-17\) + 
+              1.670186654250716`*^-16\ \[ImaginaryI], \
+\(-2.087733317813395`*^-17\) + 
+              2.1473828411794918`*^-16\ \[ImaginaryI]}, \
+{\(-2.5351047430591224`*^-17\) - 
+              2.98247616830485`*^-18\ \[ImaginaryI], \
+\(-0.0005732018934753208`\) + 
+              0.00017731212399701098`\ \[ImaginaryI], \
+\(\(0.17981260739291682`\)\(\[InvisibleSpace]\)\) + 
+              0.280041543744068`\ \[ImaginaryI]}, {\(-7.146292506399199`*^-17\
+\) + 1.2407566872049473`*^-16\ \[ImaginaryI], \(\(0.17981260739291685`\)\(\
+\[InvisibleSpace]\)\) + 
+              0.2800415437440679`\ \[ImaginaryI], \
+\(-6.859695187101155`*^-17\) + 
+              2.922826644938753`*^-16\ \[ImaginaryI]}};\)\)], "Input"],
+
+Cell[BoxData[
+    \(Catch[
+      MPT3x3MixingParameters[
+        MPT3x3NeutrinoMixingMatrix[Mnu3, "\<n\>"]]]\)], "Input"],
+
+Cell["Ohne das Fixieren der Hierarchie geht's aber nicht:", "Text"],
+
+Cell[BoxData[
+    \(Catch[
+      MPT3x3MixingParameters[MPT3x3NeutrinoMixingMatrix[Mnu3]]]\)], "Input"],
+
+Cell["\<\
+Und Fixieren der Hierarchie bei den gerundeten Werten hilft auch \
+nix:\
+\>", "Text"],
+
+Cell[BoxData[
+    \(Eigenvalues[Conjugate[Transpose[Mnu2]] . Mnu2]\)], "Input"],
+
+Cell[BoxData[{
+    \(Catch[
+      MPT3x3MixingParameters[
+        MPT3x3NeutrinoMixingMatrix[Mnu2, "\<n\>"]]]\), "\n", 
+    \(Catch[
+      MPT3x3MixingParameters[MPT3x3NeutrinoMixingMatrix[Mnu2]]]\)}], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+Diagonale Matrizen mit Phasen und nicht-entarteten Neutrinomassen\
+\
+\>", "Subsection"],
+
+Cell[BoxData[
+    \(MNSParameters[
+      DiagonalMatrix[{0.01*Exp[I], 0.02*Exp[\(-\[Pi]\)/4\ I], 0.06}], 
+      IdentityMatrix[3]]\)], "Input"],
+
+Cell[BoxData[
+    \(MPT3x3MixingParameters[
+      MPT3x3NeutrinoMixingMatrix[
+        DiagonalMatrix[{0.01*Exp[I], 0.02*Exp[\(-\[Pi]\)/4\ I], 
+            0.06}]]]\)], "Input"],
+
+Cell[BoxData[
+    \(MNSParameters[
+      DiagonalMatrix[{0.01*Exp[I], 0.02*Exp[\(-\[Pi]\)/4\ I], 0.06}], 
+      DiagonalMatrix[{0.01, 0.1, 1}]]\)], "Input"],
+
+Cell["\<\
+=> Das Problem liegt an den entarteten Leptonmassen (bzw. am \
+Benutzer, der zu faul ist, ein vernuenftiges Ye oder \
+\"MPT3x3MixingParameters[MPT3x3NeutrinoMixingMatrix[...]]\" einzugeben...).\
+\
+\>", "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[Cell[BoxData[
+    \(TraditionalForm\`\[Theta]\_13 = 0\)]]], "Subsection"],
+
+Cell[TextData[{
+  "In diesem Fall kann \[Delta]e nicht aus ",
+  Cell[BoxData[
+      \(TraditionalForm\`U\_13\)]],
+  "bestimmt werden."
+}], "Text"],
+
+Cell[BoxData[
+    \(MPTSecureArg[x_] := 
+      Which[x \[NotEqual] 0, Arg[x], x \[Equal] 0, 0]\)], "Input"],
+
+Cell[BoxData[{
+    \(\[Theta]12 = 0*Random[Real, \[Pi]/4]; \ \[Theta]23 = 
+      Random[Real, \[Pi]/2];\), "\[IndentingNewLine]", 
+    \(\[Delta]\[Mu] = Random[Real, 2\ \[Pi]]; \ \[Delta]\[Tau] = 
+      Random[Real, 2\ \[Pi]];\), "\[IndentingNewLine]", 
+    \(\(U = 
+        MPT3x3UnitaryMatrix[\[Theta]12, 0, \[Theta]23, 
+          Random[Real, 2\ \[Pi]], 
+          Random[Real, 2\ \[Pi]], \[Delta]\[Mu], \[Delta]\[Tau], 
+          Random[Real, 2\ \[Pi]], 
+          Random[Real, 2\ \[Pi]]];\)\), "\[IndentingNewLine]", 
+    \(U // MatrixForm\)}], "Input"],
+
+Cell[BoxData[
+    \(\(Which[\[IndentingNewLine]Abs[U[\([1, 3]\)]]\  \[NotEqual] \ 0\  && \ 
+          Abs[U[\([1, 3]\)]]\  \[NotEqual] \ 
+            1, \[IndentingNewLine]\[Delta]e = 
+          MPTSecureArg[Exp[I*\[Delta]]*U[\([1, 3]\)]]; \n\[Phi]1 = 
+          2*MPTSecureArg[
+              Exp[I*\[Delta]e]*Conjugate[U[\([1, 1]\)]]]; \n\[Phi]2 = 
+          2*MPTSecureArg[
+              Exp[I*\[Delta]e]*
+                Conjugate[U[\([1, 2]\)]]];, \[IndentingNewLine]Abs[
+            U[\([1, 3]\)]]\  == \ 0, \[IndentingNewLine]\[Delta] = 
+          0; \n\[Phi]2 = 
+          2*MPTSecureArg[
+              Exp[I*\[Delta]\[Mu]]*
+                Conjugate[U[\([2, 2]\)]]]; \[IndentingNewLine]\[Delta]e = 
+          MPTSecureArg[
+            Exp[I*\[Phi]2/2]*U[\([1, 2]\)]]; \[IndentingNewLine]\[Phi]1 = 
+          2*MPTSecureArg[
+              Exp[I*\[Delta]e]*
+                Conjugate[U[\([1, 1]\)]]]; \[IndentingNewLine]If[
+          Abs[U[\([1, 2]\)]] == 0, \[IndentingNewLine]\[Phi]1 = 
+            0; \[IndentingNewLine]\[Delta]e = 
+            MPTSecureArg[
+              U[\([1, 1]\)]];\[IndentingNewLine]]; \[IndentingNewLine]If[
+          Abs[U[\([2, 3]\)]] \[Equal] 0, \[IndentingNewLine]\[Theta]23 = 
+            0; \[IndentingNewLine]\[Phi]1 = 0; \[IndentingNewLine]\[Delta]e = 
+            MPTSecureArg[U[\([1, 1]\)]]; \[IndentingNewLine]\[Phi]2 = 
+            2*MPTSecureArg[
+                Exp[I*\[Delta]e]*
+                  Conjugate[
+                    U[\([1, 2]\)]]]; \[IndentingNewLine]\[Delta]\[Mu] = 
+            MPTSecureArg[\(-U[\([2, 
+                    1]\)]\)];\[IndentingNewLine]]; \[IndentingNewLine]If[
+          Abs[U[\([3, 3]\)]] \[Equal] 0, \[IndentingNewLine]\[Theta]23 = 
+            Pi/2; \[IndentingNewLine]\[Phi]1 = 
+            0; \[IndentingNewLine]\[Delta]e = 
+            MPTSecureArg[U[\([1, 1]\)]]; \[IndentingNewLine]\[Phi]2 = 
+            2*MPTSecureArg[
+                Exp[I*\[Delta]e]*
+                  Conjugate[
+                    U[\([1, 2]\)]]]; \[IndentingNewLine]\[Delta]\[Tau] = 
+            MPTSecureArg[\(-Exp[I*\[Phi]2/2]\)*
+                U[\([3, 
+                    2]\)]];\[IndentingNewLine]];\[IndentingNewLine]];\)\)], \
+"Input"],
+
+Cell[BoxData[
+    \(\(\( (*\ 
+      Test\ *) \)\(\[IndentingNewLine]\)\(MPT3x3UnitaryMatrix[\[Theta]12, 
+          0, \[Theta]23, \[Delta], \[Delta]e, \[Delta]\[Mu], \[Delta]\[Tau], \
+\[Phi]1, \[Phi]2] - U // Chop\)\)\)], "Input"],
+
+Cell[BoxData[
+    \(MPT3x3MixingParameters[
+      MPT3x3UnitaryMatrix[Random[Real, 2\ \[Pi]], 0, Random[Real, 2\ \[Pi]], 
+        0, 0, 0, 0, 0, 0]]\)], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+  Cell[BoxData[
+      \(TraditionalForm\`\[Theta]\_13 \[NotEqual] 0, \[Pi]/2\)]],
+  ", ",
+  Cell[BoxData[
+      \(TraditionalForm\`\[Theta]\_12 = 0\)]],
+  ", ",
+  Cell[BoxData[
+      \(TraditionalForm\`\[Theta]\_23 = 0\)]],
+  " oder ",
+  Cell[BoxData[
+      \(TraditionalForm\`\[Theta]\_23 = \[Pi]/2\)]]
+}], "Subsection"],
+
+Cell[TextData[{
+  Cell[BoxData[
+      \(TraditionalForm\`\[Theta]\_12 = \(\(0\)\(:\)\)\)]],
+  " \[CurlyPhi]1 kann nicht aus ",
+  Cell[BoxData[
+      \(TraditionalForm\`U\_12\)]],
+  "bestimmt werden.\n",
+  Cell[BoxData[
+      \(TraditionalForm\`\[Theta]\_23 = 0\)]],
+  " oder \[Pi]/2: Ablesen von \[Delta]\[Mu] aus ",
+  Cell[BoxData[
+      \(TraditionalForm\`U\_23\)]],
+  "bzw. \[Delta]\[Tau] aus ",
+  Cell[BoxData[
+      \(TraditionalForm\`U\_33\)]],
+  "funktioniert nicht."
+}], "Text"],
+
+Cell[BoxData[
+    \(ClearAll[\[Theta]13, \[Theta]23, \[Delta], \[Delta]e, \[Delta]\[Mu], \
+\[Delta]\[Tau], \[Phi]1, \[Phi]2]\)], "Input"],
+
+Cell[BoxData[{
+    \(\[Theta]12 = 0*Random[Real, \[Pi]/4]; \ \[Theta]13 = 
+      Random[Real, \[Pi]/2]; \ \[Theta]23 = 
+      0*Random[Real, \[Pi]/2]; \[Delta] = 
+      Random[Real, 2\ \[Pi]];\), "\[IndentingNewLine]", 
+    \(\[Delta]e = Random[Real, 2\ \[Pi]]; \[Delta]\[Mu] = 
+      Random[Real, 2\ \[Pi]]; \ \[Delta]\[Tau] = 
+      Random[Real, 2\ \[Pi]];\), "\[IndentingNewLine]", 
+    \(\[Phi]1 = Random[Real, 2\ \[Pi]]; \[Phi]2 = 
+      Random[Real, 2\ \[Pi]];\), "\[IndentingNewLine]", 
+    \(\(U = 
+        MPT3x3UnitaryMatrix[
+          0, \[Theta]13, \[Theta]23, \[Delta], \[Delta]e, \[Delta]\[Mu], \
+\[Delta]\[Tau], \[Phi]1, \[Phi]2];\)\), "\[IndentingNewLine]", 
+    \(U // MatrixForm\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(\[Phi]2 = 
+        2*MPTSecureArg[
+            Exp[I*\[Delta]e]*
+              Conjugate[U[\([1, 2]\)]]];\)\), "\[IndentingNewLine]", 
+    \(\(If[
+        Abs[U[\([\)\(2, 3\)\(]\)]] == 
+          0, \[IndentingNewLine]\ \ \[Delta]\[Mu] = 
+          MPTSecureArg[
+            Exp[I*\[Phi]2/2]*
+              U[\([\)\(2, 2\)\(]\)]]; \[IndentingNewLine]];\)\), "\n", 
+    \(\(If[
+        Abs[U[\([\)\(3, 3\)\(]\)]] == 
+          0, \[IndentingNewLine]\ \ \[Delta]\[Tau] = 
+          MPTSecureArg[\(-Exp[I*\[Phi]2/2]\)*
+              U[\([\)\(3, 
+                2\)\(]\)]]; \[IndentingNewLine]];\)\), "\[IndentingNewLine]", \
+
+    \(\(If[
+        Abs[U[\([\)\(1, 2\)\(]\)]] == 0, \[IndentingNewLine]\ \ \[Phi]2 = 
+          2*MPTSecureArg[
+              Exp[I*\[Delta]\[Mu]]*
+                Conjugate[
+                  U[\([\)\(2, 
+                    2\)\(]\)]]]; \[IndentingNewLine]];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(\( (*\ 
+      Test\ *) \)\(\[IndentingNewLine]\)\(MPT3x3UnitaryMatrix[\[Theta]12, \
+\[Theta]13, \[Theta]23, \[Delta], \[Delta]e, \[Delta]\[Mu], \[Delta]\[Tau], \
+\[Phi]1, \[Phi]2] - U // Chop\)\)\)], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Analytische Fortsetzung", "Subtitle"],
+
+Cell["Die Idee ist, den singul\[ADoubleDot]ren Koeffizienten zu fangen: ", \
+"Text"],
+
+Cell[BoxData[
+    \(SeriesCoefficient[
+      Series[Tan[\[Pi]/2 + x], {x, 0, 1}], {\(-1\)}]\)], "Input"],
+
+Cell[BoxData[
+    \(Series[Tan[\[Pi]/2 + x], {x, 0, 1}]\)], "Input"],
+
+Cell[BoxData[
+    \(\(<< MassRen/MixingParametersPrime.m;\)\)], "Input"],
+
+Cell["Aber \[UDoubleDot]berraschenderweise:", "Text"],
+
+Cell[BoxData[{
+    \(SeriesCoefficient[
+      Series[\[Theta]12PrimeMSSM[\[Theta]12, \[Pi]/2 - 
+            x, \[Theta]23, \[Delta], \[Delta]e, \[Delta]\[Mu], \
+\[Delta]\[Tau], \[CurlyPhi]1, \[CurlyPhi]2, m1, m2, m3, ye, y\[Mu], 
+          y\[Tau]], {x, 0, 0}], {\(-1\)}]\), "\[IndentingNewLine]", 
+    \(SeriesCoefficient[
+      Series[\[Theta]13PrimeMSSM[\[Theta]12, \[Pi]/2 - 
+            x, \[Theta]23, \[Delta], \[Delta]e, \[Delta]\[Mu], \
+\[Delta]\[Tau], \[CurlyPhi]1, \[CurlyPhi]2, m1, m2, m3, ye, y\[Mu], 
+          y\[Tau]], {x, 0, 0}], {\(-1\)}]\), "\[IndentingNewLine]", 
+    \(SeriesCoefficient[
+      Series[\[Theta]23PrimeMSSM[\[Theta]12, \[Pi]/2 - 
+            x, \[Theta]23, \[Delta], \[Delta]e, \[Delta]\[Mu], \
+\[Delta]\[Tau], \[CurlyPhi]1, \[CurlyPhi]2, m1, m2, m3, ye, y\[Mu], 
+          y\[Tau]], {x, 0, 0}], {\(-1\)}]\), "\[IndentingNewLine]", 
+    \(SeriesCoefficient[
+      Series[\[Delta]PrimeMSSM[\[Theta]12, \[Pi]/2 - 
+            x, \[Theta]23, \[Delta], \[Delta]e, \[Delta]\[Mu], \
+\[Delta]\[Tau], \[CurlyPhi]1, \[CurlyPhi]2, m1, m2, m3, ye, y\[Mu], 
+          y\[Tau]], {x, 0, 0}], {\(-1\)}]\), "\[IndentingNewLine]", 
+    \(SeriesCoefficient[
+      Series[\[Delta]ePrimeMSSM[\[Theta]12, \[Pi]/2 - 
+            x, \[Theta]23, \[Delta], \[Delta]e, \[Delta]\[Mu], \
+\[Delta]\[Tau], \[CurlyPhi]1, \[CurlyPhi]2, m1, m2, m3, ye, y\[Mu], 
+          y\[Tau]], {x, 0, 0}], {\(-1\)}]\), "\[IndentingNewLine]", 
+    \(SeriesCoefficient[
+      Series[\[Delta]\[Mu]PrimeMSSM[\[Theta]12, \[Pi]/2 - 
+            x, \[Theta]23, \[Delta], \[Delta]e, \[Delta]\[Mu], \
+\[Delta]\[Tau], \[CurlyPhi]1, \[CurlyPhi]2, m1, m2, m3, ye, y\[Mu], 
+          y\[Tau]], {x, 0, 0}], {\(-1\)}]\), "\[IndentingNewLine]", 
+    \(SeriesCoefficient[
+      Series[\[Delta]\[Tau]PrimeMSSM[\[Theta]12, \[Pi]/2 - 
+            x, \[Theta]23, \[Delta], \[Delta]e, \[Delta]\[Mu], \
+\[Delta]\[Tau], \[CurlyPhi]1, \[CurlyPhi]2, m1, m2, m3, ye, y\[Mu], 
+          y\[Tau]], {x, 0, 0}], {\(-1\)}]\), "\[IndentingNewLine]", 
+    \(SeriesCoefficient[
+      Series[\[CurlyPhi]1PrimeMSSM[\[Theta]12, \[Pi]/2 - 
+            x, \[Theta]23, \[Delta], \[Delta]e, \[Delta]\[Mu], \
+\[Delta]\[Tau], \[CurlyPhi]1, \[CurlyPhi]2, m1, m2, m3, ye, y\[Mu], 
+          y\[Tau]], {x, 0, 0}], {\(-1\)}]\), "\[IndentingNewLine]", 
+    \(SeriesCoefficient[
+      Series[\[CurlyPhi]2PrimeMSSM[\[Theta]12, \[Pi]/2 - 
+            x, \[Theta]23, \[Delta], \[Delta]e, \[Delta]\[Mu], \
+\[Delta]\[Tau], \[CurlyPhi]1, \[CurlyPhi]2, m1, m2, m3, ye, y\[Mu], 
+          y\[Tau]], {x, 0, 0}], {\(-1\)}]\)}], "Input"],
+
+Cell[TextData[{
+  "F\[UDoubleDot]r ",
+  Cell[BoxData[
+      \(TraditionalForm\`\[Theta]\_13 = 0\)]],
+  "klappt die Strategie jedoch"
+}], "Text"],
+
+Cell[BoxData[{
+    \(Simplify[
+      SeriesCoefficient[
+        Series[\[Delta]PrimeMSSM[\[Theta]12, 
+            x, \[Theta]23, \[Delta], \[Delta]e, \[Delta]\[Mu], \
+\[Delta]\[Tau], \[CurlyPhi]1, \[CurlyPhi]2, m1, m2, m3, ye, y\[Mu], 
+            y\[Tau]], {x, 0, 0}], {\(-1\)}]]\), "\[IndentingNewLine]", 
+    \(Simplify[
+      Solve[Simplify[
+            SeriesCoefficient[
+              Series[\[Delta]PrimeMSSM[\[Theta]12, 
+                  x, \[Theta]23, \[Delta], \[Delta]e, \[Delta]\[Mu], \[Delta]\
+\[Tau], \[CurlyPhi]1, \[CurlyPhi]2, m1, m2, m3, ye, y\[Mu], y\[Tau]], {x, 0, 
+                  0}], {\(-1\)}]] \[Equal] 0, \[Delta]]]\)}], "Input"]
+}, Open  ]]
+},
+FrontEndVersion->"5.0 for X",
+ScreenRectangle->{{0, 1024}, {0, 768}},
+WindowSize->{908, 700},
+WindowMargins->{{Automatic, 41}, {6, Automatic}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+Cell[1754, 51, 44, 1, 27, "Input"],
+Cell[1801, 54, 167, 3, 43, "Input"],
+
+Cell[CellGroupData[{
+Cell[1993, 61, 51, 0, 38, "Subsection"],
+Cell[2047, 63, 493, 13, 50, "Text"],
+Cell[2543, 78, 64, 1, 27, "Input"],
+Cell[2610, 81, 1292, 28, 160, "Input"],
+Cell[3905, 111, 172, 3, 27, "Input"],
+Cell[4080, 116, 91, 1, 27, "Input"],
+Cell[4174, 119, 123, 2, 27, "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[4334, 126, 38, 0, 38, "Subsection"],
+Cell[4375, 128, 64, 1, 27, "Input"],
+Cell[4442, 131, 132, 3, 27, "Input"],
+Cell[4577, 136, 3959, 84, 499, "Input"],
+Cell[8539, 222, 1871, 39, 171, "Input"],
+Cell[10413, 263, 405, 6, 44, "Input"],
+Cell[10821, 271, 474, 8, 75, "Input"],
+Cell[11298, 281, 90, 1, 27, "Input"],
+Cell[11391, 284, 285, 7, 63, "Input"],
+Cell[11679, 293, 64, 1, 27, "Input"],
+Cell[11746, 296, 228, 5, 43, "Input"],
+Cell[11977, 303, 57, 1, 27, "Input"],
+Cell[12037, 306, 81, 1, 27, "Input"],
+Cell[12121, 309, 678, 14, 107, "Input"],
+Cell[12802, 325, 77, 1, 27, "Input"],
+Cell[12882, 328, 113, 3, 32, "Text"],
+Cell[12998, 333, 119, 2, 43, "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[13154, 340, 93, 1, 36, "Subsection"],
+Cell[13250, 343, 232, 3, 43, "Input"],
+Cell[13485, 348, 216, 5, 27, "Input"],
+Cell[13704, 355, 108, 2, 27, "Input"],
+Cell[13815, 359, 141, 3, 27, "Input"],
+Cell[13959, 364, 249, 5, 43, "Input"],
+Cell[14211, 371, 761, 13, 87, "Input"],
+Cell[14975, 386, 740, 12, 87, "Input"],
+Cell[15718, 400, 50, 1, 27, "Input"],
+Cell[15771, 403, 2070, 43, 250, "Text"],
+Cell[17844, 448, 929, 16, 181, "Input"],
+Cell[18776, 466, 297, 6, 43, "Input"],
+Cell[19076, 474, 59, 1, 27, "Input"],
+Cell[19138, 477, 154, 5, 32, "Text"],
+Cell[19295, 484, 59, 1, 27, "Input"],
+Cell[19357, 487, 160, 4, 32, "Text"],
+Cell[19520, 493, 137, 3, 32, "Text"],
+Cell[19660, 498, 364, 7, 59, "Input"],
+Cell[20027, 507, 919, 16, 91, "Input"],
+Cell[20949, 525, 391, 8, 68, "Text"],
+Cell[21343, 535, 332, 5, 27, "Input"],
+Cell[21678, 542, 258, 5, 43, "Input"],
+Cell[21939, 549, 149, 3, 32, "Text"],
+Cell[22091, 554, 1249, 23, 363, "Input"],
+Cell[23343, 579, 227, 4, 43, "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[23607, 588, 93, 3, 38, "Subsection"],
+Cell[23703, 593, 64, 1, 27, "Input"],
+Cell[23770, 596, 336, 5, 43, "Input"],
+Cell[24109, 603, 141, 3, 43, "Input"],
+Cell[24253, 608, 102, 3, 32, "Text"],
+Cell[24358, 613, 802, 16, 75, "Input"],
+Cell[25163, 631, 185, 3, 43, "Input"],
+Cell[25351, 636, 801, 15, 59, "Input"],
+Cell[26155, 653, 138, 2, 43, "Input"],
+Cell[26296, 657, 51, 1, 27, "Input"],
+Cell[26350, 660, 703, 12, 104, "Text"],
+Cell[27056, 674, 123, 2, 43, "Input"],
+Cell[27182, 678, 816, 23, 68, "Text"],
+Cell[28001, 703, 559, 10, 139, "Input"],
+Cell[28563, 715, 151, 3, 27, "Input"],
+Cell[28717, 720, 549, 18, 50, "Text"],
+Cell[29269, 740, 535, 10, 86, "Text"],
+Cell[29807, 752, 854, 17, 107, "Input"],
+Cell[30664, 771, 121, 3, 27, "Input"],
+Cell[30788, 776, 67, 0, 32, "Text"],
+Cell[30858, 778, 103, 2, 27, "Input"],
+Cell[30964, 782, 95, 3, 32, "Text"],
+Cell[31062, 787, 79, 1, 27, "Input"],
+Cell[31144, 790, 210, 5, 43, "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[31391, 800, 97, 3, 38, "Subsection"],
+Cell[31491, 805, 143, 3, 27, "Input"],
+Cell[31637, 810, 176, 4, 27, "Input"],
+Cell[31816, 816, 156, 3, 27, "Input"],
+Cell[31975, 821, 219, 5, 50, "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[32231, 831, 87, 1, 36, "Subsection"],
+Cell[32321, 834, 146, 5, 32, "Text"],
+Cell[32470, 841, 107, 2, 27, "Input"],
+Cell[32580, 845, 558, 11, 91, "Input"],
+Cell[33141, 858, 2205, 44, 475, "Input"],
+Cell[35349, 904, 230, 4, 43, "Input"],
+Cell[35582, 910, 161, 3, 27, "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[35780, 918, 337, 12, 38, "Subsection"],
+Cell[36120, 932, 486, 16, 50, "Text"],
+Cell[36609, 950, 137, 2, 27, "Input"],
+Cell[36749, 954, 710, 14, 91, "Input"],
+Cell[37462, 970, 924, 24, 171, "Input"],
+Cell[38389, 996, 230, 4, 43, "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[38656, 1005, 43, 0, 51, "Subtitle"],
+Cell[38702, 1007, 84, 1, 32, "Text"],
+Cell[38789, 1010, 104, 2, 27, "Input"],
+Cell[38896, 1014, 68, 1, 27, "Input"],
+Cell[38967, 1017, 72, 1, 27, "Input"],
+Cell[39042, 1020, 53, 0, 32, "Text"],
+Cell[39098, 1022, 2565, 45, 299, "Input"],
+Cell[41666, 1069, 144, 5, 32, "Text"],
+Cell[41813, 1076, 656, 13, 107, "Input"]
+}, Open  ]]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

@@ -1,0 +1,136 @@
+%\section{Solving the RG equation for the Neutrino mass matrix}
+\section{First Steps\label{sec:FirstSteps}}
+
+The following simple example demonstrates how to calculate the RG
+evolution of the neutrino mass matrix in the MSSM extended by three
+heavy singlet neutrinos.
+
+\begin{enumerate}
+
+\item The package corresponding to the model at the highest energy has
+to be loaded.  All other packages needed in the course of the
+calculation are loaded automatically.
+\begin{verbatim}
+  Needs["REAP`RGEMSSM`"]
+\end{verbatim}
+Note that ` is the backquote, which is used in opening quotation marks,
+for example.
+
+\item Next, we specify that we would like to use the MSSM with singlet
+neutrinos:
+\begin{verbatim}
+  RGEAdd["MSSM"]
+\end{verbatim}
+
+%the model has to be defined. \function{RGEAddEFT[\param{model name},\param{cutoff},\optparam{options}]} adds a new part to the model. The parameters are the cutoff, the maximum valid energy, the name of the used model (e.g. ``SM'') and several options of the model (e.g. RGEIntegratedOut, which is a list of righthanded Neutrinos which are integrated out at that specific scale).
+%The SM and the MSSM have a function implemented to search transitions, which are induced by integrating out heavy neutrinos.
+%So you don't have to define the transitions by hand.
+%This option is controlled by the option $\mathrm{SearchTransition}\rightarrow\mathrm{True/False}$.
+%\begin{verbatim}
+%  RGEAddEFT["SM",10^15];
+%\end{verbatim}
+%adds the SM as an effective model with cutoff $10^{15}$ GeV. The default options of the model are used.
+%\begin{verbatim}
+%  RGEAddEFT["SM",10^4,RGEIntegratedOut->1];
+%\end{verbatim}
+%adds the SM with cutoff $10^4$ GeV, but one right-handed neutrino is already integrated out.
+
+\item Now we have to provide the initial values.  Here we use the
+default values of the package (see Sec.~\ref{sec:Models} for details) and a
+simple diagonal pattern for the neutrino Yukawa matrix.
+%The function \function{RGESetInitial[\param{scale},\param{list of initial values}]} takes as parameters the scale where the initial values are given and a list of the initial values.
+% The specific format of the list of initial values depends on the model used at that scale. (see \ref{models}).
+%
+%A model can give suggestions of initial values by the function \function{RGESuggestInitialValues[\param{model name},\optparam{name of suggestion}]}
+\begin{verbatim}
+  RGESetInitial[2*10^16,RGEY\[Nu]->{{1,0,0},{0,0.5,0},{0,0,0.1}}]
+\end{verbatim}
+
+\item \function{RGESolve[\param{low},\param{high}]} solves the RGEs
+between the energy scales low and high.  The heavy singlets are
+integrated out automatically at their mass thresholds.
+%
+%\function{RGESolve[\param{down},\param{up},\optparam{options}]}
+%RGESolve accepts the same options as \function{NDSolve}.
+\begin{verbatim}
+  RGESolve[100,2*10^16]
+\end{verbatim}
+
+\item Using \function{RGEGetSolution[\param{scale},\optparam{quantity}]}
+we can query the value of the quantity given in the second argument at
+the energy given in the first one.  For example, this returns the mass
+matrix of the light neutrinos at $100\GeV$:
+ %returns the solution at a specific scale. The second parameter of RGEGetSolution specifies the output format of RGEGetSolution (e.g. RGEM$\nu$ returns the Neutrino mass, RGEMu returns the mass matrix of the up-type quarks,..., the standard behavior is to return the whole solution)
+\begin{verbatim}
+  MatrixForm[RGEGetSolution[100,RGEM\[Nu]]]
+\end{verbatim}
+%returns the light neutrino mass matrix $M\nu$ and 
+%\begin{verbatim}
+%  RGEGetSolution[100];
+%\end{verbatim}
+%returns all parameters.
+
+\item To find the leptonic mass parameters, we use the function
+\function{MNSParameters[\param{$m_\nu$},\param{$Y_e$}]} (which also
+needs the Yukawa matrix of the charged leptons).  The results are given
+in the order
+$\{\{\theta_{12},\theta_{13},\theta_{23},\delta,\delta_e,\delta_\mu,
+\delta_\tau,\varphi_1,\varphi_2\},
+\{m_1,m_2,m_3\},\{y_e,y_\mu,y_\tau\}\}$.
+\begin{verbatim}
+  MNSParameters[RGEGetSolution[100,RGEM\[Nu]],RGEGetSolution[100,RGEYe]]
+\end{verbatim}
+
+\item Finally, we can plot the running of the mixing angles:
+\begin{verbatim}
+  Needs["Graphics`Graphics`"]
+  mNu[x_]:=RGEGetSolution[x,RGEM\[Nu]]
+  Ye[x_]:=RGEGetSolution[x,RGEYe]
+  \[Theta]12[x_]:=MNSParameters[mNu[x],Ye[x]][[1,1]]
+  \[Theta]13[x_]:=MNSParameters[mNu[x],Ye[x]][[1,2]]
+  \[Theta]23[x_]:=MNSParameters[mNu[x],Ye[x]][[1,3]]
+  LogLinearPlot[{\[Theta]12[x],\[Theta]13[x],\[Theta]23[x]},{x,100,2*10^16}]
+\end{verbatim}
+To produce nicer plots, the notebook RGEPlots.nb, which is included in
+the package, can be used.
+
+\end{enumerate}
+
+
+In a second run, let us try some more modifications of the defaults.
+For example, model parameters can be changed by including a command
+after step (2):
+\begin{verbatim}
+  RGESetOptions["MSSM",RGEtan\[Beta]->20]
+\end{verbatim}
+
+Furthermore, we set the SUSY breaking scale to 200 GeV and use the SM
+as an effective theory below this scale.
+\begin{verbatim}
+  RGEAdd["SM",RGECutoff->200]
+\end{verbatim}
+
+The initial values of the neutrino mass parameters can be changed by
+adding replacement rules in step (3).  For instance, to set the
+GUT-scale value of $\theta_{13}$ to $6^\circ$ and the Majorana phases to
+$50^\circ$ and $120^\circ$:
+\begin{verbatim}
+  RGESetInitial[2*10^16,
+    RGEY\[Nu]->{{1,0,0},{0,0.5,0},{0,0,0.1}},RGE\[Theta]13->6 Degree,
+    RGE\[CurlyPhi]1->50 Degree,RGE\[CurlyPhi]2->120 Degree]
+\end{verbatim}
+The results of the RG evolution with these parameters are now obtained
+by repeating the above steps (4)--(7).
+
+%\begin{verbatim}
+%{g1,g2,g3,Yu,Yd,Ye,Y\[Nu],\[Kappa],M,\[Lambda]}=
+%       RGEGetParameters["SM"]/.RGESuggestInitialValues["SM","GUT"]
+%       /.{RGEMassHierarchy -> "r", RGE\[Theta]12 -> 45, RGE\[Theta]13 -> 0,
+%         RGE\[Theta]23 -> 45, RGEDeltaCP -> 0, RGE\[Phi]1 -> 0, RGE\[Phi]2 -> 0, 
+%    RGEMlightest -> 0.05, RGE\[Delta]atm -> 2.5*10^-3, 
+%    RGE\[Delta]sol -> 7.3*10^-5, RGE\[Tau]\[Nu] -> 0.25, RGE\[Nu]Ratio -> 2};
+%RGESetInitial[RGEInitialScale/.RGESuggestInitialValues["SM","GUT"],
+%    {g1,g2,g3,Yu,Yd,Ye,Y\[Nu],\[Kappa],M,\[Lambda]}];
+%\end{verbatim}
+
+\endinput

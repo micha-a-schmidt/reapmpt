@@ -1,0 +1,11 @@
+(* The package `REAP' is written for Mathematica 7 and is distributed under the
+terms of GNU Public License http://www.gnu.org/copyleft/gpl.html *)
+
+
+
+
+BeginPackage["REAP`RGEInitial`",{"MixingParameterTools`MPT3x3`","REAP`RGEUtilities`","REAP`RGETakagi`"}];
+
+<PERL>
+Package("RGEInitial.cxml","{\"MixingParameterTools`MPT3x3`\",\"REAP`RGEUtilities`\",\"REAP`RGETakagi`\"}");
+</PERL>

@@ -1,0 +1,998 @@
+
+#################################################################################################
+# The package `REAP' is written for Mathematica 7 and is distributed under the
+# terms of GNU Public License http://www.gnu.org/copyleft/gpl.html
+#################################################################################################
+
+
+
+#################################################################
+# This file contains the output functions for REAP #
+#################################################################
+
+
+# raw parameters
+###############################################################
+<function name=GetRawSolution>
+<code model=.*>
+GetRawSolution[pScale_,pSolution_,pOpts___]:=Block[{},
+(* returns all parameters of the SM *)
+        Return[(ParametersFunc[pScale]/.pSolution)[[1]]];
+];
+</code>
+<doc level=advanced>
+RGERaw is used to get the raw values of all parameters. A raw parameter is
+the internal representation of the parameter
+</doc>
+</function>
+
+<function name=GetRawM\[Nu]r>
+<code model=.*SM$|.*SMTriplet$|2HDM$>
+GetRawM\[Nu]r[pScale_,pSolution_,pOpts___]:=Block[{lM},
+(* returns the mass matrix of the heavy neutrinos *)
+	lM=(M\[Nu]r[pScale]/.pSolution)[[1]];
+        Return[lM];
+];
+</code>
+<doc level=advanced>
+RGERawM$\nu$r is used to get the raw mass matrix of the right-handed neutrinos.
+</doc>
+</function>
+
+<function name=GetRawY\[Nu]>
+<code model=.*SM$|.*SMTriplet$|2HDM$>
+GetRawY\[Nu][pScale_,pSolution_,pOpts___]:=Block[{},
+(* returns the Yukawa coupling matrix of the neutrinos *)
+    Return[(Y\[Nu][pScale]/.pSolution)[[1]]];
+];
+</code>
+<doc level=advanced>
+RGERawY$\nu$ is used to get the raw Yukawa coupling matrix of the
+neutrinos.
+</doc>
+</function>
+
+# gauge couplings
+##############################################################
+
+
+<function name=GetCoupling>
+<code model=.*>
+GetCoupling[pScale_,pSolution_,pOpts___]:=Block[{},
+(* returns the coupling constants *)
+   Return[({g1[pScale],g2[pScale],g3[pScale]}/.pSolution)[[1]]];
+];
+</code>
+<doc level=simple>
+RGECoupling is used to get the coupling constants.
+</doc>
+</function>
+
+<function name=Get\[Alpha]>
+<code model=.*>
+Get\[Alpha][pScale_,pSolution_,pOpts___]:=Block[{lg},
+(* returns the fine structure constants *)
+    lg=({g1[pScale],g2[pScale],g3[pScale]}/.pSolution)[[1]];
+    Return[lg^2/(4*Pi)];
+];
+</code>
+<doc level=simple>
+RGE$\alpha$ is used to get the fine structure constants.
+</doc>
+</function>
+
+
+# parameters in Higgs potential
+###############################################################
+
+<function name=Get\[Lambda]>
+<code model=2HDM.*>
+Get\[Lambda][pScale_,pSolution_,pOpts___]:=Block[{},
+(* returns the higgs couplings *)
+   Return[({\[Lambda]1[pScale],\[Lambda]2[pScale],\[Lambda]3[pScale],\[Lambda]4[pScale],\[Lambda]5[pScale]}/.pSolution)[[1]]];
+];
+</code>
+<doc level=simple model=2HDM.*>
+RGE$\lambda$ is used to get the Higgs couplings.
+</doc>
+<code model=^SM.*>
+Get\[Lambda][pScale_,pSolution_,pOpts___]:=Block[{},
+(* returns the coupling constants *)
+   Return[(\[Lambda][pScale]/.pSolution)[[1]]];
+];
+</code>
+<doc level=simple model=^SM.*>
+RGE$\lambda$ is used to get the quartic Higgs self coupling.
+</doc>
+<code model=^SMTriplet.*>
+Get\[Lambda][pScale_,pSolution_,pOpts___]:=Block[{},
+(* returns the coupling constants *)
+   Return[({\[Lambda][pScale],\[CapitalLambda]1[pScale],\[CapitalLambda]2[pScale],\[CapitalLambda]4[pScale],\[CapitalLambda]5[pScale],\[CapitalLambda]6[pScale],M\[CapitalDelta]2[pScale]}/.pSolution)[[1]]];
+];
+</code>
+<doc level=simple model=^SMTriplet.*>
+RGE$\lambda$ is used to get the Higgs couplings.
+</doc>
+<code model=^MSSMTriplet.*>
+Get\[Lambda][pScale_,pSolution_,pOpts___]:=Block[{},
+(* returns the coupling constants *)
+   Return[({\[CapitalLambda]u[pScale],\[CapitalLambda]d[pScale],M\[CapitalDelta][pScale]}/.pSolution)[[1]]];
+];
+</code>
+<doc level=simple model=^MSSMTriplet.*>
+RGE$\lambda$ is used to get the Higgs couplings.
+</doc>
+</function>
+
+<function name=GetM\[CapitalDelta]2>
+<code model=^SMTriplet.*>
+GetM\[CapitalDelta]2[pScale_,pSolution_,pOpts___]:=Block[{},
+(* returns the coupling constants *)
+   Return[(M\[CapitalDelta]2[pScale]/.pSolution)[[1]]];
+];
+</code>
+<doc level=simple model=^SMTriplet.*>
+RGEM$\Delta2$ is used to get the mass of $\Delta$.
+</doc>
+</function>
+
+<function name=GetM\[CapitalDelta]>
+<code model=^MSSMTriplet.*>
+GetM\[CapitalDelta][pScale_,pSolution_,pOpts___]:=Block[{},
+(* returns the coupling constants *)
+   Return[(M\[CapitalDelta][pScale]/.pSolution)[[1]]];
+];
+</code>
+<doc level=simple model=MSSMTriplet.*>
+RGEM$\Delta2$ is used to get the mass of $\Delta$.
+</doc>
+</function>
+
+
+# Yukawa couplings
+##############################################################
+
+<function name=GetYe>
+<code model=.*>
+GetYe[pScale_,pSolution_,pOpts___]:=Block[{},
+(* returns the Yukawa coupling matrix of the charged leptons *)
+    Return[(Ye[pScale]/.pSolution)[[1]]];
+];
+</code>
+<doc level=simple>
+ RGEYe is used to get the Yukawa coupling matrix of the charged leptons.
+</doc>
+</function>
+
+<function name=GetYu>
+<code model=.*>
+GetYu[pScale_,pSolution_,pOpts___]:=Block[{},
+(* returns the Yukawa coupling matrix of the up-type quarks *)
+    Return[(Yu[pScale]/.pSolution)[[1]]];
+];
+</code>
+<doc level=simple>
+RGEYu is used to get the Yukawa coupling matrix of the up-type quarks.
+</doc>
+</function>
+
+<function name=GetYd>
+<code model=.*>
+GetYd[pScale_,pSolution_,pOpts___]:=Block[{},
+(* returns the Yukawa coupling matrix of the down-type quarks *)
+    Return[(Yd[pScale]/.pSolution)[[1]]];
+];
+</code>
+<doc level=simple>
+RGEYd is used to get the Yukawa coupling matrix of the down-type quarks.
+</doc>
+</function>
+
+<function name=GetRawY\[CapitalDelta]>
+<code model=.*SMTriplet.*>
+GetRawY\[CapitalDelta][pScale_,pSolution_,pOpts___]:=Block[{},
+(* returns the Yukawa coupling matrix of the down-type quarks *)
+    Return[(Y\[CapitalDelta][pScale]/.pSolution)[[1]]];
+];
+</code>
+<doc level=simple>
+RGERawY$\Delta$ is used to get the Yukawa coupling matrix of the coupling to the Higgs triplet.
+</doc>
+</function>
+
+<function name=GetY\[Nu] >
+<code model=.*0N>
+GetY\[Nu][pScale_,pSolution_,pOpts___]:=Block[{lY\[Nu]high,lCutoff},
+(* returns the mass matrix of the heavy neutrinos *)
+            lCutoff=RGEGetCutoff[Exp[pScale],1];
+            lY\[Nu]high=RGEGetSolution[lCutoff,RGEY\[Nu],1];
+        Return[lY\[Nu]high];
+];
+</code>
+<doc level=simple model=.*0N>
+As heavy particles are integrated out, their couplings are "frozen", i.e.\ for
+energies below a threshold RGEY$\nu$ contains the values at the threshold.
+</doc>
+<code model=.*Dirac>
+GetY\[Nu][pScale_,pSolution_,pOpts___]:=Block[{},
+(* returns the Yukawa couplings of the neutrinos *)
+	Return[(Y\[Nu][pScale]/.pSolution)[[1]]];
+];
+</code>
+<code model=.*SM$|.*SMTriplet|2HDM$>
+GetY\[Nu][pScale_,pSolution_,pOpts___]:=Block[{lY\[Nu],lY\[Nu]Rotated,lM,lIntegratedOut,lLenM,lMhigh,lf,lg,lMEval,lCutoff,lUp},
+(* returns the Yukawa couplings of the neutrinos *)
+        lOpts;
+        Options[lOpts]=Options[RGEOptions];
+        SetOptions[lOpts,RGEFilterOptions[lOpts,pOpts]];
+        lIntegratedOut=(RGEIntegratedOut/.Options[lOpts]);
+
+	lY\[Nu]=(Y\[Nu][pScale]/.pSolution)[[1]];
+
+        Catch[
+          If[lIntegratedOut>0,
+            lCutoff=RGEGetCutoff[Exp[pScale],1];
+	    lUp=RGEGetRange[][[2]];
+	    If[lCutoff>Exp[lUp],
+		{lMInitial,lY\[Nu]Rotated}=({RGEM\[Nu]r,RGEY\[Nu]}/.RGEGetInitial[][[2]]);
+		lLenM=Length[lMInitial];
+		If[lLenM>Length[lM],
+		            {lMInitial,lY\[Nu]Rotated}=RGERotateM[lMInitial,lY\[Nu]Rotated];
+			    lY\[Nu]=Table[If[lf<=lLenM-lIntegratedOut,lY\[Nu][[lf,lg]],lY\[Nu]Rotated[[lf,lg]]],{lf,lLenM},{lg,lLenM}];
+		];
+
+		Throw[lCutoff,RGEScaleTooBig]];
+            lY\[Nu]Rotated=RGEGetSolution[lCutoff,RGEY\[Nu],1];
+            lM=RGEGetSolution[lCutoff,RGEM\[Nu]r,1];
+            lLenM=Length[lM];
+            {lM,lY\[Nu]Rotated}=RGERotateM[lM,lY\[Nu]Rotated];
+            lY\[Nu]=Table[If[lf<=lLenM-lIntegratedOut,lY\[Nu][[lf,lg]],lY\[Nu]Rotated[[lf,lg]]],{lf,lLenM},{lg,lLenM}];
+          ];
+        ,RGEScaleTooBig];
+	Return[lY\[Nu]];
+];
+</code>
+<doc level=simple model=.*Dirac$|.*SM$|.*SMTriplet$|2HDM$>
+RGEY$\nu$ is used to get the Yukawa coupling matrix of the neutrinos.
+</doc>
+</function>
+
+
+
+# kappa
+##############################################################
+
+<function name=Get\[Kappa]>
+<code model=.*SM(0N)?|.*SMTriplet(0N)?>
+Get\[Kappa][pScale_,pSolution_,pOpts___]:=Block[{l\[Kappa]},
+(* returns \[Kappa] *)
+	l\[Kappa]=(\[Kappa][pScale]/.pSolution)[[1]];
+        Return[l\[Kappa]];
+];
+</code>
+<doc level=simple model=.SM(0N)?|.*SMTriplet(0N)?>
+RGE$\kappa$ is used to get $\kappa$.
+</doc>
+</function>
+
+<function name=Get\[Kappa]1>
+<code model=2HDM(0N)?>
+Get\[Kappa]1[pScale_,pSolution_,pOpts___]:=Block[{l\[Kappa]},
+(* returns \[Kappa] *)
+	l\[Kappa]=(\[Kappa]1[pScale]/.pSolution)[[1]];
+        Return[l\[Kappa]];
+];
+</code>
+<doc level=simple model=2HDM(0N)?>
+RGE$\kappa$1 is the parameter of the dimension 5 operator associated
+  with the first Higgs in the 2HDM.
+</doc>
+</function>
+
+<function name=Get\[Kappa]2>
+<code model=2HDM(0N)?>
+Get\[Kappa]2[pScale_,pSolution_,pOpts___]:=Block[{l\[Kappa]},
+(* returns \[Kappa] *)
+	l\[Kappa]=(\[Kappa]2[pScale]/.pSolution)[[1]];
+        Return[l\[Kappa]];
+];
+</code>
+<doc level=simple model=2HDM(0N)?>
+RGE$\kappa$2 is the parameter of the dimension 5 operator associated
+  with the second Higgs in the 2HDM.
+  </doc>
+</function>
+
+
+# masses
+##############################################################
+
+<function name=GetM\[Nu]r>
+<code model=.*0N>
+GetM\[Nu]r[pScale_,pSolution_,pOpts___]:=Block[{lMhigh,lCutoff},
+(* returns the mass matrix of the heavy neutrinos *)
+            lCutoff=RGEGetCutoff[Exp[pScale],1];
+            lMhigh=RGEGetSolution[lCutoff,RGEM\[Nu]r,1];
+        Return[lMhigh];
+];
+</code>
+<doc level=simple model=.*0N>
+As heavy particles are integrated out, their masses are "frozen", i.e.\ for
+energies below a threshold RGEM$\nu$r contains the values at the threshold.
+</doc>
+<code model=.*SM$|.*SMTriplet$|2HDM$>
+GetM\[Nu]r[pScale_,pSolution_,pOpts___]:=Block[{lM,lIntegratedOut,lLenM,lMhigh,lf,lg,lMEval,lCutoff,lUp},
+(* returns the mass matrix of the heavy neutrinos *)
+        lOpts;
+        Options[lOpts]=Options[RGEOptions];
+        SetOptions[lOpts,RGEFilterOptions[lOpts,pOpts]];
+        lIntegratedOut=(RGEIntegratedOut/.Options[lOpts]);
+	lM=(M\[Nu]r[pScale]/.pSolution)[[1]];
+        Catch[
+          If[lIntegratedOut>0,
+            lCutoff=RGEGetCutoff[Exp[pScale],1];
+	    lUp=RGEGetRange[][[2]];
+	    If[lCutoff>Exp[lUp],
+	    	lMInitial=(RGEM\[Nu]r/.RGEGetInitial[][[2]]);
+		lLenM=Length[lMInitial];
+		If[lLenM>Length[lM],
+	            lMEval=Sort[RGEEigenvalues[lMInitial],Greater];
+		    lM=Table[
+				If[lf==lg, If[lf<=lLenM-lIntegratedOut,lM[[lf,lg]],lMEval[[lLenM-lf+1]] ],
+					   If[(lf<=lLenM-lIntegratedOut)&&(lg<=lLenM-lIntegratedOut),lM[[lf,lg]],0]
+				],
+				{lf,lLenM},{lg,lLenM}
+			];
+		];
+		Throw[lCutoff,RGEScaleTooBig]
+	    ];
+            lMhigh=RGEGetSolution[lCutoff,RGEM\[Nu]r,1];
+            lLenM=Length[lMhigh];
+            lMEval=Sort[RGEEigenvalues[lMhigh],Greater];
+            lM=Table[
+              If[lf==lg,If[lf<=lLenM-lIntegratedOut,lM[[lf,lg]],lMEval[[lLenM-lf+1]] ],
+                        If[(lf<=lLenM-lIntegratedOut)&&(lg<=lLenM-lIntegratedOut),lM[[lf,lg]],0]
+              ],
+              {lf,lLenM},{lg,lLenM}];
+            ];
+        ,RGEScaleTooBig];
+        Return[lM];
+];
+</code>
+<doc level=simple model=.*SM$|.*SMTriplet$|2HDM$>
+RGEM$\nu$r is the mass matrix of the right-handed neutrinos.
+</doc>
+</function>
+
+<function name=GetM\[Nu]>
+<code model=.*SM0N>
+GetM\[Nu][pScale_,pSolution_,pOpts___]:=Block[{l\[Kappa],lvu},
+(* returns the mass matrix of the neutrinos *)
+	l\[Kappa]=(\[Kappa][pScale]/.pSolution)[[1]];
+	lOpts;
+	Options[lOpts]=Options[RGEOptions];
+	SetOptions[lOpts,RGEFilterOptions[lOpts,pOpts]];
+	lvu=RGEv\[Nu]/.Options[lOpts];
+
+	Return[-lvu^2*(1/2)^2*10^9*l\[Kappa]];
+];
+</code>
+<code model=^SMTriplet0N>
+GetM\[Nu][pScale_,pSolution_,pOpts___]:=Block[{l\[Kappa],lY\[CapitalDelta],l\[CapitalLambda]6,lM\[CapitalDelta]2,lvu},
+(* returns the mass matrix of the neutrinos *)
+	{l\[Kappa],lY\[CapitalDelta],l\[CapitalLambda]6,lM\[CapitalDelta]2}=({\[Kappa][pScale],Y\[CapitalDelta][pScale],\[CapitalLambda]6[pScale],M\[CapitalDelta]2[pScale]}/.pSolution)[[1]];
+	lOpts;
+	Options[lOpts]=Options[RGEOptions];
+	SetOptions[lOpts,RGEFilterOptions[lOpts,pOpts]];
+	lvu=RGEv\[Nu]/.Options[lOpts];
+
+	Return[-lvu^2*(1/2)^2*(10^9*l\[Kappa]-2 *l\[CapitalLambda]6/(lM\[CapitalDelta]2/10^9)*lY\[CapitalDelta])];
+];
+</code>
+<code model=^MSSMTriplet0N>
+GetM\[Nu][pScale_,pSolution_,pOpts___]:=Block[{l\[Kappa],lY\[CapitalDelta],l\[CapitalLambda]u,lM\[CapitalDelta],lvu},
+(* returns the mass matrix of the neutrinos *)
+	{l\[Kappa],lY\[CapitalDelta],l\[CapitalLambda]u,lM\[CapitalDelta]}=({\[Kappa][pScale],Y\[CapitalDelta][pScale],\[CapitalLambda]u[pScale],M\[CapitalDelta][pScale]}/.pSolution)[[1]];
+	lOpts;
+	Options[lOpts]=Options[RGEOptions];
+	SetOptions[lOpts,RGEFilterOptions[lOpts,pOpts]];
+	lvu=RGEv\[Nu]/.Options[lOpts];
+
+	Return[-lvu^2*(1/2)^2*(10^9*l\[Kappa]-2 *l\[CapitalLambda]u/(lM\[CapitalDelta]/10^9)*lY\[CapitalDelta])];
+];
+</code>
+<code model=.*SM>
+GetM\[Nu][pScale_,pSolution_,pOpts___]:=Block[{l\[Kappa],lY\[Nu],lM,lvu},
+(* returns the mass matrix of the neutrinos *)
+	{l\[Kappa],lY\[Nu],lM}=({\[Kappa][pScale],Y\[Nu][pScale],M\[Nu]r[pScale]}/.pSolution)[[1]];
+	lOpts;
+	Options[lOpts]=Options[RGEOptions];
+	SetOptions[lOpts,RGEFilterOptions[lOpts,pOpts]];
+        lvu=RGEv\[Nu]/.Options[lOpts];
+	If[MatrixConditionNumber[lM]>2*Precision[lM],Print["GetM\[Nu]: The
+	matrix M=", MatrixForm[lM]], " is ill-conditioned and the condition
+	number is ", MatrixConditionNumber[lM]];
+
+	Return[-lvu^2*(1/2)^2*(10^9*l\[Kappa]+2*Transpose[lY\[Nu]].(Inverse[lM]*10^9).lY\[Nu])];
+	];
+</code>
+<code model=^SMTriplet>
+GetM\[Nu][pScale_,pSolution_,pOpts___]:=Block[{l\[Kappa],lY\[Nu],lM,lY\[CapitalDelta],l\[CapitalLambda]6,lM\[CapitalDelta]2,lvu},
+(* returns the mass matrix of the neutrinos *)
+	{l\[Kappa],lY\[Nu],lM,lY\[CapitalDelta],l\[CapitalLambda]6,lM\[CapitalDelta]2}=({\[Kappa][pScale],Y\[Nu][pScale],M\[Nu]r[pScale],Y\[CapitalDelta][pScale],\[CapitalLambda]6[pScale],M\[CapitalDelta]2[pScale]}/.pSolution)[[1]];
+	lOpts;
+	Options[lOpts]=Options[RGEOptions];
+	SetOptions[lOpts,RGEFilterOptions[lOpts,pOpts]];
+        lvu=RGEv\[Nu]/.Options[lOpts];
+	If[MatrixConditionNumber[lM]>2*Precision[lM],Print["GetM\[Nu]: The
+	matrix M=", MatrixForm[lM]], " is ill-conditioned and the condition
+	number is ", MatrixConditionNumber[lM]];
+
+	Return[-lvu^2*(1/2)^2*(10^9*l\[Kappa]+2*Transpose[lY\[Nu]].(Inverse[lM]*10^9).lY\[Nu]-2 *l\[CapitalLambda]6/(lM\[CapitalDelta]2/10^9)*lY\[CapitalDelta])];
+	];
+</code>
+<code model=^MSSMTriplet>
+GetM\[Nu][pScale_,pSolution_,pOpts___]:=Block[{l\[Kappa],lY\[Nu],lM,lY\[CapitalDelta],l\[CapitalLambda]u,lM\[CapitalDelta],lvu},
+(* returns the mass matrix of the neutrinos *)
+	{l\[Kappa],lY\[Nu],lM,lY\[CapitalDelta],l\[CapitalLambda]u,lM\[CapitalDelta]}=({\[Kappa][pScale],Y\[Nu][pScale],M\[Nu]r[pScale],Y\[CapitalDelta][pScale],\[CapitalLambda]u[pScale],M\[CapitalDelta][pScale]}/.pSolution)[[1]];
+	lOpts;
+	Options[lOpts]=Options[RGEOptions];
+	SetOptions[lOpts,RGEFilterOptions[lOpts,pOpts]];
+        lvu=RGEv\[Nu]/.Options[lOpts];
+	If[MatrixConditionNumber[lM]>2*Precision[lM],Print["GetM\[Nu]: The
+	matrix M=", MatrixForm[lM]], " is ill-conditioned and the condition
+	number is ", MatrixConditionNumber[lM]];
+
+	Return[-lvu^2*(1/2)^2*(10^9*l\[Kappa]+2*Transpose[lY\[Nu]].(Inverse[lM]*10^9).lY\[Nu]-2 *l\[CapitalLambda]u/(lM\[CapitalDelta]/10^9)*lY\[CapitalDelta])];
+	];
+</code>
+<code model=2HDM0N>
+GetM\[Nu][pScale_,pSolution_,pOpts___]:=Block[{l\[Kappa],lvu,l\[Beta]},
+(* returns the mass matrix of the neutrinos *)
+	{l\[Kappa]1,l\[Kappa]2}=({\[Kappa]1[pScale],\[Kappa]2[pScale]}/.pSolution)[[1]];
+	lOpts;
+	Options[lOpts]=Options[RGEOptions];
+	SetOptions[lOpts,RGEFilterOptions[lOpts,pOpts]];
+	lvu=RGEvEW/.Options[lOpts,RGEvEW];
+	l\[Beta]=N[ArcTan[RGEtan\[Beta]]]/.Options[lOpts,RGEtan\[Beta]];
+	Return[-lvu^2*(1/2)^2*10^9*(l\[Kappa]1*Cos[l\[Beta]]^2+l\[Kappa]2*Sin[l\[Beta]]^2)];
+];
+</code>
+<code model=2HDM>
+GetM\[Nu][pScale_,pSolution_,pOpts___]:=Block[{l\[Kappa]1,l\[Kappa]2,lY\[Nu],lM,lM\[Nu]},
+(* returns the mass matrix of the neutrinos *)
+	{l\[Kappa]1,l\[Kappa]2,lY\[Nu],lM}=({\[Kappa]1[pScale],\[Kappa]2[pScale],Y\[Nu][pScale],M\[Nu]r[pScale]}/.pSolution)[[1]];
+	lOpts;
+	Options[lOpts]=Options[RGEOptions];
+	SetOptions[lOpts,RGEFilterOptions[lOpts,pOpts]];
+	If[MatrixConditionNumber[lM]>2*Precision[lM],Print["GetM\[Nu]: The matrix M=", MatrixForm[lM]], " is ill-conditioned and the condition number is ", MatrixConditionNumber[lM]];
+
+	lM\[Nu]=-1/4*(RGEv\[Nu]^2*2*Transpose[lY\[Nu]].(Inverse[lM]*10^9).lY\[Nu]+RGEvEW^2*(l\[Kappa]1*10^9*(1/Sqrt[1+RGEtan\[Beta]^2])^2+l\[Kappa]2*10^9*(RGEtan\[Beta]/Sqrt[1+RGEtan\[Beta]^2])^2))/.Options[lOpts];
+	Return[lM\[Nu]];
+];
+</code>
+<code model=.*SMDirac>
+GetM\[Nu][pScale_,pSolution_,pOpts___]:=Block[{lY\[Nu],lvu},
+(* returns the mass matrix of the neutrinos *)
+	lY\[Nu]=(Y\[Nu][pScale]/.pSolution)[[1]];
+
+        lOpts;
+        Options[lOpts]=Options[RGEOptions];
+        SetOptions[lOpts,RGEFilterOptions[lOpts,pOpts]];
+        lvu=RGEv\[Nu]/.Options[lOpts];
+	Return[(lvu/Sqrt[2]*lY\[Nu])*10^9];
+];
+</code>
+<code model=2HDMDirac>
+GetM\[Nu][pScale_,pSolution_,pOpts___]:=Block[{lY\[Nu],lM},
+(* returns the mass matrix of the neutrinos *)
+	lY\[Nu]=(Y\[Nu][pScale]/.pSolution)[[1]];
+
+        lOpts;
+        Options[lOpts]=Options[RGEOptions];
+        SetOptions[lOpts,RGEFilterOptions[lOpts,pOpts]];
+
+(*	lvu=RGEvEW/.Options[lOpts,RGEvEW];
+	l\[Beta]=N[ArcTan[RGEtan\[Beta]]]/.Options[lOpts,RGEtan\[Beta]];
+	\[Nu]=(RGEz\[Nu]/.Options[lOpts,RGEz\[Nu]]).{Cos[l\[Beta]],Sin[l\[Beta]]};
+	Return[(l\[Nu]/Sqrt[2]*lY\[Nu])*10^9];*)
+	lM=(10^9*RGEv\[Nu]/Sqrt[2]*lY\[Nu])/.Options[lOpts];
+	Return[lM];
+];
+</code>
+<doc level=simple>
+RGEM$\nu$ is used to get the mass matrix of the left-handed neutrinos.
+</doc>
+</function>
+
+<function name=GetMu>
+<code model=2HDM.*>
+GetMu[pScale_,pSolution_,pOpts___]:=Block[{lMu,lvu,l\[Beta]},
+(* returns the mass matrix of the up-type quarks *)
+   lOpts;
+   Options[lOpts]=Options[RGEOptions];
+   SetOptions[lOpts,RGEFilterOptions[lOpts,pOpts]];
+   l\[Beta]=ArcTan[RGEtan\[Beta]]/.Options[lOpts,RGEtan\[Beta]];
+   lvu=N[(RGEvEW/.Options[lOpts,RGEvEW])*(RGEzu/.Options[lOpts,RGEzu]).{Cos[l\[Beta]],Sin[l\[Beta]]}];
+   lMu=lvu/Sqrt[2]*(Yu[pScale]/.pSolution)[[1]];
+   Return[lMu];
+];
+</code>
+<code model=.*SM.*>
+GetMu[pScale_,pSolution_,pOpts___]:=Block[{lMu,lvu},
+(* returns the mass matrix of the up-type quarks *)
+   lOpts;
+   Options[lOpts]=Options[RGEOptions];
+   SetOptions[lOpts,RGEFilterOptions[lOpts,pOpts]];
+   lvu=RGEvu/.Options[lOpts];
+   lMu=lvu/Sqrt[2]*(Yu[pScale]/.pSolution)[[1]];
+   Return[lMu];
+];
+</code>
+<doc level=simple>
+RGEMu is used to get the mass matrix of the up-type quarks.
+</doc>
+</function>
+
+<function name=GetPoleMTop>
+<code model=.*>
+GetPoleMTop[pScale_,pSolution_,pOpts___]:=Block[{lMtop,lg3,lScale,lPrecision,lCount},
+(* returns the mass matrix of the up-type quarks *)
+   lPrecision=RGEPrecision/.pOpts/.RGETransition->6;
+   lCountMax=RGEMaxNumberIterations/.pOpts/.RGEMaxNumberIterations->20;
+   lScale=Exp[pScale];
+   lg3=RGEGetSolution[lScale,RGECoupling][[3]];
+   lMu=RGEGetSolution[lScale,RGEMu];
+   lMtop=Sqrt[Max[Abs[Eigenvalues[Dagger[lMu].lMu]]]*(1+lg3^2/3/Pi)];
+   lCount=0;
+   While[RGEFloor[Abs[lMtop-lScale],RGEPrecision->lPrecision]>0,
+	lScale=lMtop;
+	lg3=RGEGetSolution[lScale,RGECoupling][[3]];
+	lMu=RGEGetSolution[lScale,RGEMu];
+	lMtop=Sqrt[Max[Abs[Eigenvalues[Dagger[lMu].lMu]]]*(1+lg3^2/3/Pi)];
+	lCount++;
+	If[lCount>lCountMax,
+		Print["RGEGetsolution[pScale,RGEPoleMTop]: algorithm to search transitions does not converge. There have been ",lCount," iterations so far. Returning: ",N[Sort[lTransitions,Greater],lPrecision]];
+		Return[lMtop];
+            ];
+	];
+   Return[lMtop];
+];
+</code>
+<doc level=advanced>
+RGEPoleMTop is used to get the pole mass of the top quark in the
+$\overline{\text{MS}}$ scheme. The pole mass term of the top quark is given by
+\begin{equation}
+m_t^\text{Pole} = m_t(m_t) \cdot (1 + \frac{4\alpha_s}{3\pi})
+\end{equation}
+to 1-loop order.
+</doc>
+</function>
+
+<function name=GetMd>
+<code model=2HDM.*>
+GetMd[pScale_,pSolution_,pOpts___]:=Block[{lMd,lvd,l\[Beta]},
+(* returns the mass matrix of the down-type quarks *)
+   lOpts;
+   Options[lOpts]=Options[RGEOptions];
+   SetOptions[lOpts,RGEFilterOptions[lOpts,pOpts]];
+   l\[Beta]=ArcTan[RGEtan\[Beta]]/.Options[lOpts,RGEtan\[Beta]];
+   lvd=N[(RGEvEW/.Options[lOpts,RGEvEW])*(RGEzd/.Options[lOpts,RGEzd]).{Cos[l\[Beta]],Sin[l\[Beta]]}];
+   lMd=lvd/Sqrt[2]*(Yd[pScale]/.pSolution)[[1]];
+   Return[lMd];
+];
+</code>
+<code model=.*SM.*>
+GetMd[pScale_,pSolution_,pOpts___]:=Block[{lMd,lvd},
+(* returns the mass matrix of the down-type quarks *)
+   lOpts;
+   Options[lOpts]=Options[RGEOptions];
+   SetOptions[lOpts,RGEFilterOptions[lOpts,pOpts]];
+   lvd=RGEvd/.Options[lOpts];
+   lMd=lvd/Sqrt[2]*(Yd[pScale]/.pSolution)[[1]];
+   Return[lMd];
+];
+</code>
+<doc level=simple>
+RGEMd is used to get the mass matrix of the down-type quarks.
+</doc>
+</function>
+
+<function name=GetMe>
+<code model=2HDM.*>
+GetMe[pScale_,pSolution_,pOpts___]:=Block[{lMe,lvd,l\[Beta]},
+(* returns the mass matrix of the charged leptons *)
+   lOpts;
+   Options[lOpts]=Options[RGEOptions];
+   SetOptions[lOpts,RGEFilterOptions[lOpts,pOpts]];
+   l\[Beta]=ArcTan[RGEtan\[Beta]]/.Options[lOpts,RGEtan\[Beta]];
+   lvd=N[(RGEvEW/.Options[lOpts,RGEvEW])*Cos[l\[Beta]]];
+   lMe=lvd/Sqrt[2]*(Ye[pScale]/.pSolution)[[1]];
+   Return[lMe];
+];
+</code>
+<code model=.*SM.*>
+GetMe[pScale_,pSolution_,pOpts___]:=Block[{lMe,lvd},
+(* returns the mass matrix of the charged leptons *)
+   lOpts;
+   Options[lOpts]=Options[RGEOptions];
+   SetOptions[lOpts,RGEFilterOptions[lOpts,pOpts]];
+   lvd=RGEve/.Options[lOpts];
+   lMe=lvd/Sqrt[2]*(Ye[pScale]/.pSolution)[[1]];
+   Return[lMe];
+];
+</code>
+<doc level=simple>
+RGEMe is used to get the mass matrix of the charged leptons.
+</doc>
+</function>
+
+# all parameters
+#####################################################################
+<function name=GetSolution>
+<code model=2HDM>
+GetSolution[pScale_,pSolution_,pOpts___]:=Block[{lg1,lg2,lg3,lYu,lYd,lYe,lM,lY\[Nu],l\[Kappa]1,l\[Kappa]2,l\[Lambda]1,l\[Lambda]2,l\[Lambda]3,l\[Lambda]4,l\[Lambda]5},
+(* returns all parameters of the SM *)
+        {lg1,lg2,lg3,lYu,lYd,lYe,lY\[Nu],l\[Kappa]1,l\[Kappa]2,lM,l\[Lambda]1,l\[Lambda]2,l\[Lambda]3,l\[Lambda]4,l\[Lambda]5}=(ParametersFunc[pScale]/.pSolution)[[1]];
+	lM=GetM\[Nu]r[pScale,pSolution,pOpts];
+	lY\[Nu]=GetY\[Nu][pScale,pSolution,pOpts];
+        Return[{lg1,lg2,lg3,lYu,lYd,lYe,lY\[Nu],l\[Kappa]1,l\[Kappa]2,lM,l\[Lambda]1,l\[Lambda]2,l\[Lambda]3,l\[Lambda]4,l\[Lambda]5}];
+];
+</code>
+<code model=2HDM0N>
+GetSolution[pScale_,pSolution_,pOpts___]:=Block[{lg1,lg2,lg3,lYu,lYd,lYe,lM,lY\[Nu],l\[Kappa]1,l\[Kappa]2,l\[Lambda]1,l\[Lambda]2,l\[Lambda]3,l\[Lambda]4,l\[Lambda]5},
+(* returns all parameters of the SM *)
+        {lg1,lg2,lg3,lYu,lYd,lYe,l\[Kappa]1,l\[Kappa]2,l\[Lambda]1,l\[Lambda]2,l\[Lambda]3,l\[Lambda]4,l\[Lambda]5}=(ParametersFunc[pScale]/.pSolution)[[1]];
+	lM=GetM\[Nu]r[pScale,pSolution,pOpts];
+	lY\[Nu]=GetY\[Nu][pScale,pSolution,pOpts];
+        Return[{lg1,lg2,lg3,lYu,lYd,lYe,lY\[Nu],l\[Kappa]1,l\[Kappa]2,lM,l\[Lambda]1,l\[Lambda]2,l\[Lambda]3,l\[Lambda]4,l\[Lambda]5}];
+];
+</code>
+<code model=MSSM>
+GetSolution[pScale_,pSolution_,pOpts___]:=Block[{lg1,lg2,lg3,lYu,lYd,lYe,lM,lY\[Nu],l\[Kappa]},
+(* returns all parameters of the SM *)
+        {lg1,lg2,lg3,lYu,lYd,lYe,lY\[Nu],l\[Kappa],lM}=(ParametersFunc[pScale]/.pSolution)[[1]];
+	lM=GetM\[Nu]r[pScale,pSolution,pOpts];
+	lY\[Nu]=GetY\[Nu][pScale,pSolution,pOpts];
+        Return[{lg1,lg2,lg3,lYu,lYd,lYe,lY\[Nu],l\[Kappa],lM}];
+];
+</code>
+<code model=MSSM0N>
+GetSolution[pScale_,pSolution_,pOpts___]:=Block[{lg1,lg2,lg3,lYu,lYd,lYe,lM,lY\[Nu],l\[Kappa]},
+(* returns all parameters of the SM *)
+        {lg1,lg2,lg3,lYu,lYd,lYe,l\[Kappa]}=(ParametersFunc[pScale]/.pSolution)[[1]];
+	lM=GetM\[Nu]r[pScale,pSolution,pOpts];
+	lY\[Nu]=GetY\[Nu][pScale,pSolution,pOpts];
+        Return[{lg1,lg2,lg3,lYu,lYd,lYe,lY\[Nu],l\[Kappa],lM}];
+];
+</code>
+<code model=MSSMTriplet>
+GetSolution[pScale_,pSolution_,pOpts___]:=Block[{lg1,lg2,lg3,lYu,lYd,lYe,lM,lY\[Nu],l\[Kappa],lY\[CapitalDelta],l\[CapitalLambda]u,l\[CapitalLambda]d,lM\[CapitalDelta]2},
+(* returns all parameters of the SM *)
+        {lg1,lg2,lg3,lYu,lYd,lYe,lY\[Nu],lY\[CapitalDelta],l\[Kappa],lM,l\[CapitalLambda]u,l\[CapitalLambda]d,lM\[CapitalDelta]2}=(ParametersFunc[pScale]/.pSolution)[[1]];
+	lM=GetM\[Nu]r[pScale,pSolution,pOpts];
+	lY\[Nu]=GetY\[Nu][pScale,pSolution,pOpts];
+        Return[{lg1,lg2,lg3,lYu,lYd,lYe,lY\[Nu],lY\[CapitalDelta],l\[Kappa],lM,l\[CapitalLambda]u,l\[CapitalLambda]d,lM\[CapitalDelta]2}];
+];
+</code>
+<code model=MSSMTriplet0N>
+GetSolution[pScale_,pSolution_,pOpts___]:=Block[{lg1,lg2,lg3,lYu,lYd,lYe,lM,lY\[Nu],l\[Kappa],l\[CapitalLambda]u,l\[CapitalLambda]d,lM\[CapitalDelta]2},
+(* returns all parameters of the SM *)
+        {lg1,lg2,lg3,lYu,lYd,lYe,lY\[CapitalDelta],l\[Kappa],l\[CapitalLambda]u,l\[CapitalLambda]d,lM\[CapitalDelta]2}=(ParametersFunc[pScale]/.pSolution)[[1]];
+	lM=GetM\[Nu]r[pScale,pSolution,pOpts];
+	lY\[Nu]=GetY\[Nu][pScale,pSolution,pOpts];
+        Return[{lg1,lg2,lg3,lYu,lYd,lYe,lY\[Nu],lY\[CapitalDelta],l\[Kappa],lM,l\[CapitalLambda]u,l\[CapitalLambda]d,lM\[CapitalDelta]2}];
+];
+</code>
+<code model=MSSMDirac>
+GetSolution[pScale_,pSolution_,pOpts___]:=Block[{lg1,lg2,lg3,lYu,lYd,lYe,lY\[Nu]},
+(* returns all parameters of the SM *)
+        {lg1,lg2,lg3,lYu,lYd,lYe,lY\[Nu]}=(ParametersFunc[pScale]/.pSolution)[[1]];
+	lM=GetM\[Nu]r[pScale,pSolution,pOpts];
+	lY\[Nu]=GetY\[Nu][pScale,pSolution,pOpts];
+        Return[{lg1,lg2,lg3,lYu,lYd,lYe,lY\[Nu]}];
+];
+</code>
+<code model=^SM>
+GetSolution[pScale_,pSolution_,pOpts___]:=Block[{lg1,lg2,lg3,lYu,lYd,lYe,lM,lY\[Nu],l\[Kappa],l\[Lambda]},
+(* returns all parameters of the SM *)
+        {lg1,lg2,lg3,lYu,lYd,lYe,lY\[Nu],l\[Kappa],lM,l\[Lambda]}=(ParametersFunc[pScale]/.pSolution)[[1]];
+	lM=GetM\[Nu]r[pScale,pSolution,pOpts];
+	lY\[Nu]=GetY\[Nu][pScale,pSolution,pOpts];
+        Return[{lg1,lg2,lg3,lYu,lYd,lYe,lY\[Nu],l\[Kappa],lM,l\[Lambda]}];
+];
+</code>
+<code model=^SMTriplet>
+GetSolution[pScale_,pSolution_,pOpts___]:=Block[{lg1,lg2,lg3,lYu,lYd,lYe,lM,lY\[Nu],l\[Kappa],l\[Lambda],lY\[CapitalDelta],l\[CapitalLambda]1,l\[CapitalLambda]2,l\[CapitalLambda]4,l\[CapitalLambda]5,l\[CapitalLambda]6,lM\[CapitalDelta]2},
+(* returns all parameters of the SM *)
+        {lg1,lg2,lg3,lYu,lYd,lYe,lY\[Nu],lY\[CapitalDelta],l\[Kappa],lM,l\[Lambda],l\[CapitalLambda]1,l\[CapitalLambda]2,l\[CapitalLambda]4,l\[CapitalLambda]5,l\[CapitalLambda]6,lM\[CapitalDelta]2}=(ParametersFunc[pScale]/.pSolution)[[1]];
+	lM=GetM\[Nu]r[pScale,pSolution,pOpts];
+	lY\[Nu]=GetY\[Nu][pScale,pSolution,pOpts];
+        Return[{lg1,lg2,lg3,lYu,lYd,lYe,lY\[Nu],lY\[CapitalDelta],l\[Kappa],lM,l\[Lambda],l\[CapitalLambda]1,l\[CapitalLambda]2,l\[CapitalLambda]4,l\[CapitalLambda]5,l\[CapitalLambda]6,lM\[CapitalDelta]2}];
+];
+</code>
+<code model=^SMTriplet0N>
+GetSolution[pScale_,pSolution_,pOpts___]:=Block[{lg1,lg2,lg3,lYu,lYd,lYe,lM,lY\[Nu],l\[Kappa],l\[Lambda],lY\[CapitalDelta],l\[CapitalLambda]1,l\[CapitalLambda]2,l\[CapitalLambda]4,l\[CapitalLambda]5,l\[CapitalLambda]6,lM\[CapitalDelta]2},
+(* returns all parameters of the SM *)
+        {lg1,lg2,lg3,lYu,lYd,lYe,lY\[CapitalDelta],l\[Kappa],l\[Lambda],l\[CapitalLambda]1,l\[CapitalLambda]2,l\[CapitalLambda]4,l\[CapitalLambda]5,l\[CapitalLambda]6,lM\[CapitalDelta]2}=(ParametersFunc[pScale]/.pSolution)[[1]];
+	lM=GetM\[Nu]r[pScale,pSolution,pOpts];
+	lY\[Nu]=GetY\[Nu][pScale,pSolution,pOpts];
+        Return[{lg1,lg2,lg3,lYu,lYd,lYe,lY\[Nu],lY\[CapitalDelta],l\[Kappa],lM,l\[Lambda],l\[CapitalLambda]1,l\[CapitalLambda]2,l\[CapitalLambda]4,l\[CapitalLambda]5,l\[CapitalLambda]6,lM\[CapitalDelta]2}];
+];
+</code>
+<code model=^SM0N>
+GetSolution[pScale_,pSolution_,pOpts___]:=Block[{lg1,lg2,lg3,lYu,lYd,lYe,lM,lY\[Nu],l\[Kappa],l\[Lambda]},
+(* returns all parameters of the SM *)
+        {lg1,lg2,lg3,lYu,lYd,lYe,l\[Kappa],l\[Lambda]}=(ParametersFunc[pScale]/.pSolution)[[1]];
+	lM=GetM\[Nu]r[pScale,pSolution,pOpts];
+	lY\[Nu]=GetY\[Nu][pScale,pSolution,pOpts];
+        Return[{lg1,lg2,lg3,lYu,lYd,lYe,lY\[Nu],l\[Kappa],lM,l\[Lambda]}];
+];
+</code>
+<code model=^SMDirac>
+GetSolution[pScale_,pSolution_,pOpts___]:=Block[{lg1,lg2,lg3,lYu,lYd,lYe,lY\[Nu],l\[Lambda]},
+(* returns all parameters of the SM *)
+        {lg1,lg2,lg3,lYu,lYd,lYe,lY\[Nu],l\[Lambda]}=(ParametersFunc[pScale]/.pSolution)[[1]];
+        Return[{lg1,lg2,lg3,lYu,lYd,lYe,lY\[Nu],l\[Lambda]}];
+];
+</code>
+<doc level=simple model=.*0N>
+RGEAll returns all parameters of the model and in addition $Y_\nu$ and
+$M_{\nu_R}$ which are recursively obtained by determining their values at the
+cutoff of the EFT "*0N". Thus, the execution of RGEGetSolution[100,RGEAll] will
+result in an error message unless there are right-handed neutrinos. 
+</doc>
+<doc level=simple model=.*Dirac$|2HDM$|(MS)?SM$>
+RGEAll returns all parameters of the model.
+</doc>
+</function>
+
+
+
+
+
+# spezielle Parameter
+#####################################################################
+
+
+<function name=GetMixingParameters>
+<code model=.*SM(0N)?, 2HDM(0N)?, .*SMTriplet(0N)?>
+GetMixingParameters[pScale_,pSolution_,pOpts___]:=Block[{lM,lYe},
+(* returns the leptonic mixing parameters *)
+   lM=GetM\[Nu][pScale,pSolution,pOpts];
+   lYe=GetYe[pScale,pSolution,pOpts];
+   Return[MNSParameters[lM,lYe]];
+];
+</code>
+<doc level=advanced>
+RGEMixingParameters returns the mixing parameters in the leptonic sector as they
+are returned by MNSParameters: $\left\{\left\{\theta_{12},\theta_{13},\theta_{23},\delta,\delta_e,\delta_\mu,\delta_\tau,\varphi_1,\varphi_2\right\},\left\{y_1,y_2,y_3\right\},\left\{y_e,y_\mu,y_\tau\right\}\right\}$
+</doc>
+</function>
+
+# this function is not correct --> need function to extract Mixing angles
+
+<function name=GetTwistingParameters>
+<code model=.*SM(0N)?, 2HDM(0N)?, .*SMTriplet(0N)?>
+GetTwistingParameters[pScale_,pSolution_,pOpts___]:=Block[{lY\[Nu],lYe},
+(* returns the mixing parameters of the twisting matrix between Ye^\dagger Ye and Y\nu^\dagger Y\nu *)
+   lY\[Nu]=GetY\[Nu][pScale,pSolution,pOpts];
+   lYe=GetYe[pScale,pSolution,pOpts];
+    Return[MNSParameters[Dagger[lY\[Nu]].lY\[Nu],Dagger[lYe].lYe]];
+];
+</code>
+<doc level=internal>
+RGETwistingParameters returns the parameters of the matrix transforming from the
+basis in which $Y_e^\dagger Y_e$ is diagonal to the basis in which
+$Y_\nu^\dagger Y_\nu$  ] is diagonal.
+<\doc>
+</function>
+
+
+
+<function name=GetM1Tilde>
+<code model=.*SM$|.*SMTriplet$|2HDM$>
+GetM1Tilde[pScale_,pSolution_,pOpts___]:=Block[{lv,lM,lM\[Nu],lm1},
+(* returns m1 Tilde *)
+   lOpts;
+   Options[lOpts]=Options[RGEOptions];
+   SetOptions[lOpts,RGEFilterOptions[lOpts,pOpts]];
+   lv=(RGEv\[Nu]/Sqrt[2])/.Options[lOpts];
+   lM=(M\[Nu]r[pScale]/.pSolution)[[1]];
+   lM\[Nu]=lv*(Y\[Nu][pScale]/.pSolution)[[1]];
+   {lM,lM\[Nu]}=RGERotateM[lM,lM\[Nu]];
+   lM\[Nu]=lM\[Nu][[1]];
+   lm1=(lM\[Nu].Conjugate[lM\[Nu]])/lM[[1,1]];
+   Return[RGEFloor[Re[lm1]][[1]]*10^9];
+];
+</code>
+<doc level=advanced>
+RGEM1Tilde returns the effective light-neutrino mass $\widetilde{m}_1 =
+\frac{\left(m_D m_D^\dagger\right)_{11}}{M_1}=\frac{(Y_\nu Y_\nu^\dagger)_{11} 
+v^2}{2 M_1}$ which is commonly used in thermal leptogenesis. $\widetilde{m}_1$ is
+given in eV.
+</doc>
+<doc level=advanced model=MSSM>
+$v$ is the vev of the Higgs doublet which couples to the neutrinos.
+</doc>
+</function>
+
+<function name=Get\[Epsilon]1Max>
+<code model=^SM>
+Get\[Epsilon]1Max[pScale_,pSolution_,pOpts___]:=Block[{lv,lM,lm,lm1Tilde,lm1,lm2,lm3,leps},
+(* returns the mass matrix of the charged leptons *)
+   lOpts;
+   Options[lOpts]=Options[RGEOptions];
+   SetOptions[lOpts,RGEFilterOptions[lOpts,pOpts]];
+   lv=(RGEv\[Nu]/Sqrt[2])/.Options[lOpts];
+   lM=(M\[Nu]r[pScale]/.pSolution)[[1]];
+   lM\[Nu]=lv*(Y\[Nu][pScale]/.pSolution)[[1]];
+   {lM,lM\[Nu]}=RGERotateM[lM,lM\[Nu]];
+   lm1Tilde=(lM\[Nu].Dagger[lM\[Nu]])[[1,1]]/lM[[1,1]];
+   {lm1,lm2,lm3}=(MNSParameters[GetM\[Nu][pScale,pSolution,pOpts],GetYe[pScale,pSolution,pOpts]][[2]])*10^-9;
+   leps=3/16/\[Pi]^2* lM[[1,1]] *lm3/lv^2*(1-lm1/lm3 Sqrt[1+(lm3^2-lm1^2)/lm1Tilde^2]);
+   Return[RGEFloor[Abs[leps]][[1]]];
+];
+</code>
+<code model=MSSM>
+Get\[Epsilon]1Max[pScale_,pSolution_,pOpts___]:=Block[{lv,lM,lm,lm1Tilde,lm1,lm2,lm3,leps},
+(* returns the mass matrix of the charged leptons *)
+   lOpts;
+   Options[lOpts]=Options[RGEOptions];
+   SetOptions[lOpts,RGEFilterOptions[lOpts,pOpts]];
+   lv=(RGEv\[Nu]/Sqrt[2])/.Options[lOpts];
+   lM=(M\[Nu]r[pScale]/.pSolution)[[1]];
+   lM\[Nu]=lv*(Y\[Nu][pScale]/.pSolution)[[1]];
+   {lM,lM\[Nu]}=RGERotateM[lM,lM\[Nu]];
+   lm1Tilde=(lM\[Nu].Dagger[lM\[Nu]])[[1,1]]/lM[[1,1]];
+   {lm1,lm2,lm3}=MNSParameters[GetM\[Nu][pScale,pSolution,pOpts],GetYe[pScale,pSolution,pOpts]][[2]]*10^-9;
+   leps=3/8/\[Pi]^2* lM[[1,1]] *lm3/lv^2*(1-lm1/lm3 Sqrt[1+(lm3^2-lm1^2)/lm1Tilde^2]);
+   Return[RGEFloor[Abs[leps]][[1]]];
+];
+</code>
+<doc level=advanced model=.*SM>
+RGE$\epsilon$1Max is used to get the upper bound \cite{Buchmuller:2003gz} 
+on the CP asymmetry for leptogenesis in the type I see-saw mechanism 
+for $M_1 \ll M_2, M_3$,
+</doc>
+<doc level=advanced model=^SM>
+  \begin{equation}
+    \epsilon_1^\text{max}=\frac{3}{8\pi}\frac{M_1 m_3}{v^2}\left[1-\frac{m_1}{m_3}\left(1+\frac{m_3^2-m_1^2}{\widetilde{m}_1}\right)^\frac{1}{2}\right]\;.
+  \end{equation}
+</doc>
+<doc level=advanced model=MSSM>
+  \begin{equation}
+    \epsilon_1^\text{max}=\frac{3}{4\pi}\frac{M_1 m_3}{v^2}\left[1-\frac{m_1}{m_3}\left(1+\frac{m_3^2-m_1^2}{\widetilde{m}_1}\right)^\frac{1}{2}\right]\;.
+  \end{equation}
+</doc>
+</function>
+
+
+<function name=Get\[Epsilon]1>
+<code model=^SM>
+Get\[Epsilon]1[pScale_,pSolution_,pOpts___]:=Block[{lv,lM,lm,lY,leps},
+(* returns the mass matrix of the charged leptons *)
+   lOpts;
+   Options[lOpts]=Options[RGEOptions];
+   SetOptions[lOpts,RGEFilterOptions[lOpts,pOpts]];
+   lv=(RGEv\[Nu]/Sqrt[2])/.Options[lOpts];
+   lM=(M\[Nu]r[pScale]/.pSolution)[[1]];
+   lY=(Y\[Nu][pScale]/.pSolution)[[1]];
+   {lM,lY}=RGERotateM[lM,lY];
+   lm=GetM\[Nu][pScale,pSolution,pOpts]*10^-9;
+   lY=lY[[1]];
+   leps=3/16/\[Pi]*lM[[1,1]]/lv^2*Im[(lY.Conjugate[lm].lY)]/(lY.Conjugate[lY]);
+   Return[leps];
+];
+</code>
+<code model=MSSM>
+Get\[Epsilon]1[pScale_,pSolution_,pOpts___]:=Block[{lv,lM,lm,lY,leps},
+(* returns the mass matrix of the charged leptons *)
+   lOpts;
+   Options[lOpts]=Options[RGEOptions];
+   SetOptions[lOpts,RGEFilterOptions[lOpts,pOpts]];
+   lv=(RGEv\[Nu]/Sqrt[2])/.Options[lOpts];
+   lM=(M\[Nu]r[pScale]/.pSolution)[[1]];
+   lY=(Y\[Nu][pScale]/.pSolution)[[1]];
+   {lM,lY}=RGERotateM[lM,lY];
+   lm=GetM\[Nu][pScale,pSolution,pOpts]*10^-9;
+   lY=lY[[1]];
+   leps=3/8/\[Pi]*lM[[1,1]]/lv^2*Im[(lY.Conjugate[lm].lY)]/(lY.Conjugate[lY]);
+   Return[leps];
+];
+</code>
+<doc level=advanced model=.*SM>
+RGE$\epsilon$1 is used to get the CP asymmetry \cite{Covi:1996wh} for 
+leptogenesis for $M_1 \ll M_2, M_3$,
+</doc>
+<doc level=advanced model=^SM>
+   \begin{equation}
+     \epsilon_1=\frac{3}{8\pi}\frac{M_1}{v^2}
+     \frac{\sum_{f,g}\im\left[\left(Y_\nu\right)_{1f}\left(Y_\nu\right)_{1g}
+     \left(m^*_\nu\right)_{fg}\right]}{\left(Y_\nu Y_\nu^\dagger\right)_{11}}\; .\label{eq:RGEepsilonSM}
+   \end{equation}
+   Eq.~\eqref{eq:RGEepsilonSM} 
+</doc>
+<doc level=advanced model=MSSM>
+   \begin{equation}
+     \epsilon_1=\frac{3}{4\pi}\frac{M_1}{v^2}
+     \frac{\sum_{f,g}\im\left[\left(Y_\nu\right)_{1f}\left(Y_\nu\right)_{1g}
+     \left(m^*_\nu\right)_{fg}\right]}{\left(Y_\nu Y_\nu^\dagger\right)_{11}}\;. \label{eq:RGEepsilonMSSM}
+   \end{equation}
+   Eq.~\eqref{eq:RGEepsilonMSSM} 
+</doc>
+<doc level=advanced model=.*SM>
+also holds if there are additional contributions to the neutrino mass operator, as it is for example 
+the case in the type II see-saw mechanism \cite{Antusch:2004xy}.
+</doc>
+</function>
+
+
+<function name=GetGWCond>
+<code model=LRDoublet>
+GetGWCond[pScale_,pSolution_,pOpts___]:=Block[{lk1,lk2,lb1,ll1,ll2,ll3,lf1},
+(* returns the fine structure constants *)
+    {lk1,lk2,lb1,ll1,ll2,ll3,lf1}=Flatten[{\[Kappa]1[pScale],\[Kappa]2[pScale],\[Beta]1[pScale],\[Lambda]1[pScale],\[Lambda]2,\[Lambda]3,f1[pScale]}/.pSolution];
+    Return[(lk1+lk2-(lf1-2 lb1)^2/8/ll1)];
+];
+</code>
+<doc level=simple>
+RGEGWCondition returns the Gildener Weinberg condition.
+</doc>
+</function>
+
+<function name=GetGWConditions>
+<code model=LRDoublet>
+GetGWConditions[pScale_,pSolution_,pOpts___]:=Block[{lk1,lk2,lb1,ll1,ll2,ll3,lf1},
+(* returns the fine structure constants *)
+    {lk1,lk2,lb1,ll1,ll2,ll3,lf1}=Flatten[{\[Kappa]1[pScale],\[Kappa]2[pScale],\[Beta]1[pScale],\[Lambda]1[pScale],\[Lambda]2[pScale],\[Lambda]3[pScale],f1[pScale]}/.pSolution];
+    Return[{
+{
+lk1+lk2-lb1^2/2/(ll1+4ll2)+lf1^2/32/ll2,
+lk1-lb1^2/2/(ll1+4ll2)+lf1^2/32/ll2,
+lk1+lk2-lb1^2/2/(ll1-4ll3)-lf1^2/32/ll3,
+lk1-lb1^2/2/(ll1-4ll3)-lf1^2/32/ll3,
+ll1+4ll2,
+ll1-4ll3
+},
+{
+lk1+lk2-(lf1-2 lb1)^2/8/ll1,
+lk1-(lf1-2lb1)^2/8/ll1,
+lk1+lk2-(2lb1+lf1)^2/8/ll1,
+lk1-(2lb1+lf1)^2/8/ll1,
+lk1+lk2,
+lk1,
+ll1,
+ll1}}];
+];
+</code>
+<doc level=simple>
+RGEGWConditions returns all Gildener Weinberg conditions.
+</doc>
+</function>
+
+<function name=GetVEVratio>
+<code model=LRDoublet>
+GetVEVratio[pScale_,pSolution_,pOpts___]:=Block[{lb1,ll1,lf1},
+(* returns the fine structure constants *)
+    {lb1,ll1,lf1}=Flatten[{\[Beta]1[pScale],\[Lambda]1[pScale],f1[pScale]}/.pSolution];
+    Return[((lf1-2 lb1)/4/ll1)];
+];
+</code>
+<doc level=simple>
+RGEVEVratio returns the squared ratio of $v_R$ over the EW symmetry breaking scale.
+</doc>
+</function>
+
+<function name=GetVEVratios>
+<code model=LRDoublet>
+GetVEVratios[pScale_,pSolution_,pOpts___]:=Block[{lb1,ll1,lf1},
+(* returns the fine structure constants *)
+    {lb1,ll1,lf1}=Flatten[{\[Beta]1[pScale],\[Lambda]1[pScale],f1[pScale]}/.pSolution];
+    Return[((lf1-2 lb1)/4/ll1)];
+];
+</code>
+<doc level=simple>
+RGEVEVratios returns the squared ratio of $v_R$ over the EW symmetry breaking scale.
+</doc>
+</function>

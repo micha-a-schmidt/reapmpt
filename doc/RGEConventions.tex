@@ -1,0 +1,109 @@
+\section{Conventions}
+
+\subsection{Definition of the parameters}
+
+\subsubsection{GUT Charge Normalization}
+We use the GUT charge normalization in all models which is related to the charge normalization in the SM by
+\begin{equation}
+  q_Y^\text{GUT}=\sqrt{\frac{3}{5}}q^\text{SM}_Y\; .
+\end{equation}
+Therefore the coupling constant satisfies
+\begin{equation}
+  \left(g^\text{SM}_1\right)^2=\frac{3}{5}\left(g_1^\text{GUT}\right)^2\; .
+\end{equation}
+
+\subsubsection{Convention for Yukawa Matrices}
+We use the RL convention for Yukawa matrices, i.e.\
+\begin{equation}
+  \mathscr{L}_\text{Yukawa}=-Y_{ij} \overline{\psi_\mathrm{R}^i}
+  \psi_\mathrm{L}^j \cdot \phi + \text{h.c.} \;.
+\end{equation}
+
+\subsubsection{Vacuum Expectation Value of the SM Higgs}
+The vacuum expectation value of the SM Higgs is $v=246\GeV$.
+It is assumed to be constant.
+
+\subsubsection{Standard Parameterization of the Lepton Mixing Matrix}
+
+A unitary matrix can be described by 3 angles and 6 phases. Thus it can be
+written in the following way:
+\begin{equation}
+ U 
+ \,=\,
+ \diag(e^{\I\delta_{e}},e^{\I\delta_{\mu}},e^{\I\delta_{\tau}}) \cdot V({ \theta_{12}},{ \theta_{13}},{\theta_{23}}) \cdot 
+ \diag(e^{-\I\varphi_1/2},e^{-\I\varphi_2/2},1)
+\end{equation}
+V is a special unitary matrix and is parameterized in standard parameterization like the CKM
+matrix in the quark sector with 3 angles ($\theta_{12},\,\theta_{13},\,\theta_{23}$) and 1 CP phase ($\delta$).
+\begin{equation}
+ V({ \theta_{12}},{ \theta_{13}},{\theta_{23}})=\left(
+ \begin{array}{ccc}
+ { c_{12}}{ c_{13}} & { s_{12}}{ c_{13}} & { s_{13}}
+ \,e^{-\I{ \delta}}\\
+ -{  c_{23}}{ s_{12}}-{  s_{23}}{ s_{13}}{ c_{12}}
+ \,e^{\I{ \delta}} & {  c_{23}}{ c_{12}}-{  s_{23}}{ s_{13}}
+ { s_{12}}\,e^{\I{ \delta}} & {  s_{23}}{ c_{13}}\\
+ {  s_{23}}{ s_{12}}-{  c_{23}}{ s_{13}}{ c_{12}}
+ \,e^{\I{ \delta}} & -{  s_{23}}{ c_{12}}-{  c_{23}}{ s_{13}}
+ { s_{12}}\,e^{\I{ \delta}} & {  c_{23}}{ c_{13}}
+ \end{array}
+ \right)
+\label{eq:DefV}
+\end{equation}
+where $s_{ij}$ and $c_{ij}$ are defined as$s_{ij}=\sin\theta_{ij}$ and
+$c_{ij}=\cos\theta_{ij}$, respectively.
+In addition there are phase matrices multiplied from both sides. The matrix on
+the left-hand side is characterized by the unphysical phases
+$\delta_e$, $\delta_\mu$ and $\delta_\tau$ which can be rotated away by a change of
+the phases in the charged left-handed leptons in the extended (MS)SM.
+\begin{equation}
+\ket{\ell_L}\rightarrow
+\diag(e^{-\I\delta_{e}},e^{-\I\delta_{\mu}},e^{-\I\delta_{\tau}}) \ket{\ell_L}
+\end{equation}
+The matrix on the right-hand side is described by the Majorana phases
+$\varphi_1$ and $\varphi_2$. These can not be rotated away by a redefinition of
+fields, because the effective neutrino mass term is a Majorana mass term which is
+diagonalized by an unitary transformation and not by a biunitary transformation
+like the Yukawa matrix of the charged leptons.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% naming conventions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Naming conventions}
+
+\subsubsection{Variable names}
+The first letter of each word and abbreviations like (``RGE'') in a variable
+name are capitalized. The remaining letters are uncapitalized.  All local
+variables have ``l'' as prefix and all parameters in functions have ``p'' as
+prefix.
+
+\subsubsection{Function names}
+The first letter of each word and abbreviations like (``RGE'') in a function
+name are capitalized. The remaining letters are uncapitalized.  All public
+functions in \package{REAP.m} begin with ``RGE''.
+
+\subsubsection{Exceptions}
+The first letter of each word and abbreviations like (``RGE'') in the name of a
+exception are capitalized. The remaining letters are uncapitalized.
+
+The defined exceptions are:\\
+\begin{itemize}
+\item RGEModelAlreadyRegistered will be thrown if the model already is
+registered.
+\item RGELessThanZero will be thrown if a parameter is less than zero, thus out
+of range.
+\item RGEScaleTooBig will be thrown if the scale parameter is too big, thus out
+of range.
+\item RGENotImplementedYet will be thrown if the transition function isn't
+implemented yet.
+\item RGEOutOfRange will be thrown if the parameter is out of range.
+\item RGEModelDoesNotExist will be thrown if the model name given does not exist
+in the list Model. Thus the model hasn't been registered yet.
+\item RGEWrongModel will be thrown if the model name does not corresponding to
+the model valid at the given scale.
+\item RGE$\nu$MassAboveCutoff will be thrown if an eigenvalue of M$\nu$ is above
+the cutoff.
+\item RGENotAValidMassHierarchy will be thrown if the type of the given mass
+hierarchy does not exist.
+\end{itemize}

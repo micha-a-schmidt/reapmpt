@@ -1,0 +1,1311 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.0'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     56085,       1193]*)
+(*NotebookOutlinePosition[     57093,       1224]*)
+(*  CellTagsIndexPosition[     57049,       1220]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+Cell[BoxData[
+    \(\(Remove["\<Global`*\>"];\)\)], "Input"],
+
+Cell[BoxData[{
+    \(\(\(Needs["\<REAP`RGEMSSM`\>"];\)\(\[IndentingNewLine]\)
+    \)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Graphics`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Utilities`ShowTime`\>"];\)\), "\n", 
+    \(\(Needs["\<AnalyticRGEvolution`\>"];\)\)}], "Input"],
+
+Cell["\<\
+Just for plots...
+This defines boxed plots as preference as well as roman fonts. In addition, \
+there are some plot styles pre-defined, as well as log-labels.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(ClearAll[shadowRectangle, shadowEFT];\)\), "\[IndentingNewLine]", 
+    \(\(shadowRectangle[cl_, xmin_, ymin_, xmax_, ymax_] := {cl, 
+          Rectangle[{xmin, ymin}, {xmax, 
+              ymax}]};\)\), "\[IndentingNewLine]", 
+    \(\(shadowEFT[tlist_List] := 
+        Module[{plist}, \[IndentingNewLine]plist = {}; \[IndentingNewLine]Do[
+            plist = Append[plist, 
+                shadowRectangle[GrayLevel[1 - 0.1\ i], 
+                  tlist[\([i]\)], \(-10\^4\), tlist[\([i + 1]\)], 
+                  10\^4]], {i, 1, 
+              Length[tlist] - 1}]; \[IndentingNewLine]Return[
+            Graphics[plist]]];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(SetOptions[Plot, Axes \[Rule] False, Frame \[Rule] True, 
+        AxesFront \[Rule] True];\)\), "\[IndentingNewLine]", 
+    \(\($TextStyle = {FontFamily \[Rule] "\<Times\>", FontSize \[Rule] 12, 
+          SingleLetterItalics \[Rule] False};\)\), "\[IndentingNewLine]", 
+    \(\(ClearAll[psSolid, psDashDot, psDot, 
+        psDash];\)\), "\[IndentingNewLine]", 
+    \(\(psSolid = {Thickness[0.0035], 
+          GrayLevel[0]};\)\), "\[IndentingNewLine]", 
+    \(\(psDashDot = {Thickness[0.0035], 
+          Dashing[{0.002, 0.01, 0.01, 0.01}]};\)\), "\[IndentingNewLine]", 
+    \(\(psDot = {Thickness[0.0035], 
+          Dashing[{0.002, 0.002, 0.002, 
+              0.002}]};\)\), "\[IndentingNewLine]", 
+    \(\(psDash = {Thickness[0.0035], 
+          Dashing[{0.01, 0.01}]};\)\), "\[IndentingNewLine]", 
+    \(\(ClearAll[logTicks, logTicksLabeled];\)\), "\[IndentingNewLine]", 
+    \(\(logTicks[xmin_, xmax_] := 
+        Flatten[Table[
+            Table[{N[Log[10, j\ 10\^x]], "\<\>"}, {j, 1, 9}], {x, xmin, 
+              xmax}], 1];\)\), "\[IndentingNewLine]", 
+    \(\(logTicksLabeled[xmin_, xmax_] := 
+        Flatten[Table[
+            Table[Flatten[
+                Which[j \[Equal] 1, {N[Log[10, j\ 10\^x]], ToString[x]}, 
+                  j > 1, {N[Log[10, j\ 10\^x]], "\<\>"}]], {j, 1, 9}], {x, 
+              xmin, xmax}], 1];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(logTicksLabeled[2, 4] // InputForm\)], "Input"],
+
+Cell[BoxData[
+    \(\(MZ = RGEMass["\<Z\>"];\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(RGEReset[];\)\)], "Input"],
+
+Cell[BoxData[{
+    \(\(RGEAddEFT["\<MSSM\>"];\)\), "\[IndentingNewLine]", 
+    \(\(RGEAddEFT["\<SM\>", 
+        RGECutoff \[Rule] 1000];\)\), "\[IndentingNewLine]", 
+    \(\)}], "Input"],
+
+Cell[BoxData[
+    \(\(RGESetEFTOptions["\<*\>", \[IndentingNewLine]RGEThresholdFactor \
+\[Rule] 1, \[IndentingNewLine]RGEtan\[Beta] \[Rule] 
+          50, \[IndentingNewLine]RGESearchTransition \[Rule] 
+          True\[IndentingNewLine]];\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(Initial = \[IndentingNewLine]{RGEg1 \[Rule] 0.7180488278988499, 
+          RGEg2 \[Rule] 0.718936486700101, RGEg3 \[Rule] 0.7199921682759964, 
+          RGEYu \[Rule] {{5.947784764915094*^-6, 0, 0}, {0, 
+                0.0017322923127815212, 0}, {0, 0, 0.7434730956143869}}, 
+          RGEYd \[Rule] {{0.0007452555910485743, 
+                  0.0009621518627878053 - 0.0012124635764234194*I, 
+                  0.0006736908208019058 + 
+                    0.0002442225416515096*I}, {0.0009621518627878053 + 
+                    0.0012124635764234194*I, 0.007538546940222119, 
+                  0.008881741456427289 + 
+                    0.0002665322081532556*I}, {0.0006736908208019058 - 
+                    0.0002442225416515096*I, 
+                  0.008881741456427289 - 0.0002665322081532556*I, 
+                  0.2863501290221253}} . {{Exp[0  I\ \[Pi]/3], 0, 0}, {0, 
+                  Exp[2  I\ \[Pi]/3], 0}, {0, 0, Exp[I\ \[Pi]/4]}}, 
+          RGE\[Kappa] \[Rule] {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}, 
+          RGEYe \[Rule] {{0.00013033299948898765, 0, 0}, {0, 
+                0.002606659989779753, 0}, {0, 0, 0.39099899846696295}}, 
+          RGEY\[Nu] \[Rule] {{0.25, 0, 0}, {0, 0.5, 0}, {0, 0, 
+                  1}} . {{Exp[0  I\ \[Pi]/3], 0, 0}, {0, Exp[2  I\ \[Pi]/3], 
+                  0}, {0, 0, Exp[I\ \[Pi]/4]}}, 
+          RGEM\[Nu]r \[Rule] {{\(-3.7623828620131914*^13\), 
+                4.495999942580789*^11, \(-8.991999885161577*^11\)}, \
+{4.49599994258079*^11, \(-1.2503569624214625*^14\), 
+                4.798246161198801*^13}, {\(-8.991999885161578*^11\), 
+                4.798246161198801*^13, \(-5.0014278496858494*^14\)}}};\)\(\
+\[IndentingNewLine]\)
+    \)\)], "Input"],
+
+Cell[BoxData[
+    \(\(RGESetInitial[2\ 10^16, 
+        RGEYu \[Rule] {{5.947784764915094*^-6, 0, 0}, {0, 
+              0.0017322923127815212, 0}, {0, 0, 
+              0.7434730956143869}}];\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(RGESolve[MZ, 3\ 10^16, \ 
+        Method \[Rule] StiffnessSwitching];\)\)], "Input"],
+
+Cell[BoxData[{
+    \(\(Print["\<M\[Nu](MZ)=\>", 
+        RGEGetSolution[MZ, RGEMe] // 
+          MatrixForm];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Me(MZ)=\>", 
+        RGEGetSolution[MZ, RGEM\[Nu]] // MatrixForm];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(ClearAll[runningMe, runningM\[Nu]];\)\), "\[IndentingNewLine]", 
+    \(runningMe[\[Mu]_] := 
+      RGEGetSolution[\[Mu], RGEMe]\), "\[IndentingNewLine]", 
+    \(runningM\[Nu][\[Mu]_] := RGEGetSolution[\[Mu], RGEM\[Nu]]\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(ClearAll[newplot];\)\), "\[IndentingNewLine]", 
+    \(\(newplot = 
+        Plot[\(MNSParameters[runningM\[Nu][10\^t], runningMe[10\^t]]\)[\([1, 
+              1]\)], {t, 2, 16}];\)\), "\[IndentingNewLine]", 
+    \(\(Show[{newplot, oldplot}];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(ClearAll[oldplot];\)\), "\[IndentingNewLine]", 
+    \(\(oldplot\  = 
+        Plot[\(MNSParameters[runningM\[Nu][10\^t], runningMe[10\^t]]\)[\([1, 
+              1]\)], {t, 2, 16}];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(RGEGetTransitions[]\)], "Input"],
+
+Cell[BoxData[{
+    \(\(Print["\<M\[Nu](MZ)=\>", 
+        RGEGetSolution[MZ, RGEM\[Nu]] // 
+          MatrixForm];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Me(MZ)=\>", 
+        RGEGetSolution[MZ, RGEMe] // 
+          MatrixForm];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Mu(MZ)=\>", 
+        RGEGetSolution[MZ, RGEMu] // 
+          MatrixForm];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Md(MZ)=\>", 
+        RGEGetSolution[MZ, RGEMd] // 
+          MatrixForm];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<M(\!\(10\^16\)\[ThinSpace]GeV)=\>\"", 
+        RGEGetSolution[\ 10\^16, RGEM\[Nu]r] // 
+          MatrixForm];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(Y\_\[Nu]\)(\!\(10\^16\)\[ThinSpace]GeV)=\>\"", 
+        RGEGetSolution[\ 10\^16, RGEY\[Nu]] // 
+          MatrixForm];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(Y\_e\)(\!\(10\^16\)\[ThinSpace]GeV)=\>\"", \
+\@2\/\(Cos[ArcTan[20]]\ 246\)\ RGEGetSolution[\ 10\^16, RGEMe] // 
+          MatrixForm];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(M\^\(-1\)\)(\!\(10\^16\)\[ThinSpace]GeV)=\>\"", 
+        Inverse[RGEGetSolution[\ 10\^16, RGEM\[Nu]r]] // 
+          MatrixForm];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(v\^2\)\[CenterDot]\!\(Y\_\[Nu]\%T\)\!\(M\^\(-1\)\)\!\
+\(Y\_\[Nu]\)(\!\(10\^16\)\[ThinSpace]GeV)=\>\"", \(10\^9\) \((246)\)\^2\ \
+Transpose[RGEGetSolution[10\^16, RGEY\[Nu]]] . 
+              Inverse[RGEGetSolution[\ 10\^16, RGEM\[Nu]r]] . 
+              RGEGetSolution[\ 10\^16, RGEY\[Nu]] // 
+          MatrixForm, "\<\[ThinSpace]eV\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Eigenvalues of \!\(v\^2\)\[CenterDot]\!\(Y\_\[Nu]\%T\)\!\
+\(M\^\(-1\)\)\!\(Y\_\[Nu]\)(\!\(10\^16\)\[ThinSpace]GeV) in eV:\>\"", 
+        Eigenvalues[\(10\^9\) \((246)\)\^2/
+              2\ Transpose[RGEGetSolution[10\^16, RGEY\[Nu]]] . 
+              Inverse[RGEGetSolution[\ 10\^16, RGEM\[Nu]r]] . 
+              RGEGetSolution[\ 10\^16, 
+                RGEY\[Nu]]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Eigenvalues of \
+\!\(m\_\[Nu]\)(\!\(10\^16\)\[ThinSpace]GeV) in eV:\>\"", 
+        Eigenvalues[
+          RGEGetSolution[\ 10\^16, RGEM\[Nu]]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Eigenvalues of \!\(m\_\[Nu]\)(MZ) in eV:\>\"", 
+        Eigenvalues[
+          RGEGetSolution[\ MZ, RGEM\[Nu]]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalDelta]m\_atm\%2\)=\>\"", \(Eigenvalues[\(10\
+\^9\) \((246)\)\^2\ Transpose[RGEGetSolution[10\^16, RGEY\[Nu]]] . \
+Inverse[RGEGetSolution[\ 10\^16, RGEM\[Nu]r]] . RGEGetSolution[\ 10\^16, RGEY\
+\[Nu]]]\)[\([1]\)]\^2 - \(Eigenvalues[\(10\^9\) \((246)\)\^2\ \
+Transpose[RGEGetSolution[10\^16, RGEY\[Nu]]] . Inverse[RGEGetSolution[\ \
+10\^16, RGEM\[Nu]r]] . RGEGetSolution[\ 10\^16, RGEY\[Nu]]]\)[\([2]\)]\^2, \
+\*"\"\<\[ThinSpace]\!\(eV\^2\)\>\""];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(Inv\[Alpha][t_, i_] := 
+        1/\(RGEGetSolution[t, RGE\[Alpha]]\)[\([i]\)];\)\)], "Input"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"Plot", "[", 
+        RowBox[{\({Inv\[Alpha][10\^t, 1], Inv\[Alpha][10\^t, 2], 
+            Inv\[Alpha][10\^t, 3]}\), 
+          ",", \({t, Log[10, MZ], Log[10, 2\ 10^16]}\), 
+          ",", \(FrameTicks \[Rule] {logTicksLabeled[2, 17], Automatic, 
+              logTicks[2, 16], 
+              Automatic}\), \( (*\(,\)\(FrameTicks \[Rule] {{{2, "\<2\>"}, \
+{4, "\<4\>"}, {6, "\<6\>"}, {8, "\<8\>"}, {10, "\<10\>"}, {12, "\<12\>"}, \
+{14, "\<14\>"}, {16, "\<16\>"}}, 
+                Automatic, {{2, "\<\>"}, {4, "\<\>"}, {6, "\<\>"}, {8, \
+"\<\>"}, {10, "\<\>"}, {12, "\<\>"}, {14, "\<\>"}, {16, "\<\>"}}, 
+                Automatic}\)*) \), ",", 
+          RowBox[{"FrameLabel", "\[Rule]", 
+            RowBox[{"{", 
+              RowBox[{
+              "\"\<\!\(log\_10\)\[Mu]/GeV\>\"", ",", 
+                "\"\<1/\!\(\[Alpha]\_\(\*
+StyleBox[\"i\",\nFontSlant->\"Italic\"]\)\)\>\""}], "}"}]}]}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Plot", "[", 
+        RowBox[{\({Inv\[Alpha][10\^t, 1], Inv\[Alpha][10\^t, 2], 
+            Inv\[Alpha][10\^t, 3]}\), 
+          ",", \({t, Log[10, 10\^16], Log[10, 3\ 10^16]}\), 
+          ",", \(FrameTicks \[Rule] {logTicksLabeled[16, 17], Automatic, 
+              logTicks[2, 16], Automatic}\), ",", 
+          RowBox[{"FrameLabel", "\[Rule]", 
+            RowBox[{"{", 
+              RowBox[{
+              "\"\<\!\(log\_10\)\[Mu]/GeV\>\"", ",", 
+                "\"\<1/\!\(\[Alpha]\_\(\*
+StyleBox[\"i\",\nFontSlant->\"Italic\"]\)\)\>\""}], "}"}]}]}], "]"}], 
+      ";"}]}], "Input"],
+
+Cell[BoxData[{\(MyInv\[Alpha][\[Mu]_, mode_] := 
+        1/REAP`RGEMSSM`Private`\[Alpha][
+            mode, \[Mu]];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Plot", "[", 
+        RowBox[{\({3/5*MyInv\[Alpha][10\^t, 1], MyInv\[Alpha][10\^t, 2], 
+            MyInv\[Alpha][10\^t, 3]}\), 
+          ",", \({t, Log[10, 10\^16], Log[10, 3\ 10^16]}\), 
+          ",", \(FrameTicks \[Rule] {logTicksLabeled[16, 17], Automatic, 
+              logTicks[2, 16], Automatic}\), ",", 
+          RowBox[{"FrameLabel", "\[Rule]", 
+            RowBox[{"{", 
+              RowBox[{
+              "\"\<\!\(log\_10\)\[Mu]/GeV\>\"", ",", 
+                "\"\<1/\!\(\[Alpha]\_\(\*
+StyleBox[\"i\",\nFontSlant->\"Italic\"]\)\)\>\""}], "}"}]}], ",", 
+          "\[IndentingNewLine]", \(PlotStyle \[Rule] {Hue[0], Hue[0.05], 
+              Hue[0.1]}\)}], "]"}], ";"}]}], "Input"],
+
+Cell[BoxData[{
+    \(\(plot\[Alpha]1 = 
+        LogLinearPlot[
+          Inv\[Alpha][t, 1], {t, MZ, 10^4}];\)\), "\[IndentingNewLine]", 
+    \(\(plot\[Alpha]2 = 
+        LogLinearPlot[
+          Inv\[Alpha][t, 2], {t, MZ, 10^4}];\)\), "\[IndentingNewLine]", 
+    \(\(plot\[Alpha]3 = 
+        LogLinearPlot[Inv\[Alpha][t, 3], {t, MZ, 10^4}];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(Show[plot\[Alpha]1, shadowEFT[{100, 1000, 10^4}], 
+      Frame \[Rule] True]\)], "Input"],
+
+Cell[BoxData[
+    \(\(RGEGetTransitions[];\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(MassN[scale_, 
+          flavor_] := \(Sort[
+            Abs[Eigenvalues[
+                RGEGetSolution[scale, 
+                  RGEM\[Nu]r]]]]\)[\([flavor]\)];\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(LogLinearPlot[{MassN[\[Mu], 1]\/MassN[10\^3, 1], 
+          MassN[\[Mu], 2]\/MassN[10\^3, 1], 
+          MassN[\[Mu], 3]\/MassN[10\^3, 1]}, {\[Mu], 10^3, 10^12}, 
+        PlotStyle \[Rule] {GrayLevel[0], Hue[0], 
+            GrayLevel[0.4]}];\)\)], "Input"],
+
+Cell[BoxData[{
+    \(\(ClearAll[Mass\[Nu]];\)\), "\[IndentingNewLine]", 
+    \(\(Mass\[Nu][scale_, 
+          flavor_] := \(Sort[
+            Abs[Eigenvalues[
+                RGEGetSolution[scale, 
+                  RGEM\[Nu]]]]]\)[\([flavor]\)];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(Plot[{Mass\[Nu][10\^x, 1]\/Mass\[Nu][10\^3, 1], 
+          Mass\[Nu][10\^x, 2]\/Mass\[Nu][10\^3, 2], 
+          Mass\[Nu][10\^x, 3]\/Mass\[Nu][10\^3, 3]}, {x, 3, 12}, 
+        PlotStyle \[Rule] {psSolid, psDash, psDot}, 
+        FrameTicks \[Rule] {logTicksLabeled[2, 12], Automatic, 
+            logTicks[2, 12], Automatic}];\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(Dagger[M_] := Transpose[Conjugate[M]];\)\)], "Input"],
+
+Cell[BoxData[{
+    \(\(ClearAll[tstm\[Nu]];\)\), "\[IndentingNewLine]", 
+    \(\(tstm\[Nu][t_] := 
+        RGEGetSolution[Exp[t], RGEM\[Nu]];\)\), "\[IndentingNewLine]", 
+    \(\(etstm\[Nu][t_] := 
+        Sqrt[Sort[
+            Abs[Eigenvalues[
+                Dagger[tstm\[Nu][t]] . tstm\[Nu][t]]]]];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(e2tstm\[Nu][t_] := 
+        Sqrt[Abs[
+            Eigenvalues[Dagger[tstm\[Nu][t]] . tstm\[Nu][t]]]];\)\)], "Input"],
+
+Cell[BoxData[
+    \(tstm\[Nu][\ 2.000000583333333\ Log[10]]\)], "Input"],
+
+Cell[BoxData[{
+    \(\(Plot[\(tstm\[Nu][t\ Log[10]]\)\[LeftDoubleBracket]1, 
+          2\[RightDoubleBracket], {t\ , 2, 16}];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{\(etstm\[Nu][
+              t\ Log[10]]\)\[LeftDoubleBracket]1\[RightDoubleBracket], \
+\(etstm\[Nu][t\ Log[
+                  10]]\)\[LeftDoubleBracket]2\[RightDoubleBracket], \(etstm\
+\[Nu][t\ Log[10]]\)\[LeftDoubleBracket]3\[RightDoubleBracket]}, {t\ , 2, 
+          15}];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(ClearAll[tstYe];\)\), "\[IndentingNewLine]", 
+    \(\(tstYe[t_] := \(\@2\/\(Cos[ArcTan[50]]\ 246\)\) 
+          RGEGetSolution[Exp[t], RGEMe];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(Plot[\(tstYe[t\ Log[10]]\)\[LeftDoubleBracket]3, 
+        3\[RightDoubleBracket], {t, 2, 16}]\)], "Input"],
+
+Cell[BoxData[{
+    \(\(ClearAll[tstParameters];\)\), "\[IndentingNewLine]", 
+    \(\(tstParameters[t_] := 
+        MNSParameters[RGEGetSolution[Exp[t], RGEM\[Nu]], 
+          RGEGetSolution[Exp[t], RGEYe]];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(ClearAll[tstMNSParameters];\)\), "\[IndentingNewLine]", 
+    \(\(tstMNSParameters[
+          t_] := \((tstParameters[t]/
+              Degree)\)\[LeftDoubleBracket]1\[RightDoubleBracket];\)\)}], \
+"Input"],
+
+Cell[BoxData[{
+    \(tstMNSParameters[2  Log[10]]\), "\[IndentingNewLine]", 
+    \(tstMNSParameters[16\ Log[10]]\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(ClearAll[\[CapitalDelta]msol, \[CapitalDelta]matm];\)\), "\
+\[IndentingNewLine]", 
+    \(\(\[CapitalDelta]msol[
+          t_] := \(tstParameters[t]\)\[LeftDoubleBracket]2, 
+              2\[RightDoubleBracket]^2 - \(tstParameters[
+                t]\)\[LeftDoubleBracket]2, 
+              1\[RightDoubleBracket]^2;\)\), "\[IndentingNewLine]", 
+    \(\(\[CapitalDelta]matm[
+          t_] := \(tstParameters[t]\)\[LeftDoubleBracket]2, 
+              3\[RightDoubleBracket]^2 - \(tstParameters[
+                t]\)\[LeftDoubleBracket]2, 
+              2\[RightDoubleBracket]^2;\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(xMS0 = \(RGEGetTransitions[]\)[\([5, 1]\)]; 
+    xMS1 = \(RGEGetTransitions[]\)[\([2, 1]\)];\), "\[IndentingNewLine]", 
+    \(\(xMS2 = \(RGEGetTransitions[]\)[\([3, 
+            1]\)];\)\), "\[IndentingNewLine]", 
+    \(xMS3 = \(RGEGetTransitions[]\)[\([4, 1]\)]; 
+    Plot[{\(tstMNSParameters[
+            t\ Log[10]]\)\[LeftDoubleBracket]1\[RightDoubleBracket], \
+\(tstMNSParameters[
+            t\ Log[10]]\)\[LeftDoubleBracket]2\[RightDoubleBracket], \
+\(tstMNSParameters[
+            t\ Log[10]]\)\[LeftDoubleBracket]3\[RightDoubleBracket]}, {t, 2, 
+        16}, FrameLabel \[Rule] {\*"\"\<\!\(log\_10\)\[Mu]\>\"", \*"\"\<\!\(\
+\[Theta]\_ij\)\>\""}, 
+      PlotStyle \[Rule] {GrayLevel[0], Hue[0], GrayLevel[0.4]}, 
+      GridLines \[Rule] {{Log[10, xMS0], Log[10, xMS1], Log[10, xMS2], 
+            Log[10, xMS3]}, {}}];\), "\[IndentingNewLine]", 
+    \(\(plotAngles = 
+        Plot[{\(tstMNSParameters[
+                t\ Log[10]]\)\[LeftDoubleBracket]1\[RightDoubleBracket], \
+\(tstMNSParameters[
+                t\ Log[10]]\)\[LeftDoubleBracket]2\[RightDoubleBracket], \
+\(tstMNSParameters[
+                t\ Log[10]]\)\[LeftDoubleBracket]3\[RightDoubleBracket]}, {t, 
+            2, 16}, FrameLabel \[Rule] {\*"\"\<\!\(log\_10\)\[Mu]\>\"", \*"\"\
+\<\!\(\[Theta]\_ij\)\>\""}, 
+          PlotStyle \[Rule] {GrayLevel[0], Hue[0], 
+              GrayLevel[0.4]}];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(plotPhases = 
+        Plot[{\(tstMNSParameters[
+                t\ Log[10]]\)\[LeftDoubleBracket]4\[RightDoubleBracket], \
+\(tstMNSParameters[
+                t\ Log[10]]\)\[LeftDoubleBracket]8\[RightDoubleBracket], \
+\(tstMNSParameters[
+                t\ Log[10]]\)\[LeftDoubleBracket]9\[RightDoubleBracket]}, {t, 
+            2, 16}, FrameLabel \[Rule] {\*"\"\<\!\(log\_10\)\[Mu]\>\"", \*"\"\
+\<\[Delta],\!\(\[CurlyPhi]\_i\)\>\""}, 
+          PlotStyle \[Rule] {GrayLevel[0], Hue[0], 
+              GrayLevel[0.4]}];\)\), "\[IndentingNewLine]", 
+    \(\(plotMasses = 
+        Plot[{\(tstParameters[t\ Log[10]]\)\[LeftDoubleBracket]2, 
+              1\[RightDoubleBracket], \(tstParameters[
+                t\ Log[10]]\)\[LeftDoubleBracket]2, 
+              2\[RightDoubleBracket], \(tstParameters[
+                t\ Log[10]]\)\[LeftDoubleBracket]2, 
+              3\[RightDoubleBracket]}, {t, 2, 16}, 
+          FrameLabel \[Rule] {\*"\"\<\!\(log\_10\)\[Mu]\>\"", \*"\"\<\!\(m\_i\
+\)\>\""}, 
+          PlotStyle \[Rule] {GrayLevel[0], Hue[0], 
+              GrayLevel[0.4]}];\)\), "\[IndentingNewLine]", 
+    \(\(plot\[CapitalDelta]m = 
+        Plot[{\[CapitalDelta]msol[t\ Log[10]], \[CapitalDelta]matm[
+              t\ Log[10]]}, {t, 2, 16}, 
+          FrameLabel \[Rule] {\*"\"\<\!\(log\_10\)\[Mu]\>\"", \*"\"\<\!\(\
+\[CapitalDelta]m\_sol\),\!\(\[CapitalDelta]m\_atm\)\>\""}, 
+          PlotStyle \[Rule] {GrayLevel[0], Hue[0]}];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(Show[shadowEFT[Sort[Log[10, {xMS0, xMS1, xMS2, xMS3, 10\^17}]]], 
+      plotAngles, Frame \[Rule] True, 
+      PlotRange \[Rule] {{2, 16.5}, {\(-5\), 60}}, AxesFront \[Rule] True, 
+      FrameLabel \[Rule] {\*"\"\<\!\(log\_10\)\[ThinSpace]\[Mu] [GeV]\>\"", \
+\*"\"\<\!\(\[Theta]\_ij\)\!\([\^\[EmptySmallCircle]\)]\>\""}, 
+      FrameTicks \[Rule] {logTicksLabeled[2, 16], Automatic, logTicks[2, 16], 
+          Automatic}, ImageSize \[Rule] 400]\)], "Input"],
+
+Cell[BoxData[
+    \(Show[shadowEFT[Sort[Log[10, {xMS0, xMS1, xMS2, xMS3, 10\^17}]]], 
+      plotAngles, Frame \[Rule] True, 
+      PlotRange \[Rule] {{2, 16.5}, Automatic}, AxesFront \[Rule] True, 
+      FrameLabel \[Rule] {\*"\"\<\!\(log\_10\)\[ThinSpace]\[Mu] [GeV]\>\"", \
+\*"\"\<\[Delta],\!\(\[CurlyPhi]\_i\)\!\([\^\[EmptySmallCircle]\)]\>\""}, 
+      FrameTicks \[Rule] {logTicksLabeled[2, 16], Automatic, logTicks[2, 16], 
+          Automatic}, ImageSize \[Rule] 400]\)], "Input"],
+
+Cell[BoxData[
+    \(Show[shadowEFT[Sort[Log[10, {xMS0, xMS1, xMS2, xMS3, 10\^17}]]], 
+      plotMasses, Frame \[Rule] True, 
+      PlotRange \[Rule] {{2, 16.5}, Automatic}, AxesFront \[Rule] True, 
+      FrameLabel \[Rule] {\*"\"\<\!\(log\_10\)\[ThinSpace]\[Mu] [GeV]\>\"", \
+\*"\"\<\!\(m\_i\)[eV]\>\""}, 
+      FrameTicks \[Rule] {logTicksLabeled[2, 16], Automatic, logTicks[2, 16], 
+          Automatic}, ImageSize \[Rule] 400]\)], "Input"],
+
+Cell[BoxData[
+    \(Show[shadowEFT[Sort[Log[10, {xMS0, xMS1, xMS2, xMS3, 10\^17}]]], 
+      plot\[CapitalDelta]m, Frame \[Rule] True, 
+      PlotRange \[Rule] {{2, 16.5}, Automatic}, AxesFront \[Rule] True, 
+      FrameLabel \[Rule] {\*"\"\<\!\(log\_10\)\[ThinSpace]\[Mu] [GeV]\>\"", \
+\*"\"\<\!\(\[CapitalDelta]m\_sol\),\!\(\[CapitalDelta]m\_atm\)[eV^2]\>\""}, 
+      FrameTicks \[Rule] {logTicksLabeled[2, 16], Automatic, logTicks[2, 16], 
+          Automatic}, ImageSize \[Rule] 400]\)], "Input"],
+
+Cell[BoxData[
+    \(\(tstMNSParameters[
+        15.868015\ Log[
+            10]]\)\[LeftDoubleBracket]1\[RightDoubleBracket]\)], "Input"],
+
+Cell[BoxData[
+    \(tstMNSParameters[2\ Log[10]]\)], "Input"],
+
+Cell[BoxData[{
+    \(\(ClearAll[tst\[Theta]12prime, 
+        tst\[Theta]12primeNum];\)\), "\[IndentingNewLine]", 
+    \(\(tst\[Theta]12prime[
+          t_] := \[IndentingNewLine]Module[{},  (*\(Print[\(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]1\[RightDoubleBracket], "\<, \>", \
+\(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]2\[RightDoubleBracket], "\<, \>", \
+\(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]3\[RightDoubleBracket], "\<, \>", \
+\(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]4\[RightDoubleBracket], "\<, \>", \
+\(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]5\[RightDoubleBracket], "\<, \>", \
+\(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]6\[RightDoubleBracket], "\<, \>", \
+\(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]7\[RightDoubleBracket], "\<, \>", \
+\(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]8\[RightDoubleBracket], "\<, \>", \
+\(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]9\[RightDoubleBracket], "\<, \>", \
+\(Eigenvalues[tstm\[Nu][
+                      t]]\)\[LeftDoubleBracket]1\[RightDoubleBracket], "\<, \
+\>", \(Eigenvalues[tstm\[Nu][
+                      t]]\)\[LeftDoubleBracket]1\[RightDoubleBracket], "\<, \
+\>", \(Eigenvalues[tstm\[Nu][
+                      t]]\)\[LeftDoubleBracket]1\[RightDoubleBracket], "\<, \
+\>", \(tstYe[t]\)\[LeftDoubleBracket]1, 
+                  1\[RightDoubleBracket], "\<, \>", \(tstYe[
+                    t]\)\[LeftDoubleBracket]2, 
+                  2\[RightDoubleBracket], "\<, \>", \(tstYe[
+                    t]\)\[LeftDoubleBracket]3, 
+                  3\[RightDoubleBracket]];\)*) \[IndentingNewLine]Return[\
+\[Theta]12PrimeMSSM[\(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]1\[RightDoubleBracket]*
+                Degree, \(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]2\[RightDoubleBracket]*
+                Degree, \(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]3\[RightDoubleBracket]*
+                Degree, \(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]4\[RightDoubleBracket]*
+                Degree, \(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]5\[RightDoubleBracket]*
+                Degree, \(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]6\[RightDoubleBracket]*
+                Degree, \(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]7\[RightDoubleBracket]*
+                Degree, \(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]8\[RightDoubleBracket]*
+                Degree, \(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]9\[RightDoubleBracket]*
+                Degree, \(Eigenvalues[
+                  tstm\[Nu][
+                    t]]\)\[LeftDoubleBracket]3\[RightDoubleBracket], \
+\(Eigenvalues[tstm\[Nu][
+                    t]]\)\[LeftDoubleBracket]2\[RightDoubleBracket], \
+\(Eigenvalues[tstm\[Nu][
+                    t]]\)\[LeftDoubleBracket]1\[RightDoubleBracket], \(tstYe[
+                  t]\)\[LeftDoubleBracket]1, 
+                1\[RightDoubleBracket], \(tstYe[t]\)\[LeftDoubleBracket]2, 
+                2\[RightDoubleBracket], \(tstYe[t]\)\[LeftDoubleBracket]3, 
+                3\[RightDoubleBracket]]]];\)\), "\[IndentingNewLine]", 
+    \(\(tst\[Theta]12primeNum[
+          t_] := \(1\/\(0.0002*\(360/2\)/Pi\)\) \((\(tstMNSParameters[
+                  t + 0.0001]\)\[LeftDoubleBracket]1\[RightDoubleBracket] - \
+\(tstMNSParameters[
+                  t - 0.0001]\)\[LeftDoubleBracket]1\[RightDoubleBracket])\);\
+\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(tst2\[Theta]12primeNum[
+          t_] := \(1\/\(0.0002*\(360/2\)/Pi\)\) \((\(tst2[
+                  t + 0.0001]\)\[LeftDoubleBracket]1\[RightDoubleBracket] - \
+\(tst2[t - 
+                    0.0001]\)\[LeftDoubleBracket]1\[RightDoubleBracket])\);\)\
+\)], "Input"],
+
+Cell[BoxData[{
+    \(\(ClearAll[tst\[Theta]23prime, 
+        tst\[Theta]23primeNum];\)\), "\[IndentingNewLine]", 
+    \(\(tst\[Theta]23prime[
+          t_] := \[IndentingNewLine]Module[{},  (*\(Print[\(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]1\[RightDoubleBracket], "\<, \>", \
+\(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]2\[RightDoubleBracket], "\<, \>", \
+\(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]3\[RightDoubleBracket], "\<, \>", \
+\(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]4\[RightDoubleBracket], "\<, \>", \
+\(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]5\[RightDoubleBracket], "\<, \>", \
+\(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]6\[RightDoubleBracket], "\<, \>", \
+\(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]7\[RightDoubleBracket], "\<, \>", \
+\(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]8\[RightDoubleBracket], "\<, \>", \
+\(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]9\[RightDoubleBracket], "\<, \>", \
+\(Eigenvalues[tstm\[Nu][
+                      t]]\)\[LeftDoubleBracket]1\[RightDoubleBracket], "\<, \
+\>", \(Eigenvalues[tstm\[Nu][
+                      t]]\)\[LeftDoubleBracket]1\[RightDoubleBracket], "\<, \
+\>", \(Eigenvalues[tstm\[Nu][
+                      t]]\)\[LeftDoubleBracket]1\[RightDoubleBracket], "\<, \
+\>", \(tstYe[t]\)\[LeftDoubleBracket]1, 
+                  1\[RightDoubleBracket], "\<, \>", \(tstYe[
+                    t]\)\[LeftDoubleBracket]2, 
+                  2\[RightDoubleBracket], "\<, \>", \(tstYe[
+                    t]\)\[LeftDoubleBracket]3, 
+                  3\[RightDoubleBracket]];\)*) \[IndentingNewLine]Return[\
+\[Theta]23PrimeMSSM[\(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]1\[RightDoubleBracket]*
+                Degree, \(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]2\[RightDoubleBracket]*
+                Degree, \(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]3\[RightDoubleBracket]*
+                Degree, \(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]4\[RightDoubleBracket]*
+                Degree, \(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]5\[RightDoubleBracket]*
+                Degree, \(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]6\[RightDoubleBracket]*
+                Degree, \(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]7\[RightDoubleBracket]*
+                Degree, \(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]8\[RightDoubleBracket]*
+                Degree, \(tstMNSParameters[
+                    t]\)\[LeftDoubleBracket]9\[RightDoubleBracket]*
+                Degree, \(Eigenvalues[
+                  tstm\[Nu][
+                    t]]\)\[LeftDoubleBracket]3\[RightDoubleBracket], \
+\(Eigenvalues[tstm\[Nu][
+                    t]]\)\[LeftDoubleBracket]2\[RightDoubleBracket], \
+\(Eigenvalues[tstm\[Nu][
+                    t]]\)\[LeftDoubleBracket]1\[RightDoubleBracket], \(tstYe[
+                  t]\)\[LeftDoubleBracket]1, 
+                1\[RightDoubleBracket], \(tstYe[t]\)\[LeftDoubleBracket]2, 
+                2\[RightDoubleBracket], \(tstYe[t]\)\[LeftDoubleBracket]3, 
+                3\[RightDoubleBracket]]]];\)\), "\[IndentingNewLine]", 
+    \(\(tst\[Theta]23primeNum[
+          t_] := \(1\/\(0.0002*\(360/2\)/Pi\)\) \((\(tstMNSParameters[
+                  t + 0.0001]\)\[LeftDoubleBracket]3\[RightDoubleBracket] - \
+\(tstMNSParameters[
+                  t - 0.0001]\)\[LeftDoubleBracket]3\[RightDoubleBracket])\);\
+\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(tst\[Theta]12prime[4\ Log[10]]\), "\[IndentingNewLine]", 
+    \(tst\[Theta]12primeNum[4\ Log[10]]\), "\[IndentingNewLine]", 
+    \(tst\[Theta]12prime[4\ Log[10]]/
+      tst\[Theta]12primeNum[4\ Log[10]]\), "\[IndentingNewLine]", 
+    \(N[Log[10]]\)}], "Input"],
+
+Cell[BoxData[
+    \(\(Plot[{tst\[Theta]12prime[t\ Log[10]], 
+          tst\[Theta]12primeNum[t\ Log[10]]}, {t, 3.0001, 12}, 
+        PlotStyle \[Rule] {GrayLevel[0], Hue[0]}];\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(Plot[{tst\[Theta]23prime[t\ Log[10]], 
+          tst\[Theta]23primeNum[t\ Log[10]]}, {t, 3.0001, 12}, 
+        PlotStyle \[Rule] {GrayLevel[0], Hue[0]}];\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(Plot[tst\[Theta]12prime[t\ Log[10]], {t, 4, 12}];\)\)], "Input"],
+
+Cell[BoxData[
+    \(Plot[
+      tst\[Theta]12primeNum[t\ Log[10]]/tst\[Theta]12prime[t\ Log[10]], {t, 
+        3.0001, 12}]\)], "Input"],
+
+Cell[BoxData[
+    \(\(PrintMatrix[scale_, type_] := 
+        Module[{lMatrix, lMax}, \[IndentingNewLine]lMatrix = 
+            RGEGetSolution[scale, type]; \[IndentingNewLine]lMax = 
+            Max[Abs[Eigenvalues[lMatrix]]]; \[IndentingNewLine]If[
+            lMax > 0, \[IndentingNewLine]\ \ \ \ Print["\<=\>", lMax "\<*\>", 
+              lMatrix/lMax // 
+                MatrixForm], \[IndentingNewLine]\ \ \ \ \(Print["\<=\>", 
+                lMatrix // 
+                  MatrixForm];\)\[IndentingNewLine]];\[IndentingNewLine]];\)\)\
+], "Input"],
+
+Cell[BoxData[
+    \(\(?RGEMass\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(PrintMatrix[2\ 10^16, RGEYe];\)\)], "Input"],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+Comparison of the numerical results with the analytical formulae \
+for the mixing angles in the full theory\
+\>", "Subsection"],
+
+Cell[BoxData[{
+    \(\(<< MassRen/AltAnalyticRunningAbove.m;\)\), "\[IndentingNewLine]", 
+    \(\(<< MassRen/ApproxAnalyticFormulaeAbove.m;\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(ClearAll[Mnu, Ye, Ynu, P, MixingPars, MixingParsLogScale, Unu, Mdiag, 
+      MdiagLogScale]\), "\n", 
+    \(Mnu[mu_] := RGEGetSolution[mu, RGEM\[Nu]] // Chop\), "\n", 
+    \(Ye[mu_] := RGEGetSolution[mu, RGEYe] // Chop\), "\n", 
+    \(Ynu[mu_] := RGEGetSolution[mu, RGEY\[Nu]]\), "\n", 
+    \(P[t_] := 
+      Dagger[Ynu[Exp[t]]] . Ynu[Exp[t]] + 
+        Dagger[Ye[Exp[t]]] . Ye[Exp[t]]\), "\[IndentingNewLine]", 
+    \(F[t_] := 
+      Dagger[Ynu[Exp[t]]] . Ynu[Exp[t]] + 
+        3\ Dagger[Ye[Exp[t]]] . Ye[Exp[t]]\), "\[IndentingNewLine]", 
+    \(MixingPars[
+        mu_] := \(MNSParameters[Mnu[mu], 
+          Ye[mu]]\)\[LeftDoubleBracket]1\[RightDoubleBracket]\), "\n", 
+    \(MixingParsLogScale[t_] := MixingPars[Exp[t]]\), "\[IndentingNewLine]", 
+    \(Unu[mu_] := MPT3x3NeutrinoMixingMatrix[Mnu[mu]]\), "\n", 
+    \(Mdiag[mu_] := Transpose[Unu[mu]] . Mnu[mu] . Unu[mu] // Chop\), "\n", 
+    \(\(\(MdiagLogScale[t_] := Mdiag[Exp[t]]\)\(\[IndentingNewLine]\)
+    \) (*\ 
+      Mixing\ parameters\ from\ the\ neutrino\ mass\ matrix\ *) \), "\
+\[IndentingNewLine]", 
+    \(ClearAll[NuMixingPars, NuMixingParsLogScale, NuMixingParsDotNum, 
+      LeptMixingPars, LeptMixingParsLogScale, Ue, LeptYukawas, 
+      LeptYukawasLogScale]\), "\[IndentingNewLine]", 
+    \(NuMixingPars[mu_] := 
+      MPT3x3MixingParameters[MPT3x3NeutrinoMixingMatrix[Mnu[mu]]]\), "\n", 
+    \(\(\(NuMixingParsLogScale[t_] := 
+      NuMixingPars[Exp[t]]\)\(\[IndentingNewLine]\)
+    \) (*\ 
+      Mixing\ parameters\ from\ the\ charged\ lepton\ Yukawa\ matrix\ *) \), \
+"\[IndentingNewLine]", 
+    \(Ue[mu_] := MPT3x3MixingMatrixL[Ye[mu]]\), "\[IndentingNewLine]", 
+    \(LeptMixingPars[mu_] := MPT3x3MixingParameters[Ue[mu]]\), "\n", 
+    \(LeptMixingParsLogScale[t_] := 
+      LeptMixingPars[Exp[t]]\), "\[IndentingNewLine]", 
+    \(LeptYukawas[
+        mu_] := \(MNSParameters[Mnu[mu], 
+          Ye[mu]]\)\[LeftDoubleBracket]3\[RightDoubleBracket]\), "\
+\[IndentingNewLine]", 
+    \(LeptYukawasLogScale[t_] := LeptYukawas[Exp[t]]\)}], "Input"],
+
+Cell[BoxData[
+    \(\(\( (*\ 
+      Calculate\ the\ derivatives\ of\ the\ angles\ and\ phases\ numerically\ \
+*) \)\(\[IndentingNewLine]\)\(ClearAll[h, 
+      MixingParsDotNum]\[IndentingNewLine]
+    \(h = 0.01;\)\[IndentingNewLine]
+    MixingParsDotNum[
+        t_] := \((MixingParsLogScale[t + h/2] - 
+            MixingParsLogScale[t - h/2])\)/h\)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\( (*\ 
+      Calculate\ the\ derivatives\ from\ the\ analytical\ formulae\ for\ \
+\[Theta]13 = 0\ *) \)\(\[IndentingNewLine]\)\(ClearAll[
+      MixingParsDotAn]\[IndentingNewLine]
+    MixingParsDotAn[
+        t_] := \[IndentingNewLine]\(({\[Theta]12Dot, \[Theta]13DotI + \
+\[Theta]13DotII, \[Theta]23DotI + \[Theta]23DotII} + \[Xi]EDotUXU\
+\[LeftDoubleBracket]{1, 2, 3}\[RightDoubleBracket])\) /. {reP11 \[Rule] \(P[
+                t]\)\[LeftDoubleBracket]1, 1\[RightDoubleBracket], 
+          reP22 \[Rule] \(P[t]\)\[LeftDoubleBracket]2, 
+              2\[RightDoubleBracket], 
+          reP33 \[Rule] \(P[t]\)\[LeftDoubleBracket]3, 
+              3\[RightDoubleBracket], \[IndentingNewLine]reP21 \[Rule] 
+            Re[\(P[t]\)\[LeftDoubleBracket]2, 1\[RightDoubleBracket]], 
+          reP31 \[Rule] 
+            Re[\(P[t]\)\[LeftDoubleBracket]3, 1\[RightDoubleBracket]], 
+          reP32 \[Rule] 
+            Re[\(P[t]\)\[LeftDoubleBracket]3, 
+                2\[RightDoubleBracket]], \[IndentingNewLine]imP21 \[Rule] 
+            Im[\(P[t]\)\[LeftDoubleBracket]2, 1\[RightDoubleBracket]], 
+          imP31 \[Rule] 
+            Im[\(P[t]\)\[LeftDoubleBracket]3, 1\[RightDoubleBracket]], 
+          imP32 \[Rule] 
+            Im[\(P[t]\)\[LeftDoubleBracket]3, 
+                2\[RightDoubleBracket]], \[IndentingNewLine]reF11 \[Rule] \(F[
+                t]\)\[LeftDoubleBracket]1, 1\[RightDoubleBracket], 
+          reF22 \[Rule] \(F[t]\)\[LeftDoubleBracket]2, 
+              2\[RightDoubleBracket], 
+          reF33 \[Rule] \(F[t]\)\[LeftDoubleBracket]3, 
+              3\[RightDoubleBracket], \[IndentingNewLine]reF21 \[Rule] 
+            Re[\(F[t]\)\[LeftDoubleBracket]2, 1\[RightDoubleBracket]], 
+          reF31 \[Rule] 
+            Re[\(F[t]\)\[LeftDoubleBracket]3, 1\[RightDoubleBracket]], 
+          reF32 \[Rule] 
+            Re[\(F[t]\)\[LeftDoubleBracket]3, 
+                2\[RightDoubleBracket]], \[IndentingNewLine]imF21 \[Rule] 
+            Im[\(F[t]\)\[LeftDoubleBracket]2, 1\[RightDoubleBracket]], 
+          imF31 \[Rule] 
+            Im[\(F[t]\)\[LeftDoubleBracket]3, 1\[RightDoubleBracket]], 
+          imF32 \[Rule] 
+            Im[\(F[t]\)\[LeftDoubleBracket]3, 
+                2\[RightDoubleBracket]], \[IndentingNewLine]\[Theta]12 \
+\[Rule] \(MixingParsLogScale[
+                t]\)\[LeftDoubleBracket]1\[RightDoubleBracket], \
+\[IndentingNewLine]\[Theta]13 \[Rule] 
+            0, \[IndentingNewLine]\[Theta]23 \[Rule] \(MixingParsLogScale[
+                t]\)\[LeftDoubleBracket]3\[RightDoubleBracket], \[Delta] \
+\[Rule] \(MixingParsLogScale[
+                t]\)\[LeftDoubleBracket]4\[RightDoubleBracket], \
+\[IndentingNewLine]\[Delta]e \[Rule] 0, \[Delta]\[Mu] \[Rule] 
+            0, \[Delta]\[Tau] \[Rule] 
+            0, \[IndentingNewLine]\[CurlyPhi]1 \[Rule] \(MixingParsLogScale[
+                t]\)\[LeftDoubleBracket]8\[RightDoubleBracket], \[CurlyPhi]2 \
+\[Rule] \(MixingParsLogScale[
+                t]\)\[LeftDoubleBracket]9\[RightDoubleBracket], \
+\[IndentingNewLine]m1 \[Rule] \(MdiagLogScale[t]\)\[LeftDoubleBracket]1, 
+              1\[RightDoubleBracket], 
+          m2 \[Rule] \(MdiagLogScale[t]\)\[LeftDoubleBracket]2, 
+              2\[RightDoubleBracket], 
+          m3 \[Rule] \(MdiagLogScale[t]\)\[LeftDoubleBracket]3, 
+              3\[RightDoubleBracket]\[IndentingNewLine]}\)\)\)], "Input"],
+
+Cell[BoxData[{
+    \(ClearAll[RelativeErrors]\), "\[IndentingNewLine]", 
+    \(\(RelativeErrors = 
+        Table[\((\(MixingParsDotNum[t]\)\[LeftDoubleBracket]
+                    i\[RightDoubleBracket] - \(MixingParsDotAn[
+                      t]\)\[LeftDoubleBracket]
+                    i\[RightDoubleBracket])\)/\(MixingParsDotNum[
+                  t]\)\[LeftDoubleBracket]i\[RightDoubleBracket], {i, 3}, {t, 
+              Log[6*10^14], Log[2*10^16], 0.5}] // Chop;\)\), "\n", 
+    \(RelativeErrors\[LeftDoubleBracket]1\[RightDoubleBracket]\), "\n", 
+    \(RelativeErrors\[LeftDoubleBracket]2\[RightDoubleBracket]\), "\n", 
+    \(RelativeErrors\[LeftDoubleBracket]3\[RightDoubleBracket]\)}], "Input"],
+
+Cell[BoxData[
+    \(\(\( (*\ 
+      Derivatives\ from\ the\ analytical\ formulae\ for\ arbitrary\ \
+\[Theta]13\ \((Ye\ is\ continuously\ rediagonalized, 
+          the\ unphysical\ phases\ are\ absorbed\ into\ P\ and\ \
+\(\(F\)\(.\)\))\)\ \[IndentingNewLine]This\ should\ yield\ a\ perfect\ \
+\(\(agreement\)\(.\)\)\ *) \)\(\[IndentingNewLine]\)\(ClearAll[
+      MixingParsDotAnArbt13, KR, Pnew, Fnew]\[IndentingNewLine]
+    \(KR[t_] := 
+        DiagonalMatrix[
+          Exp[I*\(MixingParsLogScale[t]\)\[LeftDoubleBracket]{5, 6, 
+                  7}\[RightDoubleBracket]]];\)\[IndentingNewLine]
+    \(Pnew[t_] := 
+        Dagger[KR[t]] . Dagger[Ue[Exp[t]]] . P[t] . Ue[Exp[t]] . 
+          KR[t];\)\[IndentingNewLine]
+    \(Fnew[t_] := 
+        Dagger[KR[t]] . Dagger[Ue[Exp[t]]] . F[t] . Ue[Exp[t]] . 
+          KR[t];\)\[IndentingNewLine]
+    MixingParsDotAnArbt13[
+        t_] := \((u + \[Xi]EDot)\) \
+/. \[IndentingNewLine]{\[IndentingNewLine]reP11 \[Rule] \(Pnew[
+                t]\)\[LeftDoubleBracket]1, 1\[RightDoubleBracket], 
+          reP22 \[Rule] \(Pnew[t]\)\[LeftDoubleBracket]2, 
+              2\[RightDoubleBracket], 
+          reP33 \[Rule] \(Pnew[t]\)\[LeftDoubleBracket]3, 
+              3\[RightDoubleBracket], \[IndentingNewLine]reP21 \[Rule] 
+            Re[\(Pnew[t]\)\[LeftDoubleBracket]2, 1\[RightDoubleBracket]], 
+          reP31 \[Rule] 
+            Re[\(Pnew[t]\)\[LeftDoubleBracket]3, 1\[RightDoubleBracket]], 
+          reP32 \[Rule] 
+            Re[\(Pnew[t]\)\[LeftDoubleBracket]3, 
+                2\[RightDoubleBracket]], \[IndentingNewLine]imP21 \[Rule] 
+            Im[\(Pnew[t]\)\[LeftDoubleBracket]2, 1\[RightDoubleBracket]], 
+          imP31 \[Rule] 
+            Im[\(Pnew[t]\)\[LeftDoubleBracket]3, 1\[RightDoubleBracket]], 
+          imP32 \[Rule] 
+            Im[\(Pnew[t]\)\[LeftDoubleBracket]3, 
+                2\[RightDoubleBracket]], \[IndentingNewLine]reF11 \[Rule] \
+\(Fnew[t]\)\[LeftDoubleBracket]1, 1\[RightDoubleBracket], 
+          reF22 \[Rule] \(Fnew[t]\)\[LeftDoubleBracket]2, 
+              2\[RightDoubleBracket], 
+          reF33 \[Rule] \(Fnew[t]\)\[LeftDoubleBracket]3, 
+              3\[RightDoubleBracket], \[IndentingNewLine]reF21 \[Rule] 
+            Re[\(Fnew[t]\)\[LeftDoubleBracket]2, 1\[RightDoubleBracket]], 
+          reF31 \[Rule] 
+            Re[\(Fnew[t]\)\[LeftDoubleBracket]3, 1\[RightDoubleBracket]], 
+          reF32 \[Rule] 
+            Re[\(Fnew[t]\)\[LeftDoubleBracket]3, 
+                2\[RightDoubleBracket]], \[IndentingNewLine]imF21 \[Rule] 
+            Im[\(Fnew[t]\)\[LeftDoubleBracket]2, 1\[RightDoubleBracket]], 
+          imF31 \[Rule] 
+            Im[\(Fnew[t]\)\[LeftDoubleBracket]3, 1\[RightDoubleBracket]], 
+          imF32 \[Rule] 
+            Im[\(Fnew[t]\)\[LeftDoubleBracket]3, 
+                2\[RightDoubleBracket]], \[IndentingNewLine]\[Theta]12 \
+\[Rule] \(MixingParsLogScale[
+                t]\)\[LeftDoubleBracket]1\[RightDoubleBracket], \[Theta]13 \
+\[Rule] \(MixingParsLogScale[
+                t]\)\[LeftDoubleBracket]2\[RightDoubleBracket], \[Theta]23 \
+\[Rule] \(MixingParsLogScale[
+                t]\)\[LeftDoubleBracket]3\[RightDoubleBracket], \
+\[IndentingNewLine]\[Delta] \[Rule] \(MixingParsLogScale[
+                t]\)\[LeftDoubleBracket]4\[RightDoubleBracket], \
+\[IndentingNewLine]\[Delta]e \[Rule] 0, \[Delta]\[Mu] \[Rule] 
+            0, \[Delta]\[Tau] \[Rule] 
+            0, \[IndentingNewLine]\[CurlyPhi]1 \[Rule] \(MixingParsLogScale[
+                t]\)\[LeftDoubleBracket]8\[RightDoubleBracket], \[CurlyPhi]2 \
+\[Rule] \(MixingParsLogScale[
+                t]\)\[LeftDoubleBracket]9\[RightDoubleBracket], \
+\[IndentingNewLine]m1 \[Rule] \(MdiagLogScale[t]\)\[LeftDoubleBracket]1, 
+              1\[RightDoubleBracket], 
+          m2 \[Rule] \(MdiagLogScale[t]\)\[LeftDoubleBracket]2, 
+              2\[RightDoubleBracket], 
+          m3 \[Rule] \(MdiagLogScale[t]\)\[LeftDoubleBracket]3, 
+              3\[RightDoubleBracket], \[IndentingNewLine]ye \[Rule] \
+\(LeptYukawasLogScale[t]\)\[LeftDoubleBracket]1\[RightDoubleBracket], 
+          y\[Mu] \[Rule] \(LeptYukawasLogScale[
+                t]\)\[LeftDoubleBracket]2\[RightDoubleBracket], 
+          y\[Tau] \[Rule] \(LeptYukawasLogScale[
+                t]\)\[LeftDoubleBracket]3\[RightDoubleBracket]\
+\[IndentingNewLine]}\)\)\)], "Input"],
+
+Cell[BoxData[{
+    \(ClearAll[RelativeErrorsArbt13]\), "\[IndentingNewLine]", 
+    \(\(RelativeErrorsArbt13 = 
+        Table[\((\(MixingParsDotNum[t]\)\[LeftDoubleBracket]
+                    i\[RightDoubleBracket] - \(MixingParsDotAnArbt13[
+                      t]\)\[LeftDoubleBracket]
+                    i\[RightDoubleBracket])\)/\(MixingParsDotNum[
+                  t]\)\[LeftDoubleBracket]i\[RightDoubleBracket], {i, 9}, {t, 
+              Log[6*10^14], Log[2*10^16], 0.5}] // Chop;\)\), "\n", 
+    \(RelativeErrorsArbt13\[LeftDoubleBracket]1\[RightDoubleBracket]\), "\n", \
+
+    \(RelativeErrorsArbt13\[LeftDoubleBracket]2\[RightDoubleBracket]\), "\n", \
+
+    \(RelativeErrorsArbt13\[LeftDoubleBracket]3\[RightDoubleBracket]\), "\
+\[IndentingNewLine]", 
+    \(RelativeErrorsArbt13\[LeftDoubleBracket]8\[RightDoubleBracket]\), "\
+\[IndentingNewLine]", 
+    \(RelativeErrorsArbt13\[LeftDoubleBracket]9\[RightDoubleBracket]\)}], \
+"Input"],
+
+Cell[BoxData[
+    \(\(\( (*\ 
+      Alternative\ \(calculation : \ We\ do\ not\ rediagonalize\ Ye\); 
+      the\ Y\[Nu]\ contribution\ to\ the\ running\ is\ calculated\ using\ the\
+\ mixings\ in\ m\[Nu], 
+      and\ the\ Ye\ contribution\ \(("\<back reaction\>")\)\ is\ calculated\ \
+using\ the\ mixings\ in\ Ye . \ 
+          The\ results\ show\ that\ this\ method\ is\ less\ \(\(accurate\)\(.\
+\)\)\ *) \)\(\[IndentingNewLine]\)\(ClearAll[
+      MixingParsDotAnArbt13Alt]\[IndentingNewLine]
+    MixingParsDotAnArbt13Alt[
+        t_] := \((u\[LeftDoubleBracket]{1, 2, 
+                3}\[RightDoubleBracket] /. \[IndentingNewLine]{\
+\[IndentingNewLine]reP11 \[Rule] \(P[t]\)\[LeftDoubleBracket]1, 
+                  1\[RightDoubleBracket], 
+              reP22 \[Rule] \(P[t]\)\[LeftDoubleBracket]2, 
+                  2\[RightDoubleBracket], 
+              reP33 \[Rule] \(P[t]\)\[LeftDoubleBracket]3, 
+                  3\[RightDoubleBracket], \[IndentingNewLine]reP21 \[Rule] 
+                Re[\(P[t]\)\[LeftDoubleBracket]2, 1\[RightDoubleBracket]], 
+              reP31 \[Rule] 
+                Re[\(P[t]\)\[LeftDoubleBracket]3, 1\[RightDoubleBracket]], 
+              reP32 \[Rule] 
+                Re[\(P[t]\)\[LeftDoubleBracket]3, 
+                    2\[RightDoubleBracket]], \[IndentingNewLine]imP21 \[Rule] 
+                Im[\(P[t]\)\[LeftDoubleBracket]2, 1\[RightDoubleBracket]], 
+              imP31 \[Rule] 
+                Im[\(P[t]\)\[LeftDoubleBracket]3, 1\[RightDoubleBracket]], 
+              imP32 \[Rule] 
+                Im[\(P[t]\)\[LeftDoubleBracket]3, 
+                    2\[RightDoubleBracket]], \[IndentingNewLine]\[Theta]12 \
+\[Rule] \(NuMixingParsLogScale[
+                    t]\)\[LeftDoubleBracket]1\[RightDoubleBracket], \
+\[Theta]13 \[Rule] \(NuMixingParsLogScale[
+                    t]\)\[LeftDoubleBracket]2\[RightDoubleBracket], \
+\[Theta]23 \[Rule] \(NuMixingParsLogScale[
+                    t]\)\[LeftDoubleBracket]3\[RightDoubleBracket], \
+\[IndentingNewLine]\[Delta] \[Rule] \(NuMixingParsLogScale[
+                    t]\)\[LeftDoubleBracket]4\[RightDoubleBracket], \
+\[IndentingNewLine]\[CurlyPhi]1 \[Rule] \(NuMixingParsLogScale[
+                    t]\)\[LeftDoubleBracket]8\[RightDoubleBracket], \
+\[CurlyPhi]2 \[Rule] \(NuMixingParsLogScale[
+                    t]\)\[LeftDoubleBracket]9\[RightDoubleBracket], \
+\[IndentingNewLine]m1 \[Rule] \(MdiagLogScale[t]\)\[LeftDoubleBracket]1, 
+                  1\[RightDoubleBracket], 
+              m2 \[Rule] \(MdiagLogScale[t]\)\[LeftDoubleBracket]2, 
+                  2\[RightDoubleBracket], 
+              m3 \[Rule] \(MdiagLogScale[t]\)\[LeftDoubleBracket]3, 
+                  3\[RightDoubleBracket]\[IndentingNewLine]})\) + \
+\[IndentingNewLine]\((\[Xi]EDot\[LeftDoubleBracket]{1, 2, 
+                3}\[RightDoubleBracket] /. \[IndentingNewLine]{\
+\[IndentingNewLine]reF11 \[Rule] \(F[t]\)\[LeftDoubleBracket]1, 
+                  1\[RightDoubleBracket], 
+              reF22 \[Rule] \(F[t]\)\[LeftDoubleBracket]2, 
+                  2\[RightDoubleBracket], 
+              reF33 \[Rule] \(F[t]\)\[LeftDoubleBracket]3, 
+                  3\[RightDoubleBracket], \[IndentingNewLine]reF21 \[Rule] 
+                Re[\(F[t]\)\[LeftDoubleBracket]2, 1\[RightDoubleBracket]], 
+              reF31 \[Rule] 
+                Re[\(F[t]\)\[LeftDoubleBracket]3, 1\[RightDoubleBracket]], 
+              reF32 \[Rule] 
+                Re[\(F[t]\)\[LeftDoubleBracket]3, 
+                    2\[RightDoubleBracket]], \[IndentingNewLine]imF21 \[Rule] 
+                Im[\(F[t]\)\[LeftDoubleBracket]2, 1\[RightDoubleBracket]], 
+              imF31 \[Rule] 
+                Im[\(F[t]\)\[LeftDoubleBracket]3, 1\[RightDoubleBracket]], 
+              imF32 \[Rule] 
+                Im[\(F[t]\)\[LeftDoubleBracket]3, 
+                    2\[RightDoubleBracket]], \[IndentingNewLine]\[Theta]12 \
+\[Rule] \(LeptMixingParsLogScale[
+                    t]\)\[LeftDoubleBracket]1\[RightDoubleBracket], \
+\[Theta]13 \[Rule] \(LeptMixingParsLogScale[
+                    t]\)\[LeftDoubleBracket]2\[RightDoubleBracket], \
+\[Theta]23 \[Rule] \(LeptMixingParsLogScale[
+                    t]\)\[LeftDoubleBracket]3\[RightDoubleBracket], \
+\[IndentingNewLine]\[Delta] \[Rule] \(LeptMixingParsLogScale[
+                    t]\)\[LeftDoubleBracket]4\[RightDoubleBracket], \
+\[IndentingNewLine]\[Delta]e \[Rule] 0, \[Delta]\[Mu] \[Rule] 
+                0, \[Delta]\[Tau] \[Rule] 
+                0, \[IndentingNewLine]\[CurlyPhi]1 \[Rule] \
+\(LeptMixingParsLogScale[
+                    t]\)\[LeftDoubleBracket]8\[RightDoubleBracket], \
+\[CurlyPhi]2 \[Rule] \(LeptMixingParsLogScale[
+                    t]\)\[LeftDoubleBracket]9\[RightDoubleBracket], \
+\[IndentingNewLine]ye \[Rule] \(LeptYukawasLogScale[
+                    t]\)\[LeftDoubleBracket]1\[RightDoubleBracket], 
+              y\[Mu] \[Rule] \(LeptYukawasLogScale[
+                    t]\)\[LeftDoubleBracket]2\[RightDoubleBracket], 
+              y\[Tau] \[Rule] \(LeptYukawasLogScale[
+                    t]\)\[LeftDoubleBracket]3\[RightDoubleBracket]\
+\[IndentingNewLine]})\)\)\)\)], "Input"],
+
+Cell[BoxData[{
+    \(ClearAll[RelativeErrorsArbt13Alt]\), "\[IndentingNewLine]", 
+    \(\(RelativeErrorsArbt13Alt = 
+        Table[\((\(MixingParsDotNum[t]\)\[LeftDoubleBracket]
+                    i\[RightDoubleBracket] - \(MixingParsDotAnArbt13Alt[
+                      t]\)\[LeftDoubleBracket]
+                    i\[RightDoubleBracket])\)/\(MixingParsDotNum[
+                  t]\)\[LeftDoubleBracket]i\[RightDoubleBracket], {i, 3}, {t, 
+              Log[6*10^14], Log[2*10^16], 0.5}] // Chop;\)\), "\n", 
+    \(RelativeErrorsArbt13Alt\[LeftDoubleBracket]1\[RightDoubleBracket]\), "\n\
+", 
+    \(RelativeErrorsArbt13Alt\[LeftDoubleBracket]2\[RightDoubleBracket]\), "\n\
+", 
+    \(RelativeErrorsArbt13Alt\[LeftDoubleBracket]3\[RightDoubleBracket]\)}], \
+"Input"],
+
+Cell[BoxData[
+    \(\(\( (*\ 
+      Numerical\ derivatives\ of\ the\ angles\ and\ phases\ one\ obtains\ \
+from\ the\ neutrino\ mass\ matrix\ alone\ \((i . e . \ 
+                neglecting\ the\ contribution\ of\ Ye\ to\ V_MNS)\) . \
+\[IndentingNewLine]Of\ course\ this\ does\ not\ make\ a\ difference\ in\ the\ \
+example\ in\ this\ notebook, \ 
+      since\ Ye\ and\ Y\[Nu]\ are\ both\ \(\(diagonal\)\(.\)\)\ *) \)\(\
+\[IndentingNewLine]\)\(ClearAll[NuMixingParsDotNum]\[IndentingNewLine]
+    NuMixingParsDotNum[
+        t_] := \((NuMixingParsLogScale[t + h/2] - 
+            NuMixingParsLogScale[t - h/2])\)/h\)\)\)], "Input"],
+
+Cell[BoxData[
+    RowBox[{\( (*\ 
+        Alternative : \ 
+          Calculate\ the\ numerical\ derivatives\ from\ interpolated\ \
+functions\ *) \), "\[IndentingNewLine]", 
+      RowBox[{
+        RowBox[{
+          
+          RowBox[{\(ClearAll[NuMixingAnglesLogScaleInt, NuMixingParsDotNum]\),
+             "\[IndentingNewLine]", 
+            RowBox[{"NuMixingAnglesLogScaleInt", "=", 
+              RowBox[{"Table", "[", 
+                RowBox[{
+                  RowBox[{
+                    StyleBox["Interpolation",
+                      FontColor->GrayLevel[0]], 
+                    StyleBox["[",
+                      FontColor->GrayLevel[0]], 
+                    RowBox[{
+                      StyleBox["Table",
+                        FontColor->GrayLevel[0]], 
+                      StyleBox["[",
+                        FontColor->GrayLevel[0]], 
+                      RowBox[{
+                        RowBox[{
+                          StyleBox["{",
+                            FontColor->GrayLevel[0]], 
+                          RowBox[{
+                            StyleBox["t",
+                              FontColor->GrayLevel[0]], 
+                            StyleBox[",",
+                              FontColor->GrayLevel[
+                              0]], \(\(NuMixingParsLogScale[
+                                t]\)\[LeftDoubleBracket]
+                              i\[RightDoubleBracket]\)}], "}"}], 
+                        ",", \({t, Log[6\ 10^14], Log[2\ 10^16], 0.1}\)}], 
+                      "]"}], "]"}], ",", \({i, 3}\)}], "]"}]}]}], ";"}], 
+        "\[IndentingNewLine]", \(NuMixingParsDotNum[t_] := 
+            Table[\(NuMixingAnglesLogScaleInt\[LeftDoubleBracket]
+                    i\[RightDoubleBracket]'\)[t], {i, 3}];\)}]}]], "Input"],
+
+Cell[BoxData[
+    \(\(\( (*\ 
+      Derivatives\ from\ the\ analytical\ formulae\ for\ arbitrary\ \
+\[Theta]13\ in\ this\ case; \[IndentingNewLine]the\ unphysical\ phases\ are\ \
+absorbed\ into\ \(\(P\)\(.\)\)\ *) \)\(\[IndentingNewLine]\)\(ClearAll[
+      NuMixingParsDotAnArbt13, NuKR, Pnew2]\[IndentingNewLine]
+    \(NuKR[t_] := 
+        DiagonalMatrix[
+          Exp[I*\(NuMixingParsLogScale[t]\)\[LeftDoubleBracket]{5, 6, 
+                  7}\[RightDoubleBracket]]];\)\[IndentingNewLine]
+    \(Pnew2[t_] := Dagger[NuKR[t]] . P[t] . NuKR[t];\)\[IndentingNewLine]
+    NuMixingParsDotAnArbt13[t_] := 
+      u /. {\[IndentingNewLine]reP11 \[Rule] \(Pnew2[
+                t]\)\[LeftDoubleBracket]1, 1\[RightDoubleBracket], 
+          reP22 \[Rule] \(Pnew2[t]\)\[LeftDoubleBracket]2, 
+              2\[RightDoubleBracket], 
+          reP33 \[Rule] \(Pnew2[t]\)\[LeftDoubleBracket]3, 
+              3\[RightDoubleBracket], \[IndentingNewLine]reP21 \[Rule] 
+            Re[\(Pnew2[t]\)\[LeftDoubleBracket]2, 1\[RightDoubleBracket]], 
+          reP31 \[Rule] 
+            Re[\(Pnew2[t]\)\[LeftDoubleBracket]3, 1\[RightDoubleBracket]], 
+          reP32 \[Rule] 
+            Re[\(Pnew2[t]\)\[LeftDoubleBracket]3, 
+                2\[RightDoubleBracket]], \[IndentingNewLine]imP21 \[Rule] 
+            Im[\(Pnew2[t]\)\[LeftDoubleBracket]2, 1\[RightDoubleBracket]], 
+          imP31 \[Rule] 
+            Im[\(Pnew2[t]\)\[LeftDoubleBracket]3, 1\[RightDoubleBracket]], 
+          imP32 \[Rule] 
+            Im[\(Pnew2[t]\)\[LeftDoubleBracket]3, 
+                2\[RightDoubleBracket]], \[IndentingNewLine]\[Theta]12 \
+\[Rule] \(NuMixingParsLogScale[
+                t]\)\[LeftDoubleBracket]1\[RightDoubleBracket], \[Theta]13 \
+\[Rule] \(NuMixingParsLogScale[
+                t]\)\[LeftDoubleBracket]2\[RightDoubleBracket], \[Theta]23 \
+\[Rule] \(NuMixingParsLogScale[
+                t]\)\[LeftDoubleBracket]3\[RightDoubleBracket], \
+\[IndentingNewLine]\[Delta] \[Rule] \(NuMixingParsLogScale[
+                t]\)\[LeftDoubleBracket]4\[RightDoubleBracket], \
+\[IndentingNewLine]\[CurlyPhi]1 \[Rule] \(NuMixingParsLogScale[
+                t]\)\[LeftDoubleBracket]8\[RightDoubleBracket], \[CurlyPhi]2 \
+\[Rule] \(NuMixingParsLogScale[
+                t]\)\[LeftDoubleBracket]9\[RightDoubleBracket], \
+\[IndentingNewLine]m1 \[Rule] \(MdiagLogScale[t]\)\[LeftDoubleBracket]1, 
+              1\[RightDoubleBracket], 
+          m2 \[Rule] \(MdiagLogScale[t]\)\[LeftDoubleBracket]2, 
+              2\[RightDoubleBracket], 
+          m3 \[Rule] \(MdiagLogScale[t]\)\[LeftDoubleBracket]3, 
+              3\[RightDoubleBracket]\[IndentingNewLine]}\)\)\)], "Input"],
+
+Cell[BoxData[{
+    \(ClearAll[NuRelativeErrors]\), "\[IndentingNewLine]", 
+    \(\(NuRelativeErrors = 
+        Table[\((\(NuMixingParsDotNum[t]\)\[LeftDoubleBracket]
+                    i\[RightDoubleBracket] - \(NuMixingParsDotAnArbt13[
+                      t]\)\[LeftDoubleBracket]
+                    i\[RightDoubleBracket])\)/\(NuMixingParsDotNum[
+                  t]\)\[LeftDoubleBracket]i\[RightDoubleBracket], {i, 9}, {t, 
+              Log[6*10^14], Log[1.9*10^16], 0.5}] // Chop;\)\), "\n", 
+    \(NuRelativeErrors\[LeftDoubleBracket]1\[RightDoubleBracket]\), "\n", 
+    \(NuRelativeErrors\[LeftDoubleBracket]2\[RightDoubleBracket]\), "\n", 
+    \(NuRelativeErrors\[LeftDoubleBracket]3\[RightDoubleBracket]\), "\
+\[IndentingNewLine]", 
+    \(NuRelativeErrors\[LeftDoubleBracket]8\[RightDoubleBracket]\), "\
+\[IndentingNewLine]", 
+    \(NuRelativeErrors\[LeftDoubleBracket]9\[RightDoubleBracket]\)}], "Input"]
+}, Open  ]]
+},
+FrontEndVersion->"5.0 for X",
+ScreenRectangle->{{0, 1280}, {0, 1024}},
+WindowSize->{538, 668},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+PrintingPageRange->{Automatic, Automatic},
+PrintingOptions->{"PaperSize"->{612, 792},
+"PaperOrientation"->"Portrait",
+"FirstPageHeader"->False,
+"FirstPageFooter"->False,
+"PostScriptOutputFile":>FrontEnd`FileName[{$RootDirectory, "afs", "desy.de", \
+"user", "m", "mratz", "mathematica", "Notebooks", "MassRen"}, "mist.ps", \
+CharacterEncoding -> "iso8859-1"],
+"Magnification"->1}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+Cell[1754, 51, 60, 1, 27, "Input"],
+Cell[1817, 54, 294, 5, 91, "Input"],
+Cell[2114, 61, 182, 4, 68, "Text"],
+Cell[2299, 67, 735, 13, 207, "Input"],
+Cell[3037, 82, 1376, 26, 347, "Input"],
+Cell[4416, 110, 67, 1, 27, "Input"],
+Cell[4486, 113, 59, 1, 27, "Input"],
+Cell[4548, 116, 48, 1, 27, "Input"],
+Cell[4599, 119, 186, 4, 59, "Input"],
+Cell[4788, 125, 253, 4, 91, "Input"],
+Cell[5044, 131, 1736, 28, 523, "Input"],
+Cell[6783, 161, 206, 4, 75, "Input"],
+Cell[6992, 167, 106, 2, 27, "Input"],
+Cell[7101, 171, 238, 5, 43, "Input"],
+Cell[7342, 178, 255, 4, 59, "Input"],
+Cell[7600, 184, 280, 5, 92, "Input"],
+Cell[7883, 191, 219, 4, 76, "Input"],
+Cell[8105, 197, 52, 1, 27, "Input"],
+Cell[8160, 200, 2878, 51, 714, "Input"],
+Cell[11041, 253, 115, 2, 27, "Input"],
+Cell[11159, 257, 1603, 34, 265, "Input"],
+Cell[12765, 293, 868, 17, 135, "Input"],
+Cell[13636, 312, 356, 8, 59, "Input"],
+Cell[13995, 322, 109, 2, 27, "Input"],
+Cell[14107, 326, 57, 1, 27, "Input"],
+Cell[14167, 329, 199, 5, 75, "Input"],
+Cell[14369, 336, 279, 5, 107, "Input"],
+Cell[14651, 343, 262, 6, 91, "Input"],
+Cell[14916, 351, 363, 6, 100, "Input"],
+Cell[15282, 359, 75, 1, 27, "Input"],
+Cell[15360, 362, 318, 7, 75, "Input"],
+Cell[15681, 371, 138, 3, 43, "Input"],
+Cell[15822, 376, 72, 1, 27, "Input"],
+Cell[15897, 379, 459, 8, 59, "Input"],
+Cell[16359, 389, 181, 3, 88, "Input"],
+Cell[16543, 394, 126, 2, 27, "Input"],
+Cell[16672, 398, 222, 4, 75, "Input"],
+Cell[16897, 404, 228, 5, 43, "Input"],
+Cell[17128, 411, 126, 2, 43, "Input"],
+Cell[17257, 415, 614, 12, 91, "Input"],
+Cell[17874, 429, 1407, 27, 303, "Input"],
+Cell[19284, 458, 1476, 28, 257, "Input"],
+Cell[20763, 488, 478, 7, 102, "Input"],
+Cell[21244, 497, 486, 7, 102, "Input"],
+Cell[21733, 506, 442, 7, 101, "Input"],
+Cell[22178, 515, 499, 7, 117, "Input"],
+Cell[22680, 524, 137, 3, 27, "Input"],
+Cell[22820, 529, 61, 1, 27, "Input"],
+Cell[22884, 532, 3660, 68, 497, "Input"],
+Cell[26547, 602, 287, 6, 81, "Input"],
+Cell[26837, 610, 3660, 68, 497, "Input"],
+Cell[30500, 680, 281, 5, 75, "Input"],
+Cell[30784, 687, 190, 3, 43, "Input"],
+Cell[30977, 692, 190, 3, 43, "Input"],
+Cell[31170, 697, 86, 1, 27, "Input"],
+Cell[31259, 700, 136, 3, 43, "Input"],
+Cell[31398, 705, 553, 10, 155, "Input"],
+Cell[31954, 717, 45, 1, 27, "Input"],
+Cell[32002, 720, 66, 1, 27, "Input"],
+
+Cell[CellGroupData[{
+Cell[32093, 725, 137, 3, 56, "Subsection"],
+Cell[32233, 730, 155, 2, 43, "Input"],
+Cell[32391, 734, 2043, 40, 475, "Input"],
+Cell[34437, 776, 365, 8, 123, "Input"],
+Cell[34805, 786, 3378, 61, 427, "Input"],
+Cell[38186, 849, 707, 11, 139, "Input"],
+Cell[38896, 862, 4329, 80, 70, "Input"],
+Cell[43228, 944, 945, 18, 70, "Input"],
+Cell[44176, 964, 5132, 90, 70, "Input"],
+Cell[49311, 1056, 767, 14, 70, "Input"],
+Cell[50081, 1072, 628, 11, 70, "Input"],
+Cell[50712, 1085, 1783, 39, 70, "Input"],
+Cell[52498, 1126, 2649, 47, 70, "Input"],
+Cell[55150, 1175, 919, 15, 70, "Input"]
+}, Open  ]]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

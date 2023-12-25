@@ -1,0 +1,19 @@
+(* The package `REAP' is written for Mathematica 7 and is distributed under the
+terms of GNU Public License http://www.gnu.org/copyleft/gpl.html *)
+
+
+BeginPackage["REAP`RGEUtilities`",{"REAP`RGESolver`","REAP`RGESymbol`","REAP`RGETakagi`"}];
+
+
+ClearAll[RGEFilterOptions];
+If[$VersionNumber < 6.,
+  Needs["Utilities`FilterOptions`"];
+  RGEFilterOptions[what_,list___]:=FilterOptions[what,list],
+  RGEFilterOptions[what_, list_List] := Sequence @@ FilterRules[list, Options@what];
+  RGEFilterOptions[what_, list___] := Sequence @@ FilterRules[{list}, Options@what];
+  ];
+
+<PERL>
+Package("RGEUtilities.cxml","{\"REAP`RGESolver`\",\"REAP`RGESymbol`\",\"REAP`RGETakagi`\"}");
+</PERL>
+

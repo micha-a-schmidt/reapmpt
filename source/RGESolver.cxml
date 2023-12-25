@@ -1,0 +1,1036 @@
+#################################################################################################
+# The package `REAP' is written for Mathematica 7 and is distributed under the
+# terms of GNU Public License http://www.gnu.org/copyleft/gpl.html
+#################################################################################################
+
+
+
+
+<function name=Definitions>
+<code>
+ClearAll[gRGEModel,gRGEModelGetParameters,gRGEModelSolve,gRGEModelSetOptions,gRGEModelGetOptions,gRGEModelGetInitial,gRGETransFunc,gRGETransModel];
+gRGEModel={}; (* variables containing the different models *)
+gRGEModelContext={}; (* variable containing the name of the context of the model *)
+gRGEModelGetParameters={}; (* contains the Parameters of the gRGEModels *)
+gRGEModelSolve={}; (* solve model *)
+gRGEModelSetOptions={}; (* contains the functions to set the options of the model *)
+gRGEModelGetOptions={}; (* contains the functions to get the options of the model *)
+gRGEModelGetInitial={}; (* contains suggestions for initial parameters *)
+gRGEModelOptions={}; (* contains the options of the model (only used by RGELoadAll and RGESaveAll)*)
+
+gRGETransFunc={};
+RGEIndexTo=1;RGEIndexFunc=2; (* constants which are indices for gRGETransFunc *)
+gRGEModelGetSolution={}; (* contains functions returning the solution*)
+RGEIndexSolution=1; (* constants which are indices for ModelGetSolution (RGEIndexFunc is also used) *)
+
+gRGETransModel={};
+
+
+(*variables*)
+ClearAll[RGEModel, RGEIndexModel,RGEIndexOptions, RGEIndexCutoff,RGEIndexSolution];
+RGEModel={}; (*List of the different ranges  <model>,<options>,<cutoff>,<solution> *)
+RGEIndexModel=1; RGEIndexOptions=2;RGEIndexCutoff=3;RGEIndexSolution=4; (* constants *)
+
+ClearAll[gRGEBoundaryScale, gRGEInitial];
+gRGEBoundaryScale; (* scale where the initial values are set.*)
+gRGEInitial={}; (* list of initial values *)
+
+ClearAll[gRGESolutionValid, gRGEDown, gRGEUp];
+gRGEDown; (*solution exists between gRGEDown and gRGEUp *)
+gRGEUp;
+gRGESolutionValid=False; (* RGESolution is the Solution obtained from gRGEInitial *)
+
+(* internal functions *)
+ClearAll[RGENIM];
+RGENIM[pParameters_,pToOpts_,pFromOpts_]:=Block[{},
+(* placeholder function in the transition table for functions which are not implemented yet *)
+(* Exception: This function always throws the exception ---> RGENotImplementedYet
+*)
+	  Print["not implemented yet"];Throw[0,RGENotImplementedYet]
+];
+
+
+ClearAll[GetRGEModelRange];
+GetRGEModelRange[pLogScale_,pDirection_:0]:=Block[{li,lDirection},
+(* returns the Index to the Range containing scale *)
+(* Exception: scale too big ---> RGEScaleTooBig
+*)
+        If[pDirection>0,lDirection=1,lDirection=0];
+
+	li=1;
+	While[li<=Length[RGEModel],
+		If[RGEModel[[ li, RGEIndexCutoff ]] < pLogScale,li++,Break[] ]
+	];
+        If[li>Length[RGEModel],Throw[Length[RGEModel],RGEScaleTooBig]];
+	If[pLogScale==RGEModel[[ li,RGEIndexCutoff ]],li+=lDirection];
+        If[li>Length[RGEModel],Throw[Length[RGEModel],RGEScaleTooBig]];
+	Return[li];
+];
+
+ClearAll[UpdateTransition];
+UpdateTransition[]:=Block[{liMax,ljMax,lIndexModel,li,lj},
+(* creates the transition table gRGETransModel. This function has to be invoked after all models have been registered and before any calculation is done *)
+	liMax=Length[gRGEModel];
+	gRGETransModel=Table[RGENIM,{li,liMax},{lj,liMax}];
+	Do[	ljMax=Length[ gRGETransFunc[[li]] ];
+		Do[
+                        If[MemberQ[gRGEModel,gRGETransFunc[[li,lj,RGEIndexTo]]],
+                            lIndexModel=Flatten[Position[ gRGEModel,gRGETransFunc[[li,lj,RGEIndexTo]] ]][[ 1 ]];
+			    gRGETransModel[[ lIndexModel, li]]=gRGETransFunc[[ li,lj,RGEIndexFunc ]];
+                        ],{lj,1,ljMax}],{li,1,liMax}];
+];
+
+</code>
+</function>
+
+<function name=RGESetInitial>
+<head>
+RGESetInitial::usage="RGESetInitial[scale, initial conditions] sets the initial values at the energy <scale>. They are entered as replacement rules and can also contain options (e.g. to select the neutrino mass hierarchy). See the manual for the names of the variables and options in the different models.  The option RGESuggestion chooses between several sets of default values. If it is not given, the first set of default values is taken.  In general, these are the default values at the GUT scale.";
+</head>
+<doc level=simple>
+\function{RGESetInitial[\param{scale},\param{initial conditions}]} sets
+the initial values at the energy \param{scale}.  They are entered as
+replacement rules and can also contain options (e.g.\ to select the
+neutrino mass hierarchy).  See Sec.~\ref{sec:Models} for the names of
+the variables and options in the different models.
+</doc>
+<doc level=advanced>
+The option \variable{RGESuggestion} chooses between
+several sets of default values. If it is not given, the first set of default
+values is taken.  In general, these are the default values at the GUT scale.
+</doc>
+<doc level=simple>
+<example>
+\begin{verbatim}
+  RGESetInitial[10^16,RGE\[Theta]13->4 Degree,RGEMlightest->0.1]
+\end{verbatim}
+This sets the initial values at $10^{16}\GeV$.  The mixing angle
+$\theta_{13}$ is set to $4^\circ$, and the mass of the lightest neutrino
+to $0.1\eV$.  For the other parameters, the default values are used.
+</example>
+<implementation>
+  \function{RGESetInitial} determines the model by looking at the EFT which is defined at the given scale.
+  Then it calls the function \function{gRGEModelGetInitial} of the model. The provided \optparam{options} are passed as parameter.
+</implementation>
+</doc>
+<code>
+RGESetInitial[pBoundary_?NumericQ,pInitial___:{}]:= Block[{lIndexModel,lIndexRGEModel},
+(* sets initial values *)
+(* exceptions: pBoundary<0 --> RGELessThanZero
+*)
+   If[pBoundary<0,Throw[pBoundary,RGELessThanZero]];
+   If[Length[RGEModel]==0,
+       Print["There is no model defined yet. Use RGEAddEFT to define the model you want to use before you use RGESetInitial to set the initial conditions."];
+       Return[];
+   ];
+   Catch[
+        lIndexRGEModel=GetRGEModelRange[Log[pBoundary]],
+	RGEScaleTooBig,
+	(Print["There is no model defined at the given scale ",pBoundary,"."];Throw[pBoundary,RGEScaleTooBig];)&
+	];
+   lIndexModel=RGEModel[[lIndexRGEModel,RGEIndexModel]];
+   gRGEInitial=gRGEModelGetInitial[[ lIndexModel ]][
+   Flatten[{Sequence[pInitial]}~Join~RGEModel[[lIndexRGEModel,RGEIndexOptions]] ]];
+   gRGEBoundaryScale=Log[pBoundary];
+   gRGESolutionValid=False;
+];
+</code>
+</function>
+
+<function name=RGEGetRange>
+<head>
+RGEGetRange::usage="RGEGetRange[] returns the lower and the upper bound of the solved region.";
+</head>
+<doc level=internal>
+\function{RGEGetRange[]} returns a list containing the lower and the upper bound of the region where the
+RGE is solved.
+ <example>
+  \begin{verbatim}
+   RGEGetRange[]
+ \end{verbatim}
+This returns \begin{verbatim}{91.19,2 10^16}\end{verbatim}
+</example>
+</doc>
+<code>
+RGEGetRange[]:=Block[{},
+(* returns the range where the RGE is solved *)
+	Return[{gRGEDown,gRGEUp}];
+	];
+</code>
+</function>
+
+<function name=RGEGetInitial>
+<head>
+RGEGetInitial::usage="RGEGetInitial[] returns the scale at which the initial values are given and the initial values as a list of replacement rules. The different names of the replacement rules can be looked up in the manual in the section about the specific model.";
+</head>
+<doc level=advanced>
+\function{RGEGetInitial[]} returns the scale at which the initial values
+are given and the initial values.
+%<example>
+% \begin{verbatim}
+%  RGEGetInitial[]
+%\end{verbatim}
+%This returns \begin{verbatim}{2 10^16, {RGEg1->0.2, RGEg2->0.5, RGEg3->0.3}}\end{verbatim}
+%</example>
+</doc>
+<code>
+RGEGetInitial[]:=Block[{},
+(* returns the initial values *)
+	Return[{Exp[gRGEBoundaryScale],gRGEInitial}]
+	];
+</code>
+</function>
+
+<function name=RGEGetParameters>
+<head>
+RGEGetParameters::usage="RGEGetParameters[model] returns the quantities that run in the <model>.";
+</head>
+<doc level=simple>
+\function{RGEGetParameters[\param{model}]} returns the quantities that run
+in the \param{model}.
+% <example>
+%  \begin{verbatim}
+%   RGEGetParameters["SM"];
+% \end{verbatim}
+% This returns the parameters of the ``SM''.
+% </example>
+</doc>
+<code>
+RGEGetParameters[pModel_]:=Block[{lIndexModel},
+   lIndexModel=Flatten[Position[gRGEModel,pModel]][[1]];
+   Return[gRGEModelGetParameters[[lIndexModel]][]];
+];
+</code>
+</function>
+
+<function name=RGEAddEFT>
+<head>
+RGEAddEFT::usage="RGEAddEFT[model, options] (alias for RGEAdd) specifies that <model> (must be a string, e.g. \"SM\") should be used as an effective theory (EFT) up to a cutoff energy given in the options.  If no cutoff is given, \[Infinity] is used.  The options can also be used to specify various parameters such as tan\[Beta].  See the REAP documentation for a complete list of the models and options available.";
+</head>
+<doc level=advanced>
+This command is identical to \function{RGEAdd}.
+</doc>
+<code>
+RGEAddEFT[pModel_,pOpts___:{}] := Block[{lIndexRGEModel,lIndexModel,lLogCutoff,lCutoff},
+(* add new range to RGE model *)
+(* exceptions: pCutoff less than 0 --> RGELessThanZero
+*)
+   lCutoff=(RGECutoff/.{Sequence[pOpts]})/.{RGECutoff->\[Infinity]};
+   If[lCutoff<0,Throw[lCutoff,RGELessThanZero]];
+   lLogCutoff=Log[lCutoff];
+   lIndexRGEModel=1;
+   While[lIndexRGEModel<=Length[RGEModel],
+	If[RGEModel[[ lIndexRGEModel,RGEIndexCutoff ]] <
+	lLogCutoff,lIndexRGEModel++,
+	  If[RGEModel[[ lIndexRGEModel,RGEIndexCutoff ]] == lLogCutoff,
+	    Print["There is already a model defined with the same cutoff. Thus
+	    the model ", pModel," was not added."];
+	    Return[],
+	    Break[] ];
+	];
+   ];
+   lIndexModel=Flatten[ Position[gRGEModel,pModel] ][[ 1 ]];
+   lOpts;
+   Options[lOpts]=gRGEModelGetOptions[[lIndexModel]][];
+   RGEModel=Insert[RGEModel,{lIndexModel,{RGEFilterOptions[lOpts,pOpts]},lLogCutoff,{}},lIndexRGEModel];
+   gRGESolutionValid=False;
+]; 
+</code>
+</function>
+
+<function name=RGEAdd>
+<head>
+RGEAdd::usage="RGEAdd[model, options] specifies that <model> (must be a string, e.g. \"SM\") should be used as an effective theory (EFT) up to a cutoff energy given in the options.  If no cutoff is given, \[Infinity] is used.  The options can also be used to specify various parameters such as tan\[Beta].  See the REAP documentation for a complete list of the models and options available.";
+</head>
+<doc level=simple>
+\function{RGEAdd[\param{model},\optparam{options}]} 
+specifies that \param{model} should be used as an effective theory (EFT)
+up to a cutoff energy given in the \optparam{options}.  If no cutoff is
+given, $\infty$ is used.  \optparam{options} can also be used to specify
+various parameters such as $\tan\beta$.  See Sec.~\ref{sec:Models} for a
+complete list of the models and options available.
+<example>
+\begin{verbatim}
+  RGEAdd["MSSM",RGEtan\[Beta]->50]
+  RGEAdd["SM",RGECutoff->10^3]
+\end{verbatim}
+In this case, the MSSM with $\tan\beta=50$ is used at high energies.
+Below $10^3\GeV$ (the SUSY breaking scale in this example), the SM is
+used as an EFT.
+</example>
+<implementation>
+  At first, \function{RGEAddEFT} stores the whole information in
+  \variable{RGEModel}, so that the models are ordered by increasing cutoff. There can only be one model with the same cutoff. The exception
+  \variable{RGESameCutoff} is thrown in this case.
+</implementation>
+</doc>
+<code>
+RGEAdd[pModel_,pOpts___:{}]:=RGEAddEFT[pModel,pOpts];
+</code>
+</function>
+
+
+<function name=RGESolve>
+<head>
+RGESolve::usage="RGESolve[low, high, options] solves the RGEs between the 2 energies <low> and <high>. RGESolve accepts the same options as NDSolve. In addition, the option RGERemoveAutoGeneratedEntries determines whether automatically generated EFTs (such as the MSSM with 2 singlet neutrinos, if one started with 3 singlets) are removed before solving the RGEs. The default value is True. If it is set to False, no EFT will be removed.";
+Options[RGESolve]=Options[NDSolve]~Join~{RGERemoveAutoGeneratedEntries->True};
+SetOptions[RGESolve,Method->StiffnessSwitching];
+</head>
+<doc level=simple>
+\function{RGESolve[\param{low},\param{high},\optparam{options}]} solves
+the RGEs between the energies \param{low} and \param{high}. 
+</doc>
+<doc level=advanced>
+It accepts the same options as \function{NDSolve}.  In addition, the option
+\variable{RGERemoveAutoGeneratedEntries} determines whether automatically
+generated EFTs (such as the MSSM with 2 singlet neutrinos, if one
+started with 3 singlets) are removed before solving the RGEs. The default
+value is ``True''.
+% which means that automatically generated entries are removed. 
+If it is set to ``False'', no EFT will be removed.
+</doc>
+<doc level=internal>
+<implementation>
+The used symbols in \package{RGESolver} to control automatically generated
+entries are:\\
+  \begin{itemize}
+    \item RGEAutoGenerated is a tag to mark the EFT's which have been generated
+  automatically or changed. It can have three different values:
+  \begin{itemize}
+  \item ``True'' means that the EFT has been generated automatically.
+  \item ``False'' means that the EFT was not generated automatically.
+  \item The name of some model means that the current EFT has replaced the given
+  EFT. e.g. The current EFT is the SM w/o right-handed neutrinos (SM0N) and
+  RGEAutoGenerated is set to ``SM''.
+  \end{itemize}
+    \item RGERemoveAutoGeneratedEntries determines whether automatically generated
+  entries are removed.
+  \end{itemize}
+</implementation>
+</doc>
+<doc level=simple>
+<example>
+\begin{verbatim}
+  RGESolve[100,10^15]
+\end{verbatim}
+This solves the RGEs between $100\GeV$ and $10^{15}\GeV$.
+%using the method \variable{StiffnessSwitching} for the calculation.
+</example>
+</doc>
+<code>
+RGESolve[pDown_?NumericQ,pUp_?NumericQ,pOpts___]:=Block[{lRGEDown,lRGEUp,lIndexRGEModel, lIndexModel, lOldIndexModel, lGoUp, lGoDown, lInitial,lUp,lUpModel,lUpOptions,lDown,lDownModel,lDownOptions,lNewScale,lAddedModels,lSolution},
+(* solves the RGE *)
+(* exceptions: parameters less than 0 --> RGELessThanZero
+	       parameters too big --> RGEScaleTooBig
+*)
+	lNDSolveOpts;
+	Options[lNDSolveOpts]=Options[RGESolve];
+	SetOptions[lNDSolveOpts,RGEFilterOptions[NDSolve,pOpts]];
+
+      lOpts;
+      Options[lOpts]=Options[RGESolve];
+      SetOptions[lOpts,RGEFilterOptions[RGESolve,pOpts]];
+
+(* check pDown and pUp *)
+   If[Length[gRGEInitial]==0,
+       Print["There are no initial conditions set yet. Use RGESetInitial
+   to set the initial conditions before you use RGESolve to solve the RGEs."];
+       Return[];
+   ];
+   If[Length[RGEModel]==0,
+       Print["There is no model defined yet. Use RGEAdd to define the model you want to use before you use RGESolve to solve the RGEs."];
+       Return[];
+   ];
+   If[gRGEBoundaryScale>RGEModel[[ Length[RGEModel], RGEIndexCutoff ]],
+	Print["The initial conditions are given above the cutoff of the given model"];
+       Return[];
+   ];
+   If[pDown<0 || pUp<0, Throw[{pDown,pUp},RGELessThanZero]];
+
+   If[pDown>pUp,{lDown,lUp}=Log[{pUp,pDown}],{lUp,lDown}=Log[{pUp,pDown}]];
+   If[gRGEBoundaryScale<lDown,lDown=gRGEBoundaryScale];
+   If[gRGEBoundaryScale>lUp,lUp=gRGEBoundaryScale];
+   If[!(gRGESolutionValid && gRGEUp==lUp && gRGEDown==lDown),
+   (* removing automatically generated entries *)
+      If[RGERemoveAutoGeneratedEntries/.Options[lOpts],RGERmAutoGen[]];
+      lRGEDown=GetRGEModelRange[lDown];
+      lRGEUp=GetRGEModelRange[lUp];
+      gRGEUp=lUp;
+      gRGEDown=lDown;
+(*Print["solving range containing ",Exp[gRGEBoundaryScale]];*)
+
+
+(* solve range containing gRGEBoundaryScale *)
+      lIndexRGEModel=GetRGEModelRange[gRGEBoundaryScale];
+      lIndexModel=RGEModel[[ lIndexRGEModel, RGEIndexModel ]];
+
+      lGoUp=lRGEUp>lIndexRGEModel;
+      If[lGoUp,
+          lUp=RGEModel[[ lIndexRGEModel, RGEIndexCutoff ]];
+          lUpModel=gRGEModel[[ RGEModel[[lIndexRGEModel+1,RGEIndexModel]] ]];
+          lUpOptions=RGEModel[[lIndexRGEModel+1,RGEIndexOptions]],
+          lUpModel="";
+          lUpOptions={};
+      ];
+
+      lGoDown=lRGEDown<lIndexRGEModel;
+      If[lGoDown,
+          lDown=RGEModel[[ lIndexRGEModel-1, RGEIndexCutoff]];
+          lDownModel=gRGEModel[[ RGEModel[[lIndexRGEModel-1,RGEIndexModel]] ]];
+          lDownOptions=RGEModel[[lIndexRGEModel-1,RGEIndexOptions]],
+          lDownModel="";
+          lDownOptions={};
+      ];
+
+{lSolution,lDown,lAddedModels}=gRGEModelSolve[[lIndexModel]][{lUp,lUpModel,lUpOptions},{lDown,lDownModel,lDownOptions},-1,gRGEBoundaryScale,gRGEInitial,
+      Options[lNDSolveOpts],RGEModel[[lIndexRGEModel,RGEIndexOptions]] ];
+      lIndexRGEModel+=lAddedModels;
+      lGoDown=lRGEDown<lIndexRGEModel;
+      RGEModel[[lIndexRGEModel, RGEIndexSolution]] =lSolution;
+
+(* solving for ranges > gRGEBoundaryScale *)
+     While[lGoUp,
+(*Print["solving next range > ",Exp[gRGEBoundaryScale]];*)
+	lOldIndexModel=RGEModel[[lIndexRGEModel,RGEIndexModel]];
+      	lIndexRGEModel++;
+	lIndexModel=RGEModel[[ lIndexRGEModel, RGEIndexModel ]];
+	lDown=lUp;
+	lGoUp=lRGEUp>lIndexRGEModel;
+
+        If[lGoUp,
+          lUp=RGEModel[[ lIndexRGEModel, RGEIndexCutoff ]];
+          lUpModel=gRGEModel[[ RGEModel[[lIndexRGEModel+1,RGEIndexModel]] ]];
+          lUpOptions=RGEModel[[lIndexRGEModel+1,RGEIndexOptions]],
+          lUp=gRGEUp;
+          lUpModel="";
+          lUpOptions={};
+        ];
+        lDownModel=gRGEModel[[ RGEModel[[lIndexRGEModel-1,RGEIndexModel]] ]];
+        lDownOptions=RGEModel[[lIndexRGEModel-1,RGEIndexOptions]];
+
+(* lInitial is a list containing the initial values for the differential equation in this range *)	
+	lInitial = gRGETransModel[[ lIndexModel, lOldIndexModel ]] [ lDown, -1, RGEModel[[ lIndexRGEModel-1, RGEIndexSolution]], RGEModel[[ lIndexRGEModel, RGEIndexOptions ]], RGEModel[[ lIndexRGEModel-1, RGEIndexOptions]] ]; (* initial values as list *)
+
+      Options[lOpts]=RGEModel[[lIndexRGEModel,RGEIndexOptions]];
+      SetOptions[lOpts,RGEFilterOptions[lOpts,RGESearchTransition->False]];
+      Options[lOpts]=Options[lOpts]~Union~{RGESearchTransition->False};
+	
+        {lSolution,
+      lNewScale,lAddedModels}=gRGEModelSolve[[lIndexModel]][{lUp,lUpModel,lUpOptions},{lDown,lDownModel,lDownOptions},+1,lDown,lInitial,
+      Options[lNDSolveOpts], Options[lOpts]];
+      RGEModel[[lIndexRGEModel, RGEIndexSolution]] =lSolution;
+      
+         ];
+
+(* solving for ranges < gRGEBoundaryScale *)
+      While[lGoDown,
+(*Print["solving next range < ",Exp[gRGEBoundaryScale]];*)
+
+	lOldIndexModel=RGEModel[[lIndexRGEModel,RGEIndexModel]];
+        lIndexRGEModel--;
+	lIndexModel=RGEModel[[ lIndexRGEModel, RGEIndexModel ]];
+	lUp=lDown;
+	lGoDown=lRGEDown<lIndexRGEModel;
+        If[lGoDown,
+          lDown=RGEModel[[ lIndexRGEModel-1, RGEIndexCutoff ]];
+          lDownModel=gRGEModel[[ RGEModel[[lIndexRGEModel-1,RGEIndexModel]] ]];
+          lDownOptions=RGEModel[[lIndexRGEModel-1,RGEIndexOptions]],
+          lDown=gRGEDown;
+          lDownModel="";
+          lDownOptions={};
+        ];
+        lUpModel=gRGEModel[[ RGEModel[[lIndexRGEModel+1,RGEIndexModel]] ]];
+        lUpOptions=RGEModel[[lIndexRGEModel+1,RGEIndexOptions]];
+(* lInitial is a list containing the initial values for the differential
+	equation in this range *)
+	lInitial = gRGETransModel[[ lIndexModel, lOldIndexModel ]] [ lUp, +1,
+	RGEModel[[ lIndexRGEModel+1, RGEIndexSolution]], RGEModel[[
+	lIndexRGEModel, RGEIndexOptions ]], RGEModel[[ lIndexRGEModel+1,
+	RGEIndexOptions]] ]; (* initial values as list *)
+        {lSolution,lNewScale,lAddedModels}=gRGEModelSolve[[lIndexModel]][{lUp,lUpModel,lUpOptions},{lDown,lDownModel,lDownOptions},-1,lUp,lInitial,Options[lNDSolveOpts], RGEModel[[lIndexRGEModel,RGEIndexOptions]]];
+      lIndexRGEModel+=lAddedModels;
+      lDown=lNewScale;
+      lGoDown=lRGEDown<lIndexRGEModel;
+      RGEModel[[lIndexRGEModel, RGEIndexSolution]] =lSolution;
+      ];
+     gRGESolutionValid=True;
+   ];
+];
+</code>
+</function>
+
+<function name=RGEReset>
+<head>
+RGEReset::usage="RGEReset[] removes all EFTs and resets all options which have been changed by RGEAdd or RGESetOptions to their default values. Options which have been changed by RGESetModelOptions are not reset.";
+</head>
+<doc level=simple>
+\function{RGEReset[]} removes all EFTs and resets all options which have
+been changed by \function{RGEAdd} or \function{RGESetOptions}
+%functions named RGE*EFT* 
+to their default values. 
+</doc>
+<doc level=advanced>
+Options which have been changed by
+%functions named RGE*Model* (e.g. RGESetModelOptions)
+\function{RGESetModelOptions} are not reset.
+</doc>
+<code>
+RGEReset[]:=Block[{},
+(* resets all values which are needed by the calculation *)
+	RGEModel={};
+	gRGEInitial={}; 
+	gRGEBoundaryScale={};
+	gRGEDown=0;
+	gRGEUp=0;
+	gRGESolutionValid=False; 
+];
+</code>
+</function>
+
+<function name=RGERegisterModel>
+<head>
+RGERegisterModel::usage="RGERegister[Name, Context, Solve, GetSolution, suggest initial, set options, get options] registers a new model named <Name>. See the manual for more information, especially the section about defining a new model.";
+</head>
+<doc level=advanced>
+\function{RGERegisterModel\label{func:RGERegisterModel}[\param{name}, \param{get
+parameters}, \param{solve
+RGE}, \param{return solution}, \param{transition functions}, \param{provide
+initial values}, \param{set options}, \param{get options}]} of the package
+\package{REAP} registers a new model.  Its 8 parameters are:
+\begin{enumerate}
+  \item a string containing the name of the model
+  \item a string containing the name of the package
+  \item a function returning a list of the parameters of the model
+  \item a function to solve the RGE of this model in a given range
+  \item a list of replacement rules with the functions to return the result,
+  like \textit{Symbol$\rightarrow$function returning the solution}
+  \item a list containing the transition functions in the form \textit{\{``name of
+  the target model'',name of the function\}}
+  \item a function to provide initial values
+  \item a function to set options of the model
+  \item a function to get the initial values
+\end{enumerate}
+
+<example>
+\begin{verbatim}
+RGERegisterModel["SM","SolveNeutrinoRGES`RGESM`" `Private`GetParameters,
+        `Private`SolveModel, {RGEAll->`Private`GetSolution,
+        RGEM\[Nu]->`Private`GetM\[Nu], RGEMe->`Private`GetMe,
+        RGEMu->`Private`GetMu, RGEMd->`Private`GetMd},
+        {{"SM",`Private`TransSM},{"SM0N",`Private`TransSM0N}},
+        `Private`GetInitial, `Private`ModelSetOptions, `Private`ModelGetOptions
+        ];
+\end{verbatim}
+
+This example registers the SM.  There are 5 functions to return solutions:
+Private`GetSolution, Private`GetM$\nu$,\dots. Moreover the only 2 transition
+functions are the transition functions to the SM (with righthanded neutrinos)
+itself: \{"SM",Private`TransSM\} and to the SM without righthanded Neutrinos
+\{"SM0N",Private`TransSM0N\}.
+</example>
+<implementation>
+  \function{RGERegisterModel} saves the information which it receives in the variables \variable{gRGEModel}, \variable{gRGEModelContext}, \variable{gRGEModelGetParameters}, \variable{gRGEModelSolve}, \variable{gRGEModelSetOptions}, \variable{gRGEModelGetOptions}, \variable{gRGEModelGetInitial}, \variable{gRGEModelOptions}, \variable{gRGETransFunc} and \variable{gRGETransModel}. \variable{gRGETransModel} contains an array of the transition functions between the different EFT's.
+</implementation>
+</doc>
+<code>
+RGERegisterModel[pName_,pContext_,pGetParameters_,pSolve_,pGetSolution_,pTransModel_,pSuggestInitial_,pSetOptions_,pGetOptions_]:=Block[{lIndexModel},
+(* register a new model *)
+(* exceptions: there already is a model named pName --> RGEModelAlreadyRegistered
+*)
+	If[MemberQ[gRGEModel,pName],Throw[pName,RGEModelAlreadyRegistered]];
+        gRGEModel=Append[gRGEModel,pName];
+        gRGEModelContext=Append[gRGEModelContext,pContext];
+        gRGEModelSetOptions=Append[gRGEModelSetOptions,pSetOptions];
+        gRGEModelGetOptions=Append[gRGEModelGetOptions,pGetOptions];
+        gRGEModelGetParameters=Append[gRGEModelGetParameters,pGetParameters];
+        gRGEModelSolve=Append[gRGEModelSolve,pSolve];
+	gRGEModelGetSolution=Append[gRGEModelGetSolution,pGetSolution];
+        gRGEModelGetInitial=Append[gRGEModelGetInitial,pSuggestInitial];
+	gRGETransFunc=Append[gRGETransFunc,pTransModel];
+        UpdateTransition[];
+];
+</code>
+</function>
+
+<function name=RGERmAutoGen>
+<head>
+RGERmAutoGen::usage="RGERmAutoGen[] removes all EFT's which have been automatically inserted.";
+</head>
+<doc level=advenced>
+  \function{RGERmAutoGen[]} removes all EFT's which have been automatically
+  generated.
+</doc>
+<code>
+RGERmAutoGen[]:=Block[{lIndexRGEModel,lAutoGen},
+(* removes all entries in RGEModel which have been generated automatically *)
+	lOpts;
+        lIndexRGEModel=1;
+	While[lIndexRGEModel<=Length[RGEModel],
+	    lAutoGen=(RGEAutoGenerated/.RGEModel[[lIndexRGEModel,RGEIndexOptions
+	    ]])/.{RGEAutoGenerated->False};
+	    If[MemberQ[gRGEModel,lAutoGen],
+		RGEModel[[lIndexRGEModel,RGEIndexModel]]=Flatten[Position[gRGEModel,lAutoGen]][[1]];
+		Options[lOpts]=RGEModel[[lIndexRGEModel,RGEIndexOptions]];
+		SetOptions[lOpts,RGEAutoGenerated->False];
+		RGEModel[[lIndexRGEModel,RGEIndexOptions]]=Options[lOpts];
+		];
+	    If[lAutoGen==True,
+		RGEModel=Delete[RGEModel,lIndexRGEModel];
+		lIndexRGEModel--;
+		];
+	    lIndexRGEModel++;
+	];
+];
+</code>
+</function>
+
+<function name=RGESetEFTOptions>
+<head>
+RGESetEFTOptions::usage="RGESetEFTOptions[model, options] (alias for RGESetOptions) changes the options of the EFTs defined by RGEAdd with name matching <model>. Metacharacters like * and @ are allowed in the string <model>.";
+</head>
+<doc level=advanced>
+Same as \function{RGESetOptions}.
+</doc>
+<code>
+RGESetEFTOptions[pModel_,pOpts___]:=Block[{lIndexModel,lIndexRGEModel},
+(* sets the options of a model in RGEModel *)
+   lOpts;
+   lFilterOpts;
+   If[Length[RGEModel]==0,
+       Print["There is no model defined yet. Use RGEAddEFT to define the model
+       you want to use before you use RGESetEFTOptions to change its options."];
+       Return[];
+   ];
+   Do[  If[StringMatchQ[gRGEModel[[ RGEModel[[lIndexRGEModel,RGEIndexModel]] ]],pModel],
+          Options[lFilterOpts]=gRGEModelGetOptions[[RGEModel[[lIndexRGEModel,RGEIndexModel]]]][];
+	  Options[lOpts]={RGEFilterOptions[lFilterOpts,RGEModel[[lIndexRGEModel,RGEIndexOptions]]]};
+	  SetOptions[lOpts,RGEFilterOptions[lOpts,pOpts]];
+	  RGEModel[[lIndexRGEModel,RGEIndexOptions]]=Options[lOpts]~Union~{RGEFilterOptions[lFilterOpts,pOpts]};
+      ],{lIndexRGEModel,1,Length[RGEModel]}];
+   gRGESolutionValid=false;
+];
+</code>
+</function>
+
+<function name=RGESetModelOptions>
+<head>
+RGESetModelOptions::usage="RGESetModelOptions[model name, options] sets the options of the model <model name> globally. See the section about the specific model for a list of the options.";
+</head>
+<doc level=advanced>
+\function{RGESetModelOptions[\param{model name},\param{options}]} globally changes the options
+of \param{model name} to \param{options}. Metacharacters, like * and @, are
+allowed in the \param{model name}. \param{model name} is matched against all
+model names with \function{StringMatchQ}.
+<example>
+\begin{verbatim}
+  RGESetModelOptions["SM",RGEvEW->246];
+\end{verbatim}
+This sets the option RGEvEW of the ``SM'' to 246.  The other options are
+unchanged.
+</example>
+</doc>
+<code>
+RGESetModelOptions[pModel_,pOpts___]:=Block[{lIndexModel},
+(* sets the options of a model *)
+	Do[If[StringMatchQ[gRGEModel[[lIndexModel]],pModel],gRGEModelSetOptions[[ lIndexModel ]][Sequence[{pOpts}]]],{lIndexModel,1,Length[gRGEModel]}];
+   gRGESolutionValid=false;
+];
+</code>
+</function>
+
+<function name=RGESetOptions>
+<head>
+RGESetOptions::usage="RGESetOptions[model, options] changes the options of the EFTs defined by RGEAdd with name matching <model>. Metacharacters like * and @ are allowed in the string <model>.";
+</head>
+<doc level=simple>
+\function{RGESetOptions[\param{model},\param{options}]} changes the options
+of the EFTs defined by \function{RGEAdd} with name matching \param{model} to \param{options}. Metacharacters, like * and @, are
+allowed in the name.
+<example>
+\begin{verbatim}
+  RGESetOptions["MSSM",RGEtan\[Beta]->40]
+\end{verbatim}
+This sets $\tan\beta$ of the ``MSSM'' to 40.  The EFT must have been
+added earlier by \function{RGEAdd["MSSM"]}.  The other options are
+unchanged.
+</example>
+<implementation>
+\param{model name} is matched against all model names with
+\function{StringMatchQ}.
+</implementation>
+</doc>
+<code>
+RGESetOptions[pModel_,pOpts___]:=RGESetEFTOptions[pModel,pOpts];
+</code>
+</function>
+
+<function name=RGEChangeOptions>
+<head>
+RGEChangeOptions::usage="RGEChangeOptions[scale, options] sets the options of the model at the scale <scale>. See the manual for a list of the possible options in the section of the specific model.";
+</head>
+<doc level=internal>
+\function{RGEChangeOptions[\param{scale},\optparam{options}]} sets the options
+for the model at the given scale.
+</doc>
+<code>
+RGEChangeOptions[pScale_,pOpts___]:=Block[{lIndexRGEModel,lOpts,lFilterOpts},
+(* sets the options of model at the scale pScale *)
+   lIndexRGEModel=GetRGEModelRange[Log[pScale]];
+   lOpts;
+   lFilterOpts;
+   Options[lFilterOpts]=gRGEModelGetOptions[[RGEModel[[lIndexRGEModel,RGEIndexModel]]]][];
+   Options[lOpts]={RGEFilterOptions[lFilterOpts,RGEModel[[lIndexRGEModel,RGEIndexOptions]]]};
+   SetOptions[lOpts,RGEFilterOptions[lOpts,pOpts]];
+   RGEModel[[lIndexRGEModel,RGEIndexOptions]]=Options[lOpts]~Union~{RGEFilterOptions[lFilterOpts,pOpts]};
+];
+</code>
+</function>
+
+<function name=RGEGetEFTOptions>
+<head>
+RGEGetEFTOptions::usage="RGEGetEFTOptions[model] (alias for RGEGetOptions) returns the options set by RGEAdd or RGESetOptions for the EFT's whose names match <model> (must be a string and may contain wildcards).";
+</head>
+<doc level=advanced>
+Same as \function{RGEGetOptions}.
+</doc>
+<code>
+RGEGetEFTOptions[pModel_]:=Block[{lIndexRGEModel,lResult,lAuto},
+(* returns the options of all models named pModel *)
+   lOpts;
+   If[Length[RGEModel]==0,
+       Print["There is no model defined yet. Use RGEAddEFT to define the model
+       you want to use before you use RGEGetEFTOptions to get its options."];
+       Return[];
+   ];
+   lResult={};
+   Do[
+	lAuto=(RGEAutoGenerated/.RGEModel[[lIndexRGEModel,RGEIndexOptions]])/.{RGEAutoGenerated->False};
+	Switch[ lAuto,
+		True,True,
+		_, If[StringMatchQ[gRGEModel[[RGEModel[[lIndexRGEModel,RGEIndexModel]]]],pModel],lResult=Append[lResult,{gRGEModel[[RGEModel[[lIndexRGEModel, RGEIndexModel]]]],RGEModel[[ lIndexRGEModel, RGEIndexOptions ]]}]]
+		  ],{lIndexRGEModel,1,Length[RGEModel]}];
+   Return[lResult];
+];
+</code>
+</function>
+
+<function name=RGEGetModelOptions>
+<head>
+RGEGetModelOptions::usage="RGEGetModelOptions[model name] returns the options of the model <model name>. See the manual for a detailed list of possible options in the section about the specific model";
+</head>
+<doc level=advanced>
+\function{RGEGetModelOptions[\param{model name}]} returns the options of the model
+\param{model name}.
+ <example>
+  \begin{verbatim}
+   RGEGetModelOptions["SM"]
+ \end{verbatim}
+% This returns the options which are currently set for the ``SM''.
+ </example>
+</doc>
+<code>
+RGEGetModelOptions[pModel_]:=Block[{lIndexModel,lResult},
+(* returns the options of a model *)
+   lResult={};
+   Do[If[StringMatchQ[gRGEModel[[lIndexModel]],pModel],lResult=Append[lResult,{gRGEModel[[lIndexModel]],gRGEModelGetOptions[[lIndexModel]][]}]],{lIndexModel,1,Length[gRGEModel]}];
+   Return[lResult];
+];
+</code>
+</function>
+
+<function name=RGEGetOptions>
+<head>
+RGEGetOptions::usage="RGEGetOptions[model] returns the options set by RGEAdd or RGESetOptions for the EFT's whose names match <model> (must be a string and may contain wildcards).";
+</head>
+<doc level=simple>
+\function{RGEGetOptions[\param{model}]} returns the options set by
+\function{RGEAdd} or \function{RGESetOptions} for the EFT \param{model}.
+Wildcards can be used in \param{model}.
+ <example>
+  \begin{verbatim}
+   RGEGetOptions["SM*"]
+ \end{verbatim}
+ This returns the options which are currently set for all EFTs whose
+ names start with ``SM''.
+ </example>
+</doc>
+<code>
+RGEGetOptions[pModel_]:=RGEGetEFTOptions[pModel];
+</code>
+</function>
+
+<function name=RGEGetSolution>
+<head>
+RGEGetSolution::usage="RGEGetSolution[scale, parameter, direction] returns the
+solution of the RGEs at the energy <scale>. <parameter> (optional) specifies the
+quantity of interest, e.g. RGEM\[Nu] (cf. the REAP documentation for the lists
+of possible parameters for each model). If no <parameter> is given, the values
+of all running quantities are returned. <direction> (optional) specifies which
+EFT is used at thresholds. It will not have any effect, if <scale> is no threshold. The default value is 0, which indicates that the EFT
+which is valid immediately below <scale> is used. If <direction> is positive,
+the EFT which is valid above the threshold will be used.";
+</head>
+<doc level=simple>
+\label{sec:RGEGetSolution}
+\function{RGEGetSolution[\param{scale},\optparam{parameter}]} 
+returns the solution of the RGEs at the energy \param{scale}.
+The \optparam{parameter} (optional) specifies the quantity
+of interest (cf.\ Sec.~\ref{sec:Models} for the lists for each model).
+If no \optparam{parameter} is given, the values of all running
+quantities are returned.
+
+<example>
+\begin{verbatim}
+  RGEGetSolution[100,RGEM\[Nu]]
+\end{verbatim}
+returns the neutrino mass matrix at $100\GeV$.
+\begin{verbatim}
+  RGEGetSolution[100]
+\end{verbatim}
+returns all parameters at $100\GeV$.
+</example>
+<implementation>
+  \function{RGEGetSolution} first determines the EFT which is valid at the given scale by searching through RGEModel. Then the name of the model is looked up and the index in Model is determined.
+  Finally the correct function to return the required values is called by using the replacement rules for the model which are stored in \variable{gRGEModelGetSolution}.
+
+A second optional parameter, \optparam{direction}, can be used to specify which EFT is used
+at thresholds. The default value is 0, which indicates that the EFT which
+is valid immediately below \param{scale} is used. If \optparam{direction} is positive, the
+EFT which is valid above the threshold will be used. \optparam{direction} will
+not have any effect, if \param{scale} is no threshold.
+</implementation>
+</doc>
+<code>
+RGEGetSolution[pScale_?NumericQ,pName_:RGEAll,pDirection_:0]:=Block[{lIndexModel, lIndexRGEModel,lLogScale,lDirection},
+(* returns the solution *)
+(* exceptions:  Log[pScale] > gRGEUp || Log[pScale] < gRGEDown --> RGEOutOfRange
+                lIndexRGEModel > Length[RGEModel] --> RGEScaleTooBig 
+*)
+        If[pDirection<=0,lDirection=0,lDirection=1];
+        If[!gRGESolutionValid, RGESolve[gRGEDown,gRGEUp];];
+        lLogScale=Log[pScale];
+        If[lLogScale>gRGEUp||lLogScale<gRGEDown,Throw[lLogScale,RGEOutOfRange]]; 
+	lIndexRGEModel=GetRGEModelRange[lLogScale];
+        If[lIndexRGEModel<Length[RGEModel] && Chop[Abs[RGEModel[[
+	lIndexRGEModel,RGEIndexCutoff ]] - lLogScale]]==0,lIndexRGEModel+=lDirection];
+	If[lIndexRGEModel>Length[RGEModel],Throw[lIndexRGEModel,RGEScaleTooBig]];
+        lIndexModel=RGEModel[[ lIndexRGEModel,RGEIndexModel ]];
+	Return[(pName/.gRGEModelGetSolution[[ lIndexModel ]])[lLogScale,RGEModel[[ lIndexRGEModel,RGEIndexSolution ]], RGEModel[[ lIndexRGEModel, RGEIndexOptions]] ]];
+];
+</code>
+</function>
+
+<function name=RGEGetTransitions>
+<head>
+RGEGetTransitions::usage="RGEGetTransitions[] returns the transitions (thresholds) between the various EFTs in a list containing the energy scale, the model name and its options.";
+</head>
+<doc level=simple>
+\function{RGEGetTransitions[]} returns the transitions (thresholds)
+between the various EFTs in a list
+containing the energy scale, the model name and its options.
+%<example>
+%\begin{verbatim}
+%  Print[RGEGetTransitions[]];
+%  {{10000000,MSSM,{}},{10000,MSSM,{RGEIntegratedOut->1}}}
+%\end{verbatim}
+%</example>
+<implementation>
+  \variable{RGEModel} is essentially returned by \function{RGEGetTransitions}
+</implementation>
+</doc>
+<code>
+RGEGetTransitions[]:=Block[{li,lModel,lTmpModel},
+(* returns RGEModel essentially *)
+    lModel={};
+    Do[
+        lTmpModel={ Exp[RGEModel[[li,RGEIndexCutoff]]],gRGEModel[[RGEModel[[li,RGEIndexModel]] ]], RGEModel[[li,RGEIndexOptions]]};
+(*        Print[lTmpModel[[1]],": ",lTmpModel[[2]],", ",lTmpModel[[3]]];*)
+        lModel=Append[lModel,lTmpModel],{li,Length[RGEModel], 1, -1}];
+    Return[lModel];
+];
+</code>
+</function>
+
+<function name=RGEGetCutoff>
+<head>
+RGEGetCutoff::usage="RGEGetCutoff[Scale] returns the next transition above <Scale>.";
+</head>
+<doc level=internal>
+\function{RGEGetCutoff[\param{scale}]} returns the next transition above
+\param{scale}.
+</doc>
+<code>
+RGEGetCutoff[pScale_,pDirection_:0]:=Block[{lIndexRGEModel},
+(* returns RGEModel essentially *)
+    lIndexRGEModel=GetRGEModelRange[Log[pScale],pDirection];
+    Return[ Exp[RGEModel[[ lIndexRGEModel, RGEIndexCutoff ]]] ];
+];
+</code>
+</function>
+
+<function name=RGEGetModel>
+<head>
+RGEGetModel::usage="RGEGetModel[Scale] returns the name of the model and its options which is defined at <Scale>. See the section about the specific model in the manual.";
+</head>
+<doc level=internal>
+\function{RGEGetModel[\param{scale}]} returns the name of the model valid at
+\param{scale} and its options.
+<example>
+ \begin{verbatim}
+  RGEGetModel[10^4];
+\end{verbatim}
+This returns the model name and its options at the scale $10^4$ GeV.
+</example>
+</doc>
+<code>
+RGEGetModel[pScale_]:=Block[{lIndexRGEModel},
+(* returns the name of the model at pScale and its options *)
+   lIndexRGEModel=GetRGEModelRange[Log[pScale]];
+   Return[{gRGEModel[[ RGEModel[[lIndexRGEModel,RGEIndexModel]] ]],RGEModel[[lIndexRGEModel,RGEIndexOptions]]}];
+];
+</code>
+</function>
+
+<function name=RGEGetSolveModel>
+<head>
+RGEGetSolveModel::usage="RGEGetSolveModel[Modelname] returns the function to solve the model <Modelname>.";
+</head>
+<doc level=internal>
+\function{RGEGetSolveModel[\param{name of model}]} returns the function to solve
+the RGE for the given model.
+<example>
+\begin{verbatim}
+  RGEGetSolveModel["SM"]
+ \end{verbatim}
+This returns REAP`RGESM`Private`SolveModel, the function to solve the RGE for the SM.
+</example>
+</doc>
+<code>
+RGEGetSolveModel[pModel_]:=Block[{lIndexModel},
+(* returns the function to solve the model *)
+   lIndexModel=Flatten[ Position[gRGEModel,pModel] ][[ 1 ]];
+   Return[gRGEModelSolve[[lIndexModel]]];
+];
+</code>
+</function>
+
+<function name=RGEDelModel>
+<head>
+RGEDelModel::usage="RGEDelModel[Scale] removes the model at scale <Scale>.";
+</head>
+<doc level=internal>
+\function{RGEDelModel[\param{scale}]} removes the model at the given scale.
+</doc>
+<code>
+RGEDelModel[pScale_]:=Block[{lIndexRGEModel},
+(* removes the model at pScale *)
+   lIndexRGEModel=GetRGEModelRange[Log[pScale]];
+   RGEModel=Delete[RGEModel,lIndexRGEModel];
+];
+</code>
+</function>
+
+<function name=RGELoadAll>
+<head>
+RGELoadAll::usage="RGELoadAll[filename] loads the saved state which is given in <filename>.";
+</head>
+<doc level=advanced>
+\function{RGELoadAll[\param{filename}]} loads the saved state which is given in
+\param{filename}.
+</doc>
+<code>
+RGELoadAll[pFile_]:=Block[{li,lModel,lModelContext},
+   Needs["REAP`RGESymbol`"];
+   Needs["REAP`RGEUtilities`"];
+   Needs["REAP`RGEParameters`"];
+   Needs["REAP`RGEInitial`"];
+   Needs["MixingParameterTools`MPT3x3`"];
+   Print["loading variables..."];
+   Get[pFile];
+   lModel=gRGEModel;
+   lModelContext=gRGEModelContext;
+   gRGEModel={};
+   gRGEModelContext={};
+   Do[
+      Print["loading ",lModel[[li]]];
+      Needs[lModelContext[[ li ]] ];
+      RGESetModelOptions[ lModel[[ li ]], gRGEModelOptions[[ li ]] ],{li,1,Length[lModel]}];
+   Get[pFile];
+];
+</code>
+</function>
+
+<function name=RGESaveAll>
+<head>
+RGESaveAll::usage="RGESaveAll[filename] saves the state to <filename>.";
+</head>
+<doc level=advanced>
+\function{RGESaveAll[\param{filename}]} saves the state to \param{filename}.
+</doc>
+<code>
+RGESaveAll[pFile_]:=Block[{li,lModel,lModelContext},
+   gRGEModelOptions={};
+   Do[Print["getting options of ",gRGEModel[[li]]];
+      gRGEModelOptions=Append[ gRGEModelOptions, RGEGetModelOptions[gRGEModel[[ li ]] ][[1,2]] ],{li,1,Length[gRGEModel]}];
+   DeleteFile[pFile];
+   Print["saving variables ..."];
+   Save[pFile,{
+        gRGEModel,gRGEModelContext,gRGEModelOptions,
+        RGEModel,gRGEBoundaryScale,gRGEInitial,gRGEDown,gRGEUp,gRGESolutionValid,
+	gRGEModelGetParameters,gRGEModelSolve,gRGEModelSetOptions,gRGEModelGetOptions,gRGEModelGetInitial,gRGETransFunc,gRGEModelGetSolution,gRGETransModel
+   }];
+];
+</code>
+</function>
+
+<function name=RGELoadResults>
+<head>
+RGELoadResults::usage="RGELoadResults[model] loads the saved model which is given in <model>.";
+</head>
+<doc level=advanced>
+\function{RGELoadResults[\param{model}]} loads the saved model which is given in
+\param{model}.
+</doc>
+<code>
+RGELoadResults[pModel_]:=Block[{},
+	RGEModel=pModel;
+	];
+</code>
+</function>
+
+<function name=RGESaveResults>
+<head>
+RGESaveResults::usage="RGESaveResults[] returns a variable containing the current model.";
+</head>
+<doc level=advanced>
+\function{RGESaveModel[]} returns the current model. It can be loaded again by \function{RGELoadResults}.
+</doc>
+<code>
+RGESaveResults[]:=Block[{},
+	Return[RGEModel];
+	];
+</code>
+</function>
+
+<function name=RGESaveInitialData>
+<head>
+RGESaveInitialData::usage="RGESaveInitialData[] returns the initial values,
+the boundary scale and the range used to solve the RGE.";
+</head>
+<doc level=advanced>
+\function{RGESaveInitialData[]} returns all data which is relevant to rerun the
+calculation,i.e. Initial values and the range. The data is returned as a list of replacement rules which
+is self-explaining (RGEUpperBound, RGELowerBound determine the range which is
+passed to \function{RGESolve}, RGEBoundaryScale is the scale where the
+initial data is given and RGEModelData is the model with cutoff and options. The remaining parameters are the initial values.).
+</doc>
+<code>
+RGESaveInitialData[]:=Block[{},
+	Return[{RGEBoundaryScale->gRGEBoundaryScale}
+	~Join~gRGEInitial~Join~{RGEUpperBound->gRGEUp,RGELowerBound->gRGEDown, RGEModelData->RGEModel}];
+	];
+</code>
+</function>
+
+
+

@@ -1,0 +1,71 @@
+\section{Installation}
+
+\subsection{Automatic Installation under UNIX/Linux}
+
+Execute REAP.installer and you are done.
+\begin{verbatim}
+sh REAP.installer
+\end{verbatim}
+After the execution the Mathematica packages are copied to
+\verb+~/.Mathematica/Applications/REAP+ and the documentation and notebooks are in a
+subdirectory of the working directory, which is called REAP.
+
+In addition, you have to install the package MixingParameterTools. There is also
+a script which installs both REAP and MPT at the same time:
+REAP\_MPT.installer.
+
+
+\subsection{Semi-Automatic Installation under UNIX/Linux}
+
+Unpack the archive REAP.tar.gz.
+\begin{verbatim}
+tar -xvzf REAP.tar.gz
+\end{verbatim}
+Then go to the directory REAPInstall and execute the script install.sh.
+\begin{verbatim}
+cd REAPInstall
+sh ./install.sh
+\end{verbatim}
+The script copies the Mathematica packages to
+\verb+~/.Mathematica/Applications/REAP+.  
+The documentation and some sample notebooks are placed in a new
+subdirectory of the working directory called REAP.  Hence, the folder
+REAPInstall can be deleted now.
+
+In addition, you have to install the package MixingParameterTools.
+REAP and MPT can be installed simultaneously by using the archive
+REAP\_MPT.tar.gz.  The procedure is completely analogous to the one
+described above.
+
+
+\subsection{Installation by Hand}
+
+In order to install the package(s) manually, unpack the archive
+REAP.tar.gz first.  Under UNIX/Linux, type
+\begin{verbatim}
+tar -xvzf REAP.tar.gz
+\end{verbatim}
+On Windows systems, a program like WinZip can be used.
+Then move the directory REAP from the folder
+REAPInstall to the directory
+where the Mathematica add-ons are located, e.g.\
+\begin{verbatim}
+mv REAPInstall/REAP ~/.Mathematica/Applications/
+\end{verbatim}
+under UNIX/Linux. 
+Under Windows XP, the path to the add-on directory should be something
+like \verb+Application Data\Mathematica\Applications+.
+The documentation and some sample notebooks can be found in
+REAPInstall/Doc/REAP/.
+
+In addition, you have to install the package MixingParameterTools.
+To install both REAP and MPT at the same time, you can use the archive
+REAP\_MPT.tar.gz.  The procedure is the same as above (except that the 
+installation directory is called REAP\_MPTInstall now), supplemented by
+an analogous step for moving the MPT directory, e.g.
+\begin{verbatim}
+mv REAP_MPTInstall/MixingParameterTools ~/.Mathematica/Applications/
+\end{verbatim}
+
+
+\endinput

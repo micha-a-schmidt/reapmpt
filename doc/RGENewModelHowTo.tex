@@ -1,0 +1,129 @@
+
+\section{How to define a new model}
+
+A model has to provide several functions.  In the following a simple example of
+a toy model with one running coupling constant is shown.  It is contained in the
+file \texttt{RGEToyModel.m}.
+
+
+\begin{enumerate}
+  \item First of all it must have a function returning the parameters with no arguments.
+\begin{verbatim}
+Parameters={\[Lambda]};
+
+ClearAll[GetParameters];
+GetParameters[]:= Module[{},
+   Return[Parameters];
+];
+\end{verbatim}
+
+\item Furthermore there has to be a function to solve the RGE.
+
+\begin{verbatim}
+ClearAll[RGE];
+RGE:={  D[\[Lambda][t],t]==Beta\[Lambda][\[Lambda][t]] };
+
+ClearAll[Beta\[Lambda]];
+Beta\[Lambda][\[Lambda]_] :=-7 * 1/(16*Pi^2) * \[Lambda]^3;
+
+ClearAll[SolveModel];
+SolveModel[{pUp_,pUpModel_,pUpOptions_},{pDown_,pDownModel_,pDownOptions_},
+           pDirection_,pBoundary_,pInitial_,pOpts___]
+           :=Module[{lSolution,lNDSolveOpts,lNewScale,lInitial},
+        lNDSolveOpt;
+        Options[lNDSolveOpts]=Options[NDSolve];
+        SetOptions[lNDSolveOpts,FilterOptions[NDSolve,Options[RGEOptions]]];
+        SetOptions[lNDSolveOpts,FilterOptions[NDSolve,pOpts]];
+        lInitial=SetInitial[pBoundary,pInitial];
+        lSolution=NDSolve[RGE ~Join~ lInitial, Parameters,{t,pDown,pUp},
+                Sequence[Options[lNDSolveOpts]]];
+        If[lDirection>0,lNewScale=pUp,lNewScale=pDown];
+        Return[{lSolution,lNewScale,0}];
+];
+\end{verbatim}
+
+  The arguments of \function{SolveModel} are
+  \begin{itemize}
+    \item pUp is the upper bound. It is the logarithm of the renormalization scale $\log\mu$.
+    \item pUpModel is the modelname of the model which is valid above pUp.
+    \item pUpOptions are the options of the model which is valid above pUp.
+      
+    \item pDown, pDownModel and pDownOptions are the corresponding options for
+    the lower bound.
+  \item pDirection specifies whether the RGEs are solved upwards or downwards.
+  \item pBoundary is the scale where the initial values are given. It is the
+  logarithm of the renormalization scale scale $\log\mu$.
+  \item pInitial is the list of initial values which given as replacement rules.
+  \item pOpts are options for NDSolve,\dots .
+  \end{itemize}
+
+\item The transition functions provide the possibility to implement a model
+which has several transitions to other EFT's (e.g. integrating out degrees of freedom like
+heavy right handed neutrinos):
+\begin{verbatim}
+ClearAll[Transition];
+Transition[pScale_?NumericQ,pDirection_?NumericQ,pSolution_,pToOpts_,pFromOpts_]
+         :=Module[{},
+       Return[({RGE\[Lambda]->\[Lambda][pScale]}/.pSolution)[[1]]];
+];
+\end{verbatim}
+
+\item The model has to provide initial values. The only argument of the function
+  are the specified initial values of the user. The initial values are returned as replacement rules.
+\begin{verbatim}
+ClearAll[GetInitial];
+GetInitial[pOpts___:{}]:=Module[{lInitial,l\[Lambda]},
+        lInitial={RGE\[Lambda]->0.1};
+        l\[Lambda]=(RGE\[Lambda]/.pOpts)/.lInitial;
+        Return[{RGE\[Lambda]->l\[Lambda]}];
+];
+\end{verbatim}
+
+\item The model has to provide functions to set and return options.  The
+function to set the options takes the options as parameters and the function
+returning the options doesn't have any parameters.
+\begin{verbatim}
+ClearAll[ModelSetOptions];
+ModelSetOptions[pOpts_]:= Module[{},
+    SetOptions[RGEOptions,FilterOptions[RGEOptions,pOpts]];
+];
+
+ClearAll[ModelGetOptions];
+ModelGetOptions[]:= Module[{},
+   Return[Options[RGEOptions]];
+];
+\end{verbatim}
+
+\item Finally the model has to provide functions to return the solution which
+  take as argument the logarithmic energy scale $\log\mu$ and the solution for
+  this energy range. \param{pOpts} might contain options which are relevant for
+  the model.
+
+\begin{verbatim}
+ClearAll[GetSolution];
+GetSolution[pScale_,pSolution_,pOpts___]:=Module[{},
+        Return[({\[Lambda][pScale]}/.pSolution)[[1]]];
+];
+\end{verbatim}
+
+\end{enumerate}
+
+At last the model has to be registered.
+
+The function \function{RGERegisterModel[\param{name}, \param{function returning
+parameters}, \param{ solution}, \param{list of transition
+functions}, \param{provide initial values}, \param{set options}, \param{get
+options}]} of the package \package{REAP} is used to register a new
+model (see \ref{func:RGERegisterModel}).
+
+\begin{verbatim}
+RGERegisterModel["Toy","REAP`Toy`",
+        `Private`GetParameters,
+        `Private`SolveModel,
+        {RGEAll->`Private`GetSolution},
+        {{"Toy",`Private`Transition}},
+        `Private`GetInitial,
+        `Private`ModelSetOptions,
+        `Private`ModelGetOptions
+];
+\end{verbatim}

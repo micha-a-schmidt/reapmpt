@@ -1,0 +1,222 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% models
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Models\label{sec:Models}}
+
+%\subsection{\package{RGEToyModel}}
+%This package contains a toy model for testing purposes.
+
+\subsection{Standard Model (SM)}
+
+\subsubsection[\package{RGESM}]{\package{REAP`RGESM`}}
+This package contains the Standard Model extended by an arbitrary number of right-handed neutrinos (SM)
+to 1 loop order.  It is possible to automatically find transitions where heavy
+neutrinos are integrated out.  However, quarks are not integrated out.
+
+\vspace{2ex}
+<REMOVE level=simple>
+Options:
+</REMOVE>
+<PERL level=advanced|internal>
+our $level;
+ModelDoc("../source/RGEModelOptions.cxml","SM",$level);
+</PERL>
+
+Options used by \function{RGESetInitial}:
+
+If the default values of all parameters are used, the resulting parameters will
+be compatible to the experimental data at the Z boson mass. The number of right-handed neutrinos is given by the initial conditions. There
+is no need to specify the number of neutrinos somewhere else.
+<PERL>
+our $level;
+ModelDoc("../source/RGEModelInitial.cxml","SM",$level);
+</PERL>
+
+Parameters accepted by \function{RGEGetSolution}:
+<PERL>
+our $level;
+ModelOutputDoc("../source/RGEOutput.cxml","SM",$level);
+</PERL>
+
+\subsubsection[\package{RGESM0N}]{\package{REAP`RGESM0N`}}
+This package contains the Standard Model without any right-handed neutrinos
+(SM0N) to 1 loop order.
+
+\vspace{2ex} It has the same parameters and options as \package{RGESM},
+with the following exceptions:  The only
+missing options are RGEIntegratedOut, RGESearchTransition, RGEThresholdFactor,
+RGEPrecision and RGEMaxNumberIterations, which are used to control the process
+of integrating out.  Besides, RGEM$\nu$r and RGEY$\nu$ are no parameters of
+\function{RGESetInitial}, and RGE$\epsilon$Max, RGE$\epsilon$, RGEM1Tilde, RGERawM$\nu$r and RGERawY$\nu$ are not accepted as
+parameters by \function{RGEGetSolution}.  \function{RGESetInitial} has
+an additional option: RGESuggestion can be used to choose between
+different sets of default values, ``GUT'' (default) and ``MZ''.  They
+refer to typical parameter values at the GUT scale or at the $Z$ mass,
+respectively.
+
+\subsubsection[\package{RGESMDirac}]{\package{REAP`RGESMDirac`}}
+This package contains the Standard Model with Dirac Neutrinos to 1 loop order.
+
+\vspace{2ex} It has the same parameters and options as \package{RGESM},
+with the following exceptions:  The only
+missing options are RGEIntegratedOut, RGESearchTransition, RGEThresholdFactor,
+RGEPrecision and RGEMaxNumberIterations, which are used to control the process
+of integrating out.  In addition RGE$\kappa$ and RGEM$\nu$r are no parameters of
+\function{RGESetInitial} and RGEMixingParameters, RGE$\epsilon$Max, RGE$\epsilon$, RGEM1Tilde, RGERawM$\nu$r, RGERawY$\nu$ and RGE$\kappa$ are not
+accepted as parameters by \function{RGEGetSolution}.
+\function{RGESetInitial} has an additional option: RGESuggestion can be
+used to choose between different sets of default values, ``GUT''
+(default) and ``MZ''.  They refer to typical parameter values at the GUT
+scale or at the $Z$ mass, respectively.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Minimal Supersymmetric Standard Model (MSSM)}
+
+\subsubsection[\package{RGEMSSM}]{\package{REAP`RGEMSSM`}}
+This package contains the Minimal Supersymmetric Standard Model extended by an arbitrary number of 
+right-handed neutrinos (MSSM) to 1 and 2 loop order.
+
+It is possible to automatically find transitions where heavy neutrinos are
+integrated out.  But neither quarks are integrated out nor MSSM thresholds are
+considered. 
+
+Options:
+<PERL>
+our $level;
+ ModelDoc("../source/RGEModelOptions.cxml","MSSM",$level);
+</PERL>
+
+Options used by \function{RGESetInitial}:
+
+If the default values of all parameters are used, the resulting parameters will
+be compatible to the experimental data at the Z boson mass. The number of right-handed neutrinos is given by the initial conditions. There
+is no need to specify the number of neutrinos somewhere else.
+<PERL>
+our $level;
+ModelDoc("../source/RGEModelInitial.cxml","MSSM",$level);
+</PERL>
+
+Parameters accepted by \function{RGEGetSolution}:
+<PERL>
+our $level;
+ModelOutputDoc("../source/RGEOutput.cxml","MSSM",$level);
+</PERL>
+
+\subsubsection[\package{RGEMSSM0N}]{\package{REAP`RGEMSSM0N`}}
+This package contains the Minimal Supersymmetric Standard Model (MSSM) without
+any right-handed neutrinos to 1 and 2 loop order.
+
+\vspace{2ex} It has the same parameter and options as \package{RGEMSSM}.  The
+only missing options are RGEIntegratedOut, RGESearchTransition,
+RGEThresholdFactor, RGEPrecision and RGEMaxNumberIterations, which are used to
+control the process of integrating out.  In addition RGEM$\nu$r and RGEY$\nu$
+are no parameters of \function{RGESetInitial} and RGE$\epsilon$Max,
+RGE$\epsilon$, RGEM1Tilde, RGERawM$\nu$r and RGERawY$\nu$
+are not accepted as parameters by \function{RGEGetSolution}.
+
+
+\subsubsection[\package{RGEMSSMDirac}]{\package{REAP`RGEMSSMDirac`}}
+This package contains the MSSM with Dirac Neutrinos to 1 loop order and 2 loop
+order.
+
+\vspace{2ex} It has the same parameter and options as \package{RGEMSSM}.  The
+only missing options are RGEIntegratedOut, RGESearchTransition,
+RGEThresholdFactor, RGEPrecision and RGEMaxNumberIterations, which are used to
+control the process of integrating out.  In addition RGEM$\nu$r and RGE$\kappa$
+are no parameter of \function{RGESetInitial} and RGEMixingParameters, RGE$\epsilon$Max,
+RGE$\epsilon$, RGEM1Tilde, RGERawM$\nu$r, RGERawY$\nu$ and
+RGE$\kappa$ are not accepted as parameters by \function{RGEGetSolution}.
+
+\subsection{Two Higgs Doublet Model (2HDM)}
+
+\subsubsection[\package{RGE2HDM}]{\package{REAP`RGE2HDM`}}
+This package contains the Two Higgs Doublet Model (2HDM) with a $\mathbb{Z}_2$
+symmetry extended by an arbitrary number of right-handed neutrinos. The charged leptons always couple to the first Higgs. In addition
+there are right-handed neutrinos. The $\beta$-functions are to 1 loop order. The
+vevs of the Higgs fields are $v_1=\braket{\phi_1}$ and
+$v_2=\braket{\phi_2}$. They obey $v^2=v_1^2+v_2^2$, $v_1=v\cos\beta$ and
+$v_2=v\sin\beta$, where v is the v.e.v. of the SM Higgs and $\beta$
+($\tan\beta=\frac{v_2}{v_1}$, $\beta\in\left(0,\frac{\pi}{2}\right)$) is used to
+parametrize the Higgs vevs.
+
+Thus there are 2 dimension 5 operators which give mass to the light neutrinos.
+\begin{equation*}
+  \mathcal{L}_\kappa^{(ii)}=\frac{1}{4}\kappa_{gf}^{(ii)}\overline{l_{Lc}^C}^g\epsilon^{cd}\phi_d^{(i)}l_{Lb}^f\epsilon^{ba}\phi_a^{(i)}+\mathrm{h.c.}\quad\quad(i=1\;
+  or\; 2)
+\end{equation*}
+The Higgs potential is
+\begin{eqnarray*}
+\mathcal{L}_{2Higgs}&=& -\frac{\lambda_1}{4}
+\left(\phi^{(1)\dagger}\phi^{(1)}\right)^2 -\frac{\lambda_2}{4}
+\left(\phi^{(2)\dagger}\phi^{(2)}\right)^2\\
+&&-\lambda_3\left(\phi^{(1)\dagger}\phi^{(1)}\right)\left(\phi^{(2)\dagger}\phi^{(2)}\right)
+-\lambda_4\left(\phi^{(1)\dagger}\phi^{(2)}\right)\left(\phi^{(2)\dagger}\phi^{(1)}\right)
+\\ &&
+-\left[\frac{\lambda_5}{4}\left(\phi^{(1)\dagger}\phi^{(2)}\right)^2+\mathrm{h.c.}\right]\\
+\end{eqnarray*}
+
+The charged leptons always couple to the first Higgs field and the coupling of
+the other fields to the Higgs fields is determined by RGEModelOptions.
+
+It is possible to automatically find transitions where heavy neutrinos are
+integrated out.  But no other particles are integrated out.
+
+Options:
+<PERL>
+our $level;
+ModelDoc("../source/RGEModelOptions.cxml","2HDM",$level);
+</PERL>
+
+Options used by \function{RGESetInitial}:
+
+If the default values of all parameters are used, the resulting parameters will
+be compatible to the experimental data at the Z boson mass. The number of right-handed neutrinos is given by the initial conditions. There
+is no need to specify the number of neutrinos somewhere else.
+<PERL>
+our $level;
+ModelDoc("../source/RGEModelInitial.cxml","2HDM",$level);
+</PERL>
+
+Parameters accepted by \function{RGEGetSolution}:
+<PERL>
+our $level;
+ModelOutputDoc("../source/RGEOutput.cxml","2HDM",$level);
+</PERL>
+
+  
+
+\subsubsection[\package{RGE2HDM0N}]{\package{REAP`RGE2HDM0N`}}
+This package contains the Two Higgs Doublet Model (2HDM) with a $\mathbb{Z}_2$
+symmetry without right-handed neutrinos.
+
+\vspace{2ex} It has the same parameters and options as
+\package{RGE2HDM}, with the following exceptions:  The
+only missing options are RGEIntegratedOut, RGESearchTransition,
+RGEThresholdFactor, RGEPrecision and RGEMaxNumberIterations, which are used to
+control the process of integrating out.  In addition RGEM$\nu$r and RGEY$\nu$
+are no parameters of \function{RGESetInitial} and RGEM1Tilde, RGERawM$\nu$r and RGERawY$\nu$
+are not accepted as parameters by \function{RGEGetSolution}.
+\function{RGESetInitial} has an additional option: RGESuggestion can be
+used to choose between different sets of default values, ``GUT''
+(default) and ``MZ''.  They refer to typical parameter values at the GUT
+scale or at the $Z$ mass, respectively.
+
+
+\subsubsection[\package{RGE2HDMDirac}]{\package{REAP`RGE2HDMDirac`}}
+This package contains the 2HDM with Dirac neutrinos to 1 loop order.
+
+\vspace{2ex} It has the same parameters and options as
+\package{RGE2HDM}, with the following exceptions: The
+only missing options are RGEIntegratedOut, RGESearchTransition,
+RGEThresholdFactor, RGEPrecision and RGEMaxNumberIterations, which are used to
+control the process of integrating out.  In addition RGEM$\nu$r, RGE$\kappa$1
+and RGE$\kappa$2 are no parameter of \function{RGESetInitial} and
+RGEMixingParameters, RGEM1Tilde, RGERawM$\nu$r,
+RGERawY$\nu$, RGE$\kappa$1 and RGE$\kappa$2 are not accepted as parameters by
+\function{RGEGetSolution}.
+\function{RGESetInitial} has an additional option: RGESuggestion can be
+used to choose between different sets of default values, ``GUT''
+(default) and ``MZ''.  They refer to typical parameter values at the GUT
+scale or at the $Z$ mass, respectively.

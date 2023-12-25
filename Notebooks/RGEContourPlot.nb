@@ -1,0 +1,492 @@
+(* Content-type: application/mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 6.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       145,          7]
+NotebookDataLength[     15930,        482]
+NotebookOptionsPosition[     14179,        429]
+NotebookOutlinePosition[     14915,        454]
+CellTagsIndexPosition[     14872,        451]
+WindowFrame->Normal
+ContainsDynamic->False*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Remove", "[", "\"\<Global`*\>\"", "]"}], ";"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"If", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"ToExpression", "[", 
+      RowBox[{
+       RowBox[{"Characters", "[", "$Version", "]"}], "[", 
+       RowBox[{"[", "1", "]"}], "]"}], "]"}], "<", "6"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"Get", "[", "\"\<Graphics`FilledPlot`\>\"", "]"}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Get", "[", "\"\<Graphics`Colors`\>\"", "]"}]}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"ForestGreen", "=", 
+      RowBox[{"RGBColor", "[", 
+       RowBox[{"0.1", ",", "0.75", ",", "0.2"}], "]"}]}], ";"}]}], 
+   "\[IndentingNewLine]", "]"}], ";"}]], "Input",
+ CellChangeTimes->{{3.435587848557613*^9, 3.435587856517888*^9}, {
+  3.435655531948548*^9, 3.435655544087432*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<REAP`RGEMSSM`\>\"", "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{"Needs", "[", "\"\<BarCharts`\>\"", "]"}], ";", 
+    RowBox[{"Needs", "[", "\"\<Histograms`\>\"", "]"}], ";", 
+    RowBox[{"Needs", "[", "\"\<PieCharts`\>\"", "]"}]}], ")"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<AnalyticRGEvolution`\>\"", "]"}], 
+  ";"}]}], "Input",
+ CellChangeTimes->{{3.436080490141746*^9, 3.436080490512207*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"MZ", "=", 
+   RowBox[{"RGEMass", "[", "\"\<Z\>\"", "]"}]}], ";"}]], "Input"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ClearAll", "[", "tstMNSParameters", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"tstMNSParameters", "[", "t_", "]"}], ":=", 
+   RowBox[{"(", 
+    RowBox[{"MNSParameters", "[", 
+     RowBox[{
+      RowBox[{"RGEGetSolution", "[", 
+       RowBox[{
+        RowBox[{"Exp", "[", "t", "]"}], ",", "RGEM\[Nu]"}], "]"}], ",", 
+      RowBox[{"RGEGetSolution", "[", 
+       RowBox[{
+        RowBox[{"Exp", "[", "t", "]"}], ",", "RGEYe"}], "]"}]}], "]"}], 
+    ")"}]}], ";"}]}], "Input"],
+
+Cell["Funktion zum Restrukurieren der Daten", "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ClearAll", "[", "MyTrans", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"MyTran", "[", "M_", "]"}], ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"N", ",", "Len"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"N", "=", 
+       RowBox[{"Table", "[", 
+        RowBox[{
+         RowBox[{"Flatten", "[", 
+          RowBox[{"M", "\[LeftDoubleBracket]", 
+           RowBox[{"i", ",", "j"}], "\[RightDoubleBracket]"}], "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"i", ",", "iMax"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"j", ",", "jMax"}], "}"}]}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Len", "=", 
+       RowBox[{"Length", "[", 
+        RowBox[{"N", "\[LeftDoubleBracket]", 
+         RowBox[{"1", ",", "1"}], "\[RightDoubleBracket]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Return", "[", 
+       RowBox[{"Table", "[", 
+        RowBox[{
+         RowBox[{"Table", "[", 
+          RowBox[{
+           RowBox[{"N", "\[LeftDoubleBracket]", 
+            RowBox[{"i", ",", "j", ",", "f"}], "\[RightDoubleBracket]"}], ",",
+            
+           RowBox[{"{", 
+            RowBox[{"i", ",", "iMax"}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"j", ",", "jMax"}], "}"}]}], "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"f", ",", "Len"}], "}"}]}], "]"}], "]"}], ";"}]}], 
+    "\[IndentingNewLine]", "]"}]}], ";"}]}], "Input"],
+
+Cell["Optionen f\[UDoubleDot]r die Plots", "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"ClearAll", "[", "myFrameTicks", "]"}], ";"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"ClearAll", "[", 
+   RowBox[{
+   "iMax", ",", "jMax", ",", "iScale", ",", "jScale", ",", "i", ",", "j", ",",
+     "xMax", ",", "yMax"}], "]"}], ";"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"$TextStyle", "=", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"FontFamily", "\[Rule]", "\"\<Times\>\""}], ",", 
+      RowBox[{"FontSize", "\[Rule]", "12"}], ",", 
+      RowBox[{"SingleLetterItalics", "\[Rule]", "False"}]}], "}"}]}], 
+   ";"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"ClearAll", "[", "NumFrameTicks", "]"}], ";"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"NumFrameTicks", "=", "10"}], ";"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"myFrameTicks", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"Table", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"1", "+", 
+          RowBox[{"i", "*", 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"iMax", "-", "1"}], ")"}], "/", "NumFrameTicks"}]}]}], 
+         ",", 
+         RowBox[{"xMin", "+", 
+          RowBox[{"i", "*", 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"xMax", "-", "xMin"}], ")"}], "/", 
+            "NumFrameTicks"}]}]}]}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"i", ",", "0", ",", "NumFrameTicks"}], "}"}]}], "]"}], ",", 
+     RowBox[{"Table", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"1", "+", 
+          RowBox[{"j", "*", 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"jMax", "-", "1"}], ")"}], "/", "NumFrameTicks"}]}]}], 
+         ",", 
+         RowBox[{"yMin", "+", 
+          RowBox[{"j", "*", 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"yMax", "-", "yMin"}], ")"}], "/", 
+            "NumFrameTicks"}]}]}]}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"j", ",", "0", ",", "NumFrameTicks"}], "}"}]}], "]"}], ",", 
+     "Automatic", ",", "Automatic"}], "}"}]}], ";"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"SetOptions", "[", 
+   RowBox[{"ListContourPlot", ",", 
+    RowBox[{"ColorFunction", "\[Rule]", 
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"GrayLevel", "[", 
+        RowBox[{"0.5", "+", "#"}], "]"}], "&"}], ")"}]}], ",", 
+    RowBox[{"FrameTicks", "\[Rule]", "myFrameTicks"}], ",", 
+    RowBox[{"Contours", "\[Rule]", "10"}], ",", 
+    RowBox[{"FrameLabel", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<\!\(\*SubscriptBox[\(\[Phi]\), \(1\)]\)\>\"", ",", 
+       "\"\<\!\(\*SubscriptBox[\(\[Phi]\), \(2\)]\)\>\""}], "}"}]}], ",", 
+    RowBox[{"PlotRange", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "iMax"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "jMax"}], "}"}], ",", "Automatic"}], "}"}]}]}], 
+   "]"}], ";"}]], "Input"],
+
+Cell["Anzahl der Datenpunkte die genommen werden", "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"iMax", "=", "10"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"jMax", "=", "10"}], ";"}]}], "Input"],
+
+Cell["Bereich der gescannt wird:", "Text"],
+
+Cell[BoxData[{
+ RowBox[{"xMax", "=", 
+  RowBox[{"2", "\[Pi]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"yMax", "=", 
+   RowBox[{"2", "\[Pi]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"xMin", "=", "0"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"yMin", "=", "0"}], ";"}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"iScale", "=", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"xMax", "-", "xMin"}], ")"}], "/", 
+    RowBox[{"(", 
+     RowBox[{"iMax", "-", "1"}], ")"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"jScale", "=", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"yMax", "-", "yMin"}], ")"}], "/", 
+    RowBox[{"(", 
+     RowBox[{"jMax", "-", "1"}], ")"}]}]}], ";"}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"ClearAll", "[", 
+   RowBox[{"MNSParamGUT", ",", "MNSParamMZ"}], "]"}], ";"}]], "Input"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"MNSParamGUT", "=", 
+   RowBox[{"ConstantArray", "[", 
+    RowBox[{"0", ",", 
+     RowBox[{"{", 
+      RowBox[{"iMax", ",", "jMax"}], "}"}]}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"MNSParamMZ", "=", 
+   RowBox[{"ConstantArray", "[", 
+    RowBox[{"0", ",", 
+     RowBox[{"{", 
+      RowBox[{"iMax", ",", "jMax"}], "}"}]}], "]"}]}], ";"}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"For", "[", 
+   RowBox[{
+    RowBox[{"i", "=", "1"}], ",", 
+    RowBox[{"i", "\[LessEqual]", "iMax"}], ",", 
+    RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"For", "[", 
+      RowBox[{
+       RowBox[{"j", "=", "1"}], ",", 
+       RowBox[{"j", "\[LessEqual]", "jMax"}], ",", 
+       RowBox[{"j", "++"}], ",", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"RGEReset", "[", "]"}], ";", "\[IndentingNewLine]", 
+        "\[IndentingNewLine]", 
+        RowBox[{"RGEAddEFT", "[", "\"\<MSSM\>\"", "]"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"RGEAddEFT", "[", 
+         RowBox[{"\"\<SM\>\"", ",", 
+          RowBox[{"RGECutoff", "\[Rule]", "1000"}]}], "]"}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"RGESetEFTOptions", "[", 
+         RowBox[{"\"\<*\>\"", ",", "\[IndentingNewLine]", 
+          RowBox[{"RGEThresholdFactor", "\[Rule]", "1"}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{"RGEtan\[Beta]", "\[Rule]", "20"}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{"RGESearchTransition", "\[Rule]", "True"}]}], 
+         "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+        "\[IndentingNewLine]", 
+        RowBox[{"RGESetInitial", "[", 
+         RowBox[{
+          RowBox[{"2", " ", 
+           RowBox[{"10", "^", "16"}]}], ",", 
+          RowBox[{"RGESuggestion", "->", "\"\<GUT\>\""}], ",", 
+          RowBox[{"RGE\[Phi]1", "\[Rule]", 
+           RowBox[{"(", 
+            RowBox[{"xMin", "+", 
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{"i", "-", "1"}], ")"}], "*", "iScale"}]}], ")"}]}], 
+          ",", 
+          RowBox[{"RGE\[Phi]2", "\[Rule]", 
+           RowBox[{"(", 
+            RowBox[{"yMin", "+", 
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{"j", "-", "1"}], ")"}], "*", "jScale"}]}], ")"}]}], 
+          ",", 
+          RowBox[{"RGE\[Theta]12", "\[Rule]", 
+           RowBox[{"33", " ", "Degree"}]}], ",", 
+          RowBox[{"RGE\[Theta]13", "\[Rule]", 
+           RowBox[{"0", " ", "Degree"}]}]}], "]"}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"RGESolve", "[", 
+         RowBox[{"MZ", ",", 
+          RowBox[{"3", " ", 
+           RowBox[{"10", "^", "16"}]}], ",", " ", 
+          RowBox[{"Method", "\[Rule]", "StiffnessSwitching"}]}], "]"}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"MNSParamGUT", "\[LeftDoubleBracket]", 
+          RowBox[{"i", ",", "j"}], "\[RightDoubleBracket]"}], "=", 
+         RowBox[{"tstMNSParameters", "[", 
+          RowBox[{"Log", "[", 
+           RowBox[{"2", " ", 
+            RowBox[{"10", "^", "16"}]}], "]"}], "]"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"MNSParamMZ", "\[LeftDoubleBracket]", 
+          RowBox[{"i", ",", "j"}], "\[RightDoubleBracket]"}], "=", 
+         RowBox[{"tstMNSParameters", "[", 
+          RowBox[{"Log", "[", "MZ", "]"}], "]"}]}], ";"}]}], 
+      "\[IndentingNewLine]", "]"}], ";"}]}], "]"}], ";"}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+\[CapitalADoubleDot]nderungen in den einzelnen Parametern in \
+Abh\[ADoubleDot]ngigkeit der beiden Majorana Phasen:\
+\>", "Section"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"ClearAll", "[", "Diff", "]"}], ";"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Diff", "=", 
+   RowBox[{"MyTran", "[", 
+    RowBox[{"MNSParamMZ", "-", "MNSParamGUT"}], "]"}]}], ";"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"ourParameters", "=", 
+   RowBox[{"{", 
+    RowBox[{
+    "\"\<\!\(\*SubscriptBox[\(\[Theta]\), \(12\)]\)\>\"", ",", 
+     "\"\<\!\(\*SubscriptBox[\(\[Theta]\), \(13\)]\)\>\"", ",", 
+     "\"\<\!\(\*SubscriptBox[\(\[Theta]\), \(23\)]\)\>\"", ",", 
+     "\"\<\[Delta]\>\"", ",", 
+     "\"\<\!\(\*SubscriptBox[\(\[Delta]\), \(e\)]\)\>\"", ",", 
+     "\"\<\!\(\*SubscriptBox[\(\[Delta]\), \(\[Mu]\)]\)\>\"", ",", 
+     "\"\<\!\(\*SubscriptBox[\(\[Delta]\), \(\[Tau]\)]\)\>\"", ",", 
+     "\"\<\!\(\*SubscriptBox[\(\[Phi]\), \(1\)]\)\>\"", ",", 
+     "\"\<\!\(\*SubscriptBox[\(\[Phi]\), \(2\)]\)\>\"", ",", 
+     "\"\<\!\(\*SubscriptBox[\(m\), \(1\)]\)\>\"", ",", 
+     "\"\<\!\(\*SubscriptBox[\(m\), \(2\)]\)\>\"", ",", 
+     "\"\<\!\(\*SubscriptBox[\(m\), \(3\)]\)\>\"", ",", 
+     "\"\<\!\(\*SubscriptBox[\(y\), \(e\)]\)\>\"", ",", 
+     "\"\<\!\(\*SubscriptBox[\(y\), \(\[Mu]\)]\)\>\"", ",", " ", 
+     "\"\<\!\(\*SubscriptBox[\(y\), \(\[Tau]\)]\)\>\""}], "}"}]}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.436080742598808*^9, 3.436080745398651*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"For", "[", 
+   RowBox[{
+    RowBox[{"i", "=", "1"}], ",", 
+    RowBox[{"i", "\[LessEqual]", 
+     RowBox[{"Length", "[", "Diff", "]"}]}], ",", 
+    RowBox[{"i", "++"}], ",", 
+    RowBox[{"Print", "[", 
+     RowBox[{"ListContourPlot", "[", 
+      RowBox[{
+       RowBox[{"Diff", "\[LeftDoubleBracket]", "i", "\[RightDoubleBracket]"}],
+        ",", 
+       RowBox[{"PlotLabel", "\[Rule]", 
+        RowBox[{
+        "ourParameters", "\[LeftDoubleBracket]", "i", 
+         "\[RightDoubleBracket]"}]}]}], "]"}], "]"}]}], "]"}], ";"}]], "Input",\
+
+ CellChangeTimes->{{3.436080748112719*^9, 3.436080749510706*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"Diff", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], "//",
+    "MatrixForm"}], "\[IndentingNewLine]"}]], "Input"]
+}, Open  ]]
+},
+WindowSize->{1398, 1023},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+PrintingPageRange->{Automatic, Automatic},
+PrintingOptions->{"FirstPageFooter"->False,
+"FirstPageHeader"->False,
+"Magnification"->1,
+"PaperOrientation"->"Portrait",
+"PaperSize"->{612, 792},
+"PostScriptOutputFile":>FrontEnd`FileName[{$RootDirectory, "afs", "desy.de", 
+   "user", "m", "mratz", "mathematica", "Notebooks", "MassRen"}, "mist.ps", 
+  CharacterEncoding -> "iso8859-1"]},
+ShowSelection->True,
+FrontEndVersion->"6.0 for Linux x86 (32-bit) (June 2, 2008)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[568, 21, 92, 2, 39, "Input"],
+Cell[663, 25, 791, 21, 160, "Input"],
+Cell[1457, 48, 493, 12, 100, "Input"],
+Cell[1953, 62, 111, 3, 39, "Input"],
+Cell[2067, 67, 540, 16, 100, "Input"],
+Cell[2610, 85, 53, 0, 42, "Text"],
+Cell[2666, 87, 1519, 41, 190, "Input"],
+Cell[4188, 130, 50, 0, 42, "Text"],
+Cell[4241, 132, 90, 2, 39, "Input"],
+Cell[4334, 136, 194, 5, 39, "Input"],
+Cell[4531, 143, 328, 9, 70, "Input"],
+Cell[4862, 154, 91, 2, 39, "Input"],
+Cell[4956, 158, 80, 2, 39, "Input"],
+Cell[5039, 162, 1323, 41, 160, "Input"],
+Cell[6365, 205, 846, 23, 70, "Input"],
+Cell[7214, 230, 58, 0, 42, "Text"],
+Cell[7275, 232, 145, 4, 70, "Input"],
+Cell[7423, 238, 42, 0, 42, "Text"],
+Cell[7468, 240, 312, 9, 130, "Input"],
+Cell[7783, 251, 417, 14, 70, "Input"],
+Cell[8203, 267, 122, 3, 39, "Input"],
+Cell[8328, 272, 389, 12, 70, "Input"],
+Cell[8720, 286, 3136, 74, 640, "Input"],
+Cell[CellGroupData[{
+Cell[11881, 364, 142, 3, 79, "Section"],
+Cell[12026, 369, 82, 2, 39, "Input"],
+Cell[12111, 373, 148, 4, 39, "Input"],
+Cell[12262, 379, 1083, 21, 72, "Input"],
+Cell[13348, 402, 642, 18, 39, "Input"],
+Cell[13993, 422, 170, 4, 70, "Input"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+

@@ -1,0 +1,17 @@
+(* The package `REAP' is written for Mathematica 7 and is distributed under the
+terms of GNU Public License http://www.gnu.org/copyleft/gpl.html *)
+
+
+
+
+BeginPackage["REAP`RGESolver`",{"REAP`RGEUtilities`","REAP`RGETakagi`","REAP`RGESymbol`"}];
+
+Print["Loading REAP <INCLUDE>../RGEVersion
+</INCLUDE>"];
+
+
+<PERL>
+Package("RGESolver.cxml","{\"REAP`RGEUtilities`\",\"REAP`RGETakagi`\",\"REAP`RGESymbol`\"}");
+</PERL>
+
+

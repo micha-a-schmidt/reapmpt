@@ -1,0 +1,1360 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.0'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     52957,       1196]*)
+(*NotebookOutlinePosition[     54629,       1249]*)
+(*  CellTagsIndexPosition[     54320,       1237]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Test the mixing parameter tools", "Title"],
+
+Cell["\<\
+This notebook contains several tests of the functions of \
+`MixingParameterTools.m'.\
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell["Preliminaries", "Section"],
+
+Cell["Evaluating the following cell is mandatory:", "Text"],
+
+Cell[BoxData[
+    \(<< MixingParameterTools/MPT3x3.m\)], "Input"],
+
+Cell["\<\
+
+In the following `table of contents' you can go to a function by clicking on \
+it.\
+\>", "Text"],
+
+Cell[TextData[{
+  StyleBox["Table of contents:", "Headline",
+    FontSize->16,
+    FontWeight->"Bold"],
+  "\n1) ",
+  StyleBox["public functions",
+    FontSize->14],
+  ButtonBox["\n",
+    ButtonData:>"CKMParameters",
+    ButtonStyle->"Hyperlink"],
+  StyleBox[ButtonBox["CKMParameters",
+    ButtonData:>"CKMParameters",
+    ButtonStyle->"Hyperlink"], "Outline3"],
+  StyleBox["\n", "Outline3"],
+  StyleBox[ButtonBox["CKMMatrix",
+    ButtonData:>"CKMParameters",
+    ButtonStyle->"Hyperlink"], "Outline3"],
+  StyleBox[ButtonBox["\n",
+    ButtonData:>"Uneutrino",
+    ButtonStyle->"Hyperlink"], "Outline3"],
+  StyleBox[ButtonBox["MNSParameters",
+    ButtonData:>"MNSParameters",
+    ButtonStyle->"Hyperlink"], "Outline3"],
+  StyleBox["\n", "Outline3"],
+  StyleBox[ButtonBox["MNSMatrix\n",
+    ButtonData:>"MNSParameters",
+    ButtonStyle->"Hyperlink"], "Outline3"],
+  StyleBox[ButtonBox["DiracMNSParameters",
+    ButtonData:>"DiracMNSParameters",
+    ButtonStyle->"Hyperlink"], "Outline3"],
+  StyleBox["\n", "Outline3"],
+  StyleBox[ButtonBox["DiracMNSMatrix",
+    ButtonData:>"DiracMNSParameters",
+    ButtonStyle->"Hyperlink"], "Outline3"],
+  "\n2) ",
+  StyleBox["private functions",
+    FontSize->14],
+  ButtonBox["\nMPT3x3OrthogonalMatrix",
+    ButtonData:>"Orthogonal and unitary matrix",
+    ButtonStyle->"Hyperlink"],
+  "\n",
+  ButtonBox["MPT3x3UnitaryMatrix",
+    ButtonData:>"Orthogonal and unitary matrix",
+    ButtonStyle->"Hyperlink"],
+  "\n",
+  ButtonBox["MPT3x3MixingParameters",
+    ButtonData:>"Extract mixing parameters",
+    ButtonStyle->"Hyperlink"],
+  "\n",
+  ButtonBox["MPT3x3MixingMatrixL",
+    ButtonData:>"UL and UR",
+    ButtonStyle->"Hyperlink"],
+  "\n",
+  ButtonBox["MPT3x3MixingMatrixR",
+    ButtonData:>"UL and UR",
+    ButtonStyle->"Hyperlink"],
+  "\n",
+  ButtonBox["MPT3x3NeutrinoMixingMatrix",
+    ButtonData:>"Uneutrino",
+    ButtonStyle->"Hyperlink"]
+}], "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Test CKMParameters and CKMMatrix ", "Section",
+  CellTags->"CKMParameters"],
+
+Cell[BoxData[{
+    \(\(?CKMParameters\)\), "\[IndentingNewLine]", 
+    \(\(?CKMMatrix\)\), "\[IndentingNewLine]", 
+    \(\(?CKMReplacementRules\)\)}], "Input"],
+
+Cell[BoxData[{\(ClearAll[rndMatrix];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"rndMatrix", ":=", 
+        RowBox[{"(", GridBox[{
+              {\(Exp[Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\), \(Exp[
+                  Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\), \(Exp[
+                  Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\)},
+              {\(Exp[Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\), \(Exp[
+                  Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\), \(Exp[
+                  Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\)},
+              {\(Exp[Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\), \(Exp[
+                  Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\), \(Exp[
+                  Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\)}
+              }], ")"}]}], ";"}]}], "Input"],
+
+Cell[BoxData[{\(ClearAll[tmpYd, tmpYu, tmpULu, tmpULd, tmpUCKM, tmpCKM, 
+        tmpUCKMp];\), "\[IndentingNewLine]", \(tmpYd = 
+        rndMatrix;\), "\[IndentingNewLine]", \(tmpYu = 
+        rndMatrix;\), "\[IndentingNewLine]", \(tmpULu = 
+        Catch[MPT3x3MixingMatrixL[
+            tmpYu]];\), "\[IndentingNewLine]", \(tmpULd = 
+        Catch[MPT3x3MixingMatrixL[tmpYd]];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\(\*
+StyleBox[\"Y\",\nFontSlant->\"Italic\"]\)\_u\)=\>\"", ",", "tmpYu"}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_L\%\((u)\)\)=\>\"", ",", 
+          "tmpULu"}], "]"}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_L\%\((u)\)\^T\)\!\(\(\*
+StyleBox[\"Y\",\nFontSlant->\"Italic\"]\)\_u\^\[Dagger]\)\!\(\(\*
+StyleBox[\"Y\",\nFontSlant->\"Italic\"]\)\_u\)\[ThinSpace]\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_L\%\((u)\)\)=\>\"", 
+          ",", \(Chop[
+            Conjugate[Transpose[tmpULu]] . Conjugate[Transpose[tmpYu]] . 
+              tmpYu . tmpULu]\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", \(Print[\*"\"\<\!\(Y\_d\)=\>\"", 
+        tmpYd];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_L\%\((d)\)\)=\>\"", ",", 
+          "tmpULd"}], "]"}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_L\%\((d)\)\^\[Dagger]\)\!\(\(\*
+StyleBox[\"Y\",\nFontSlant->\"Italic\"]\)\_d\^\[Dagger]\)\!\(\(\*
+StyleBox[\"Y\",\nFontSlant->\"Italic\"]\)\_d\)\[ThinSpace]\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_L\%\((d)\)\)=\>\"", 
+          ",", \(Chop[
+            Conjugate[Transpose[tmpULd]] . Conjugate[Transpose[tmpYd]] . 
+              tmpYd . tmpULd]\)}], "]"}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<Naive \!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_CKM\)=\>\"", 
+          ",", \(Conjugate[Transpose[tmpULu]] . tmpULd\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", \(Print["\<Naive CKM parameters: \>", 
+        Catch[MPT3x3MixingParameters[
+            Conjugate[Transpose[tmpULu]] . 
+              tmpULd]]];\), "\[IndentingNewLine]", \(tmpUCKM = 
+        Catch[CKMMatrix[tmpYu, tmpYd]];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_CKM\)=\>\"", ",", "tmpUCKM"}], 
+        "]"}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<Mixing parameters of \!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_CKM\): \>\"", 
+          ",", \(Catch[MPT3x3MixingParameters[tmpUCKM]]\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", \(Print["\<CKM parameters: \>", 
+        Catch[CKMParameters[tmpYu, tmpYd]]];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_CKM\^\[Dagger]\)\[ThinSpace]\!\(\(\
+\*
+StyleBox[\"U\",\n\
+FontSlant->\"Italic\"]\)\_L\%\((u)\)\^\[Dagger]\)\[ThinSpace]\!\(\(\*
+StyleBox[\"Y\",\nFontSlant->\"Italic\"]\)\_d\^\[Dagger]\)\!\(\(\*
+StyleBox[\"Y\",\nFontSlant->\"Italic\"]\)\_d\)\[ThinSpace]\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_L\%\((u)\)\)\[ThinSpace]\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_CKM\)=\>\"", 
+          ",", \(Chop[
+            Conjugate[Transpose[tmpUCKM]] . Conjugate[Transpose[tmpULu]] . 
+              Conjugate[Transpose[tmpYd]] . tmpYd . tmpULu . tmpUCKM]\)}], 
+        "]"}], ";"}], "\[IndentingNewLine]", \(Print["\<Replacement rules: \
+\>", CKMReplacementRules[tmpYu, tmpYd]];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"(*", 
+        RowBox[{\(tmpCKM = Catch[CKMParameters[tmpYu, tmpYd]]\), ";", 
+          "\[IndentingNewLine]", \(tmpUCKMp = 
+            MPT3x3UnitaryMatrix[tmpCKM[\([1]\)], tmpCKM[\([2]\)], 
+              tmpCKM[\([3]\)], tmpCKM[\([4]\)], 0, 0, 0, 0, 0]\), ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"Print", "[", 
+            RowBox[{"\"\<Define new \!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_CKM\) with \!\(\[Delta]\_e\)=\!\(\
+\[Delta]\_\[Mu]\)=\!\(\[Delta]\_\[Tau]\)=\!\(\[CurlyPhi]\_1\)=\!\(\[CurlyPhi]\
+\_2\)=0: \!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_CKM\%\[Prime]\)=\>\"", ",", 
+              "tmpUCKMp"}], "]"}], ";", "\[IndentingNewLine]", 
+          RowBox[{"Print", "[", 
+            RowBox[{"\"\<\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_CKM\%\[Prime]\^\[Dagger]\)\
+\[ThinSpace]\!\(\(\*
+StyleBox[\"U\",\n\
+FontSlant->\"Italic\"]\)\_L\%\((u)\)\^\[Dagger]\)\[ThinSpace]\!\(\(\*
+StyleBox[\"Y\",\nFontSlant->\"Italic\"]\)\_d\^\[Dagger]\)\!\(\(\*
+StyleBox[\"Y\",\nFontSlant->\"Italic\"]\)\_d\)\[ThinSpace]\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_L\%\((u)\)\)\[ThinSpace]\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_CKM\%\[Prime]\)=\>\"", 
+              ",", \(Chop[
+                Conjugate[Transpose[tmpUCKMp]] . 
+                  Conjugate[Transpose[tmpULu]] . 
+                  Conjugate[Transpose[tmpYd]] . tmpYd . tmpULu . 
+                  tmpUCKMp]\)}], "]"}], ";"}], "*)"}]}]}], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Test MNSParameters and MNSMatrix ", "Section",
+  CellTags->"MNSParameters"],
+
+Cell[BoxData[{
+    \(\(?MNSParameters\)\), "\[IndentingNewLine]", 
+    \(\(?MNSMatrix\)\)}], "Input"],
+
+Cell[BoxData[{\(ClearAll[rndMatrix];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"rndMatrix", ":=", 
+        RowBox[{"(", GridBox[{
+              {\(Exp[Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\), \(Exp[
+                  Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\), \(Exp[
+                  Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\)},
+              {\(Exp[Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\), \(Exp[
+                  Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\), \(Exp[
+                  Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\)},
+              {\(Exp[Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\), \(Exp[
+                  Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\), \(Exp[
+                  Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\)}
+              }], ")"}]}], ";"}]}], "Input"],
+
+Cell[BoxData[
+    \(<< MixingParameterTools/MPT3x3.m\)], "Input"],
+
+Cell[BoxData[{\(ClearAll[tmpYe, tmpF, tmpm, tmpU, tmpUL, tmpUMNS, tmpMNS, 
+        tmpUp];\), "\[IndentingNewLine]", \(tmpYe = 
+        rndMatrix;\), "\[IndentingNewLine]", \(tmpF = 
+        rndMatrix;\), "\[IndentingNewLine]", \(tmpm = 
+        tmpF + Transpose[tmpF];\), "\[IndentingNewLine]", \(tmpU = 
+        Catch[MPT3x3NeutrinoMixingMatrix[
+            tmpm]];\), "\[IndentingNewLine]", \(tmpUL = 
+        Catch[MPT3x3MixingMatrixL[tmpYe]];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\*
+StyleBox[\"m\",\nFontSlant->\"Italic\"]\)=\>\"", ",", "tmpm"}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)=\>\"", ",", "tmpU"}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\^T\)\!\(\*
+StyleBox[\"m\",\nFontSlant->\"Italic\"]\)\[ThinSpace]\!\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)=\>\"", 
+          ",", \(Chop[Transpose[tmpU] . tmpm . tmpU]\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", \(Print[\*"\"\<\!\(Y\_e\)=\>\"", 
+        tmpYe];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_L\)=\>\"", ",", "tmpUL"}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_L\^\[Dagger]\)\!\(\(\*
+StyleBox[\"Y\",\nFontSlant->\"Italic\"]\)\_e\^\[Dagger]\)\!\(\(\*
+StyleBox[\"Y\",\nFontSlant->\"Italic\"]\)\_e\)\[ThinSpace]\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_L\)=\>\"", 
+          ",", \(Chop[
+            Conjugate[Transpose[tmpUL]] . Conjugate[Transpose[tmpYe]] . 
+              tmpYe . tmpUL]\)}], "]"}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<Naive \!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_MNS\)=\>\"", 
+          ",", \(Conjugate[Transpose[tmpUL]] . tmpU\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", \(Print["\<Naive MNS parameters: \>", 
+        Catch[MPT3x3MixingParameters[
+            Conjugate[Transpose[tmpUL]] . 
+              tmpU]]];\), "\[IndentingNewLine]", \(tmpUMNS = 
+        Catch[MNSMatrix[tmpm, tmpYe]];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_MNS\)=\>\"", ",", "tmpUMNS"}], 
+        "]"}], ";"}], "\[IndentingNewLine]", \(Print["\<MNS parameters: \>", 
+        Catch[MNSParameters[tmpm, 
+            tmpYe]]];\), "\[IndentingNewLine]", \(Print["\<The MNS parameters \
+and the naive MNS parameters are in general different!\>"];\), "\
+\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_MNS\^T\)\[ThinSpace]\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_L\^T\)\[ThinSpace]\!\(\*
+StyleBox[\"m\",\nFontSlant->\"Italic\"]\)\[ThinSpace]\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_L\)\[ThinSpace]\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_MNS\)=\>\"", 
+          ",", \(Chop[
+            Transpose[tmpUMNS] . Transpose[tmpUL] . tmpm . tmpUL . 
+              tmpUMNS]\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", \(tmpMNS = \(Catch[
+            MNSParameters[tmpm, 
+              tmpYe]]\)[\([1]\)];\), "\[IndentingNewLine]", \(tmpUp = 
+        MPT3x3UnitaryMatrix[tmpMNS[\([1]\)], tmpMNS[\([2]\)], 
+          tmpMNS[\([3]\)], tmpMNS[\([4]\)], 0  tmpMNS[\([5]\)], 
+          0  tmpMNS[\([6]\)], 0  tmpMNS[\([7]\)], tmpMNS[\([8]\)], 
+          tmpMNS[\([9]\)]];\), "\[IndentingNewLine]", \(Print[\*"\"\<Define \
+new MNS matrix with \!\(\[Delta]\_e\)=\!\(\[Delta]\_\[Mu]\)=\!\(\[Delta]\_\
+\[Tau]\)=0: \!\(U\_MNS\%\[Prime]\)=\>\"", tmpUp];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_MNS\%\[Prime]\^T\)\[ThinSpace]\!\(\
+\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_L\^T\)\[ThinSpace]\!\(\*
+StyleBox[\"m\",\nFontSlant->\"Italic\"]\)\[ThinSpace]\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_L\)\[ThinSpace]\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_MNS\%\[Prime]\)=\>\"", 
+          ",", \(Chop[
+            Transpose[tmpUp] . Transpose[tmpUL] . tmpm . tmpUL . tmpUp]\)}], 
+        "]"}], ";"}]}], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Test DiracMNSMatrix and DiracMNSParameters", "Section",
+  CellTags->"DiracMNSParameters"],
+
+Cell[BoxData[{
+    \(\(?DiracMNSMatrix\)\), "\[IndentingNewLine]", 
+    \(\(?DiracMNSParameters\)\)}], "Input"],
+
+Cell[BoxData[{\(ClearAll[rndMatrix];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"rndMatrix", ":=", 
+        RowBox[{"(", GridBox[{
+              {\(Exp[Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\), \(Exp[
+                  Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\), \(Exp[
+                  Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\)},
+              {\(Exp[Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\), \(Exp[
+                  Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\), \(Exp[
+                  Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\)},
+              {\(Exp[Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\), \(Exp[
+                  Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\), \(Exp[
+                  Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\)}
+              }], ")"}]}], ";"}]}], "Input"],
+
+Cell[BoxData[{\(ClearAll[tmpYe, tmpY\[Nu], tmpUL\[Nu], tmpULe, tmpUMNS, 
+        tmpMNS, tmpUMNSp];\), "\[IndentingNewLine]", \(tmpYe = 
+        rndMatrix;\), "\[IndentingNewLine]", \(tmpY\[Nu] = 
+        rndMatrix;\), "\[IndentingNewLine]", \(tmpUL\[Nu] = 
+        Catch[MPT3x3MixingMatrixL[
+            tmpY\[Nu]]];\), "\[IndentingNewLine]", \(tmpULe = 
+        Catch[MPT3x3MixingMatrixL[
+            tmpYe]];\), "\[IndentingNewLine]", \(Print[\*"\"\<\!\(Y\_\[Nu]\)=\
+\>\"", tmpY\[Nu]];\), "\[IndentingNewLine]", \
+\(Print[\*"\"\<\!\(U\_L\%\((\[Nu])\)\)=\>\"", 
+        tmpUL\[Nu]];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(U\_L\%\((\[Nu])\)\^\[Dagger]\)\!\(\(\*
+StyleBox[\"Y\",\nFontSlant->\"Italic\"]\)\_\[Nu]\^\[Dagger]\)\!\(\(\*
+StyleBox[\"Y\",\nFontSlant->\"Italic\"]\)\_\[Nu]\)\[ThinSpace]\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_L\%\((\[Nu])\)\)=\>\"", 
+          ",", \(Chop[
+            Conjugate[Transpose[tmpUL\[Nu]]] . 
+              Conjugate[Transpose[tmpY\[Nu]]] . tmpY\[Nu] . tmpUL\[Nu]]\)}], 
+        "]"}], ";"}], "\[IndentingNewLine]", \(Print[\*"\"\<\!\(Y\_e\)=\>\"", 
+        tmpYe];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_L\%\((e)\)\)=\>\"", ",", 
+          "tmpULe"}], "]"}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_L\%\((e)\)\^\[Dagger]\)\!\(\(\*
+StyleBox[\"Y\",\nFontSlant->\"Italic\"]\)\_e\^\[Dagger]\)\!\(\(\*
+StyleBox[\"Y\",\nFontSlant->\"Italic\"]\)\_e\)\[ThinSpace]\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_L\%\((e)\)\)=\>\"", 
+          ",", \(Chop[
+            Conjugate[Transpose[tmpULe]] . Conjugate[Transpose[tmpYe]] . 
+              tmpYe . tmpULe]\)}], "]"}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<Naive \!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_MNS\)=\>\"", 
+          ",", \(Conjugate[Transpose[tmpULe]] . tmpUL\[Nu]\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", \(Print["\<Naive MNS parameters: \>", 
+        Catch[MPT3x3MixingParameters[
+            Conjugate[Transpose[tmpULe]] . 
+              tmpUL\[Nu]]]];\), "\[IndentingNewLine]", \(tmpUMNS = 
+        Catch[DiracMNSMatrix[tmpY\[Nu], tmpYe]];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_Mns\)=\>\"", ",", "tmpUMNS"}], 
+        "]"}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<Mixing parameters of \!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_MNS\): \>\"", 
+          ",", \(Catch[MPT3x3MixingParameters[tmpUMNS]]\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", \(Print["\<MNS parameters: \>", 
+        Catch[DiracMNSParameters[tmpY\[Nu], 
+            tmpYe]]];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(U\_MNS\^\[Dagger]\)\[ThinSpace]\!\(\(\*
+StyleBox[\"U\",\n\
+FontSlant->\"Italic\"]\)\_L\%\((e)\)\^\[Dagger]\)\[ThinSpace]\!\(\(\*
+StyleBox[\"Y\",\nFontSlant->\"Italic\"]\)\_\[Nu]\^\[Dagger]\)\!\(\(\*
+StyleBox[\"Y\",\nFontSlant->\"Italic\"]\)\_\[Nu]\)\[ThinSpace]\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_L\%\((e)\)\)\[ThinSpace]\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_MNS\)=\>\"", 
+          ",", \(Chop[
+            Conjugate[Transpose[tmpUMNS]] . Conjugate[Transpose[tmpULe]] . 
+              Conjugate[Transpose[tmpY\[Nu]]] . tmpY\[Nu] . tmpULe . 
+              tmpUMNS]\)}], "]"}], ";"}]}], "Input"],
+
+Cell["Test inverted hierarchy", "Text"],
+
+Cell[BoxData[{\(ClearAll[tmpYe, tmpY\[Nu], tmpUL\[Nu], tmpULe, tmpUMNS, 
+        tmpMNS, tmpUMNSp];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"tmpYe", "=", 
+        RowBox[{"(", GridBox[{
+              {\(10\^\(-6\)\), \(10\^\(-7\)\), "0"},
+              {"0", \(10\^\(-3\)\), "0"},
+              {"0", \(10\^\(-5\)\), \(10\^\(-1\)\)}
+              }], ")"}]}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"tmpY\[Nu]", "=", 
+        RowBox[{\(Conjugate[
+            MPT3x3UnitaryMatrix[2\ \[Pi]/6, \[Pi]/10, \[Pi]/4, \[Pi]/3, 0, 0, 
+              0, 0, 0]]\), ".", 
+          RowBox[{"(", GridBox[{
+                {\(\@\(10\^\(-2\) + 2.5\ 10\^\(-3\) + 8\ 10\^\(-5\)\)\), "0", 
+                  "0"},
+                {"0", \(\@\(10\^\(-2\) + 2.5\ 10\^\(-3\)\)\), "0"},
+                {"0", "0", \(10\^\(-1\)\)}
+                }], ")"}], 
+          ".", \(Conjugate[
+            Transpose[
+              MPT3x3UnitaryMatrix[2\ \[Pi]/6, \[Pi]/10, \[Pi]/4, \[Pi]/3, 0, 
+                0, 0, 0, 0]]]\)}]}], 
+      ";"}], "\[IndentingNewLine]", \(tmpUL\[Nu] = 
+        Catch[MPT3x3MixingMatrixL[tmpY\[Nu]]];\), "\n", \(tmpULe = 
+        Catch[MPT3x3MixingMatrixL[
+            tmpYe]];\), "\[IndentingNewLine]", \(Print[\*"\"\<\!\(Y\_\[Nu]\)=\
+\>\"", tmpY\[Nu]];\), "\n", \(Print[\*"\"\<\!\(U\_L\%\((\[Nu])\)\)=\>\"", 
+        tmpUL\[Nu]];\), "\n", \(Print[\*"\"\<\!\(U\_L\%\((\[Nu])\)\^\[Dagger]\
+\)\!\(Y\_\[Nu]\^\[Dagger]\)\!\(Y\_\[Nu]\)\!\(U\_L\%\((\[Nu])\)\)=\>\"", 
+        Chop[Conjugate[Transpose[tmpUL\[Nu]]] . 
+            Conjugate[Transpose[tmpY\[Nu]]] . tmpY\[Nu] . 
+            tmpUL\[Nu]]];\), "\[IndentingNewLine]", \(Print[\*"\"\<\!\(U\_L\%\
+\((\[Nu])\)\)=\>\"", 
+        tmpUL\[Nu]];\), "\[IndentingNewLine]", \(Print[\*"\"\<\!\(U\_MNS\)=\>\
+\"", MatrixForm[
+          Chop[Catch[
+              DiracMNSMatrix[tmpY\[Nu], 
+                tmpYe]]]]];\), "\[IndentingNewLine]", \(Print["\<MNS \
+parameters=\>", DiracMNSParameters[tmpY\[Nu], tmpYe]];\)}], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Test MPT3x3OrthogonalMatrix and MPT3x3UnitaryMatrix", "Section",
+  CellTags->"Orthogonal and unitary matrix"],
+
+Cell[BoxData[""], "Input"],
+
+Cell[BoxData[{
+    \(\(?MPT3x3OrthogonalMatrix\)\), "\[IndentingNewLine]", 
+    \(\(?MPT3x3UnitaryMatrix\)\)}], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Test ExtractMixingParameters", "Section",
+  CellTags->"Extract mixing parameters"],
+
+Cell[BoxData[
+    \(\(?MPT3x3MixingParameters\)\)], "Input"],
+
+Cell[TextData[{
+  "The following should ",
+  StyleBox["not",
+    FontWeight->"Bold"],
+  " work"
+}], "Text"],
+
+Cell[BoxData[
+    RowBox[{"MPT3x3MixingParameters", "[", 
+      RowBox[{"(", GridBox[{
+            {"a", "b", "c"},
+            {"a", "b", "c"},
+            {"a", "c", "b"}
+            }], ")"}], "]"}]], "Input"],
+
+Cell[BoxData[{
+    \(ClearAll[rndUnitaryMatrix]\), "\[IndentingNewLine]", 
+    \(\(rndUnitaryMatrix := 
+        MPT3x3UnitaryMatrix[Random[Real, {0, 4  \[Pi]}], 
+          Random[Real, {0, 4  \[Pi]}], Random[Real, {0, 4  \[Pi]}], 
+          Random[Real, {0, 4  \[Pi]}], Random[Real, {0, 4  \[Pi]}], 
+          Random[Real, {0, 4  \[Pi]}], Random[Real, {0, 4  \[Pi]}], 
+          Random[Real, {0, 4  \[Pi]}], 
+          Random[Real, {0, 4  \[Pi]}]];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(rndUnitaryMatrix\)], "Input"],
+
+Cell[BoxData[
+    \(tmpMist = Catch[MPT3x3MixingParameters[rndUnitaryMatrix]]\)], "Input"],
+
+Cell[BoxData[{
+    \(\(nLoop = 1000;\)\), "\[IndentingNewLine]", 
+    \(Do[tmpMist = ComplexMixingAngles3x3[rndUnitaryMatrix], {i, 1, 
+        nLoop}]\)}], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Test MPT3x3MixingMatrixL and MPT3x3MixingMatrixR", "Section",
+  CellTags->"UL and UR"],
+
+Cell[BoxData[{
+    \(\(?MPT3x3MixingMatrixL\)\), "\[IndentingNewLine]", 
+    \(\(?MPT3x3MixingMatrixR\)\)}], "Input"],
+
+Cell[BoxData[{\(ClearAll[rndMatrix];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"rndMatrix", ":=", 
+        RowBox[{"(", GridBox[{
+              {\(Exp[Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\), \(Exp[
+                  Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\), \(Exp[
+                  Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\)},
+              {\(Exp[Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\), \(Exp[
+                  Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\), \(Exp[
+                  Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\)},
+              {\(Exp[Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\), \(Exp[
+                  Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\), \(Exp[
+                  Random[Complex, {\(-6\), 0.2 + 2  \[Pi]\ I}]]\)}
+              }], ")"}]}], ";"}]}], "Input"],
+
+Cell[BoxData[{
+    \(Options[MPT3x3MixingMatrixL]\), "\[IndentingNewLine]", 
+    \(Catch[MPT3x3MixingMatrixL[rndMatrix]]\), "\[IndentingNewLine]", 
+    \(Catch[
+      MPT3x3MixingMatrixL[rndMatrix, 
+        MPTTolerance \[Rule] 10\^\(-9\)]]\), "\[IndentingNewLine]", 
+    \(Options[MPT3x3MixingMatrixL]\), "\[IndentingNewLine]", 
+    \(SetOptions[MPT3x3MixingMatrixL, 
+      MPTTolerance \[Rule] 10\^\(-6\)]\), "\[IndentingNewLine]", 
+    \(MPT3x3MixingMatrixL[rndMatrix]\)}], "Input"],
+
+Cell[BoxData[
+    \(<< MixingParameterTools/MPT3x3.m\)], "Input"],
+
+Cell[BoxData[{
+    \(\(SetOptions[MPT3x3MixingMatrixL, 
+        MPTTolerance \[Rule] 10\^\(-6\)];\)\), "\[IndentingNewLine]", 
+    \(Options[MPT3x3MixingMatrixL]\)}], "Input"],
+
+Cell[BoxData[{\(ClearAll[tmpY, tmpUL, 
+        tmpUR];\), "\[IndentingNewLine]", \(tmpY = 
+        rndMatrix;\), "\[IndentingNewLine]", \(Print["\<Y=\>", 
+        tmpY, \*"\"\<, \!\(Y\^\[Dagger]\)Y=\>\"", 
+        Conjugate[Transpose[tmpY]] . 
+          tmpY];\), "\[IndentingNewLine]", \(tmpUL = 
+        Catch[MPT3x3MixingMatrixL[tmpY, 
+            MPTTolerance \[Rule] 
+              10\^\(-9\)]];\), "\[IndentingNewLine]", \(Print[
+        Det[tmpUL]];\), "\[IndentingNewLine]", \(tmpUR = 
+        Catch[MPT3x3MixingMatrixR[tmpY]];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_R\^\[Dagger]\)\[ThinSpace]\!\(\*
+StyleBox[\"Y\",\nFontSlant->\"Italic\"]\)\[ThinSpace]\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_L\)=\>\"", 
+          ",", \(Chop[Conjugate[Transpose[tmpUR]] . tmpY . tmpUL]\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_R\^\[Dagger]\)\[ThinSpace]\!\(\*
+StyleBox[\"Y\",\nFontSlant->\"Italic\"]\)\[ThinSpace]\!\(\*
+StyleBox[\"Y\",\nFontSlant->\"Italic\"]\^\[Dagger]\)\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_R\)=\>\"", 
+          ",", \(Chop[
+            Conjugate[Transpose[tmpUR]] . tmpY . Conjugate[Transpose[tmpY]] . 
+              tmpUR]\)}], "]"}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_L\^\[Dagger]\)\[ThinSpace]\!\(\*
+StyleBox[\"Y\",\nFontSlant->\"Italic\"]\^\[Dagger]\)\!\(\*
+StyleBox[\"Y\",\nFontSlant->\"Italic\"]\)\[ThinSpace]\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_L\)=\>\"", 
+          ",", \(Chop[
+            Conjugate[Transpose[tmpUL]] . Conjugate[Transpose[tmpY]] . tmpY . 
+              tmpUL]\)}], "]"}], ";"}]}], "Input"],
+
+Cell["Degenerate cases:", "Text"],
+
+Cell[BoxData[{
+    \(\(ClearAll[rndDegenerateMatrix];\)\), "\[IndentingNewLine]", 
+    \(\(rndDegenerateMatrix[x_, y_, z_] := 
+        MPT3x3UnitaryMatrix[{Random[Real, {0, 2  \[Pi]}], 
+              Random[Real, {0, 2  \[Pi]}], Random[Real, {0, 2  \[Pi]}], 
+              Random[Real, {0, 2  \[Pi]}], Random[Real, {0, 2  \[Pi]}], 
+              Random[Real, {0, 2  \[Pi]}], Random[Real, {0, 2  \[Pi]}], 
+              Random[Real, {0, 2  \[Pi]}], Random[Real, {0, 2  \[Pi]}]}] . 
+          DiagonalMatrix[{x, y, z}] . 
+          MPT3x3UnitaryMatrix[{Random[Real, {0, 2  \[Pi]}], 
+              Random[Real, {0, 2  \[Pi]}], Random[Real, {0, 2  \[Pi]}], 
+              Random[Real, {0, 2  \[Pi]}], Random[Real, {0, 2  \[Pi]}], 
+              Random[Real, {0, 2  \[Pi]}], Random[Real, {0, 2  \[Pi]}], 
+              Random[Real, {0, 2  \[Pi]}], 
+              Random[Real, {0, 2  \[Pi]}]}];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(<< MixingParameterTools/MPT3x3.m\)], "Input"],
+
+Cell[BoxData[{\(ClearAll[rndY, tmpUL];\), "\[IndentingNewLine]", \(rndY = 
+        rndDegenerateMatrix[1, 1, 1];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<random matrix with degeneracies: Y=\>", rndY];\), 
+      "\[IndentingNewLine]", \( (*\(Print[
+            Abs[Eigenvalues[
+                rndY]], \@Abs[Eigenvalues[Conjugate[Transpose[rndY]] . \
+rndY]]];\)*) \)}], "\[IndentingNewLine]", \(tmpUL = 
+        MPT3x3MixingMatrixL[rndY];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_L\)=\>\"", ",", "tmpUL"}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_L\^\[Dagger]\)\!\(\*
+StyleBox[\"Y\",\nFontSlant->\"Italic\"]\^\[Dagger]\)\!\(\*
+StyleBox[\"Y\",\nFontSlant->\"Italic\"]\)\[ThinSpace]\!\(\(\*
+StyleBox[\"U\",\nFontSlant->\"Italic\"]\)\_L\)=\>\"", 
+          ",", \(Chop[
+            Conjugate[Transpose[tmpUL]] . Conjugate[Transpose[rndY]] . rndY . 
+              tmpUL]\)}], "]"}], ";"}], "\[IndentingNewLine]", \(Catch[
+      MPT3x3MixingParameters[tmpUL]]\)}], "Input"],
+
+Cell[BoxData[
+    \(Cos[1.23935]\ Cos[0.3314]\)], "Input"],
+
+Cell[BoxData[{
+    \(\(ClearAll[tmpU];\)\), "\[IndentingNewLine]", 
+    \(\(tmpU = 
+        MPT3x3UnitaryMatrix[\[Theta]12, \[Pi]/
+            2, \[Theta]23, \[Delta], \[Delta]e, \[Delta]\[Mu], \
+\[Delta]\[Tau], \[CurlyPhi]1, \[CurlyPhi]2];\)\), "\[IndentingNewLine]", 
+    \(FullSimplify[
+      ComplexExpand[
+        Conjugate[tmpU\[LeftDoubleBracket]2, 1\[RightDoubleBracket]]*
+          tmpU\[LeftDoubleBracket]2, 
+            1\[RightDoubleBracket]]]\), "\[IndentingNewLine]", 
+    \(FullSimplify[
+      ComplexExpand[
+        Conjugate[tmpU\[LeftDoubleBracket]2, 2\[RightDoubleBracket]]*
+          tmpU\[LeftDoubleBracket]2, 
+            2\[RightDoubleBracket]]]\), "\[IndentingNewLine]", 
+    \(FullSimplify[
+      ComplexExpand[
+        Conjugate[tmpU\[LeftDoubleBracket]3, 1\[RightDoubleBracket]]*
+          tmpU\[LeftDoubleBracket]3, 
+            1\[RightDoubleBracket]]]\), "\[IndentingNewLine]", 
+    \(FullSimplify[
+      ComplexExpand[
+          Conjugate[tmpU\[LeftDoubleBracket]2, 2\[RightDoubleBracket]]*
+            tmpU\[LeftDoubleBracket]2, 2\[RightDoubleBracket]] - 
+        ComplexExpand[
+          Conjugate[tmpU\[LeftDoubleBracket]2, 1\[RightDoubleBracket]]*
+            tmpU\[LeftDoubleBracket]2, 
+              1\[RightDoubleBracket]]]\), "\[IndentingNewLine]", 
+    \(FullSimplify[
+      ComplexExpand[
+          Conjugate[tmpU\[LeftDoubleBracket]3, 2\[RightDoubleBracket]]*
+            tmpU\[LeftDoubleBracket]3, 2\[RightDoubleBracket]] - 
+        ComplexExpand[
+          Conjugate[tmpU\[LeftDoubleBracket]2, 2\[RightDoubleBracket]]*
+            tmpU\[LeftDoubleBracket]2, 
+              2\[RightDoubleBracket]]]\), "\[IndentingNewLine]", 
+    \(FullSimplify[
+      ComplexExpand[
+          Conjugate[tmpU\[LeftDoubleBracket]2, 2\[RightDoubleBracket]]*
+            tmpU\[LeftDoubleBracket]2, 2\[RightDoubleBracket]] + 
+        ComplexExpand[
+          Conjugate[tmpU\[LeftDoubleBracket]3, 1\[RightDoubleBracket]]*
+            tmpU\[LeftDoubleBracket]3, 
+              1\[RightDoubleBracket]]]\), "\[IndentingNewLine]", 
+    \(FullSimplify[
+      ComplexExpand[
+          Conjugate[tmpU\[LeftDoubleBracket]3, 2\[RightDoubleBracket]]*
+            tmpU\[LeftDoubleBracket]3, 2\[RightDoubleBracket]] - 
+        ComplexExpand[
+          Conjugate[tmpU\[LeftDoubleBracket]2, 2\[RightDoubleBracket]]*
+            tmpU\[LeftDoubleBracket]2, 2\[RightDoubleBracket]] + 
+        ComplexExpand[
+          Conjugate[tmpU\[LeftDoubleBracket]2, 2\[RightDoubleBracket]]*
+            tmpU\[LeftDoubleBracket]2, 2\[RightDoubleBracket]] + 
+        ComplexExpand[
+          Conjugate[tmpU\[LeftDoubleBracket]3, 1\[RightDoubleBracket]]*
+            tmpU\[LeftDoubleBracket]3, 
+              1\[RightDoubleBracket]]]\), "\[IndentingNewLine]", 
+    \(FullSimplify[
+      ComplexExpand[
+          Conjugate[tmpU\[LeftDoubleBracket]2, 1\[RightDoubleBracket]]*
+            tmpU\[LeftDoubleBracket]2, 1\[RightDoubleBracket]] + 
+        ComplexExpand[
+          Conjugate[tmpU\[LeftDoubleBracket]2, 2\[RightDoubleBracket]]*
+            tmpU\[LeftDoubleBracket]2, 2\[RightDoubleBracket]]]\)}], "Input"],
+
+Cell[BoxData[
+    \(TrigExpand[Cos[\[Theta]12 + \[Theta]23]]\)], "Input"],
+
+Cell[BoxData[
+    \(Solve[{Cos[\[Theta]23] Sin[\[Theta]12] - 
+            Sin[\[Theta]23] Sin[\[Theta]12] Exp[I\ \[Delta]] \[Equal] 
+          a, \(-Cos[\[Theta]23]\) Cos[\[Theta]12] - 
+            Sin[\[Theta]23] Sin[\[Theta]12] Exp[I\ \[Delta]] \[Equal] 
+          b}, {\[Theta]12, \[Theta]23}]\)], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Test MPT3x3NeutrinoMixingMatrix", "Section",
+  CellTags->"Uneutrino"],
+
+Cell[BoxData[
+    \(\(?MPT3x3NeutrinoMixingMatrix\)\)], "Input"],
+
+Cell[BoxData[
+    \(Options[MPT3x3NeutrinoMixingMatrix]\)], "Input"],
+
+Cell[BoxData[{\(ClearAll[rndNeutrinoMassMatrix]\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"rndNeutrinoMassMatrix", ":=", 
+        RowBox[{"Module", "[", 
+          RowBox[{\({x, y, z, a, b, c}\), ",", "\[IndentingNewLine]", 
+            
+            RowBox[{\(x = Exp[\(-Random[Real, {0, 2}]\)]*Random[Complex]\), 
+              ";", "\[IndentingNewLine]", \(y = 
+                Exp[\(-Random[Real, {0, 2}]\)]*Random[Complex]\), ";", 
+              "\[IndentingNewLine]", \(z = 
+                Exp[\(-Random[Real, {0, 2}]\)]*Random[Complex]\), ";", 
+              "\[IndentingNewLine]", \(a = 
+                Exp[\(-Random[Real, {0, 2}]\)]*Random[Complex]\), ";", 
+              "\[IndentingNewLine]", \(b = 
+                Exp[\(-Random[Real, {0, 2}]\)]*Random[Complex]\), ";", 
+              "\[IndentingNewLine]", \(c = 
+                Exp[\(-Random[Real, {0, 2}]\)]*Random[Complex]\), ";", 
+              "\[IndentingNewLine]", 
+              RowBox[{"Return", "[", 
+                RowBox[{"(", GridBox[{
+                      {"a", "x", "y"},
+                      {"x", "b", "z"},
+                      {"y", "z", "c"}
+                      }], ")"}], "]"}]}]}], "]"}]}], ";"}]}], "Input"],
+
+Cell[BoxData[
+    \(<< MixingParameterTools/MPT3x3.m\)], "Input"],
+
+Cell[BoxData[{
+    \(\(ClearAll[tmpNeutrinoMassMatrix, tmpU];\)\), "\[IndentingNewLine]", 
+    \(\(tmpNeutrinoMassMatrix = 
+        rndNeutrinoMassMatrix;\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Random neutrino mass matrix: \!\(m\_\[Nu]\)=\>\"", 
+        tmpNeutrinoMassMatrix];\)\), "\[IndentingNewLine]", 
+    \(\(tmpU = 
+        Catch[MPT3x3NeutrinoMixingMatrix[
+            tmpNeutrinoMassMatrix]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<U=\>", Chop[MatrixForm[tmpU]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(U\^T\) \!\(m\_\[Nu]\) U=\>\"", 
+        Chop[MatrixForm[
+            Transpose[MPT3x3NeutrinoMixingMatrix[tmpNeutrinoMassMatrix]] . 
+              tmpNeutrinoMassMatrix . 
+              MPT3x3NeutrinoMixingMatrix[
+                tmpNeutrinoMassMatrix]]]];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(MPT3x3MixingParameters[
+        MPT3x3NeutrinoMixingMatrix[
+          tmpNeutrinoMassMatrix]]*180\/\[Pi]\)], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Froggatt-Nielsen games", "Subtitle"],
+
+Cell[BoxData[{
+    \(\(ClearAll[unitZ];\)\), "\[IndentingNewLine]", 
+    \(\(unitZ[z_] = z\/Abs[z];\)\)}], "Input"],
+
+Cell[BoxData[{\(ClearAll[tmp\[Epsilon]L, tmp\[Epsilon]R, tmp\[CurlyEpsilon], 
+        tmp\[Lambda]L, tmp\[Lambda]R, tmp\[Nu], tmpY\[Nu], tmpYe, tmpM1, 
+        tmpM, tmpm, tmpm1, tmpm2, tmpm3, 
+        tmpMiPa];\), "\[IndentingNewLine]", \(tmp\[Epsilon]L = \
+\@\(1\/17\);\), "\[IndentingNewLine]", \(tmp\[Epsilon]R = \@\(1\/34\);\), "\
+\[IndentingNewLine]", \(tmp\[CurlyEpsilon] = \@\(1\/8\);\), "\
+\[IndentingNewLine]", \(tmp\[Lambda]L = {1, 0, 
+          0};\), "\[IndentingNewLine]", \(tmp\[Lambda]R = {4, 2, 
+          1};\), "\[IndentingNewLine]", \(tmp\[Nu] = {2, 1, 
+          0};\), "\[IndentingNewLine]", \(tmpY\[Nu] = 
+        Table[Exp[\(-Random[Real, {0, 0.1}]\)]*
+            Random[Complex]\ \(tmp\[Epsilon]L\^tmp\[Lambda]L\
+\[LeftDoubleBracket]i\[RightDoubleBracket]\) 
+            tmp\[CurlyEpsilon]\^tmp\[Nu]\[LeftDoubleBracket]j\
+\[RightDoubleBracket], {j, 1, 3}, {i, 1, 
+            3}];\), "\[IndentingNewLine]", \(tmpYe = 
+        Table[Exp[\(-Random[Real, {0, 0.1}]\)]*
+            Random[Complex]\ \(tmp\[Epsilon]L\^tmp\[Lambda]L\
+\[LeftDoubleBracket]i\[RightDoubleBracket]\) 
+            tmp\[Epsilon]R\^tmp\[Lambda]R\[LeftDoubleBracket]j\
+\[RightDoubleBracket], {j, 1, 3}, {i, 1, 
+            3}];\), "\[IndentingNewLine]", \(tmpM1 = 
+        0.1  Table[
+            Exp[\(-Random[Real, {0, 0.1}]\)]*
+              Random[Complex]\ \(tmp\[CurlyEpsilon]\^tmp\[Nu]\
+\[LeftDoubleBracket]i\[RightDoubleBracket]\) 
+              tmp\[CurlyEpsilon]\^tmp\[Nu]\[LeftDoubleBracket]j\
+\[RightDoubleBracket], {j, 1, 3}, {i, 1, 
+              3}];\), "\[IndentingNewLine]", \(tmpM = \(1\/2\) \((tmpM1 + 
+              Transpose[tmpM1])\);\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\(\*
+StyleBox[\"Y\",\nFontSlant->\"Italic\"]\)\_\[Nu]\)=\>\"", 
+          ",", \(MatrixForm[tmpY\[Nu]]\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\(\*
+StyleBox[\"Y\",\nFontSlant->\"Italic\"]\)\_e\)=\>\"", 
+          ",", \(MatrixForm[tmpYe]\)}], "]"}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\*
+StyleBox[\"M\",\nFontSlant->\"Italic\"]\)=\>\"", ",", \(MatrixForm[tmpM]\)}], 
+        "]"}], ";"}], "\[IndentingNewLine]", \(tmpm = \(1\/2\) \(\(5\ \(10\^4\
+\) 10\^9\)\/10\^16\) 
+          Transpose[tmpY\[Nu]] . Inverse[tmpM] . 
+            tmpY\[Nu];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\(\*
+StyleBox[\"m\",\nFontSlant->\"Italic\"]\)\_\[Nu]\)=\>\"", 
+          ",", \(MatrixForm[tmpm]\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", \(tmpMiPa = 
+        Catch[MNSParameters[tmpm, 
+            tmpYe]];\), "\[IndentingNewLine]", \(Print["\<Mixing parameters: \
+\>", \(180\/\[Pi]\) 
+          tmpMiPa\[LeftDoubleBracket]1\[RightDoubleBracket]];\), "\
+\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{
+        "\"\<Light masses: \>\"", 
+          ",", \(tmpMiPa\[LeftDoubleBracket]2\[RightDoubleBracket]\), ",", 
+          "\"\<, \!\(\*
+StyleBox[\(\[CapitalDelta]\(\*
+StyleBox[\"m\",\nFontSlant->\"Italic\"]\)\)]\_12\%2\)=\>\"", 
+          ",", \(tmpMiPa\[LeftDoubleBracket]2, 2\[RightDoubleBracket]\^2 - 
+            tmpMiPa\[LeftDoubleBracket]2, 1\[RightDoubleBracket]\^2\), ",", 
+          "\"\<, \!\(\*
+StyleBox[\(\[CapitalDelta]\(\*
+StyleBox[\"m\",\nFontSlant->\"Italic\"]\)\)]\_23\%2\)=\>\"", 
+          ",", \(tmpMiPa\[LeftDoubleBracket]2, 3\[RightDoubleBracket]\^2 - 
+            tmpMiPa\[LeftDoubleBracket]2, 2\[RightDoubleBracket]\^2\)}], 
+        "]"}], ";"}], "\[IndentingNewLine]", \(Print["\<Charged lepton \
+masses: \>", \(1\/50\) 
+          tmpMiPa\[LeftDoubleBracket]3\[RightDoubleBracket]*246];\)}], "Input"],
+
+Cell[BoxData[{\(ClearAll[tmp\[Epsilon]L, tmp\[Epsilon]R, tmp\[CurlyEpsilon], 
+        tmp\[Lambda]L, tmp\[Lambda]R, tmp\[Nu], tmpY\[Nu], tmpYe, tmpM1, 
+        tmpM, tmpm, tmpm1, tmpm2, tmpm3, 
+        tmpMiPa];\), "\[IndentingNewLine]", \(tmp\[Epsilon]L = \
+\(\@\(1\/17\)\) 
+          Exp[I\ \[Phi]1];\), "\[IndentingNewLine]", \(tmp\[Epsilon]R = \@\(1\
+\/34\)\ Exp[
+            I\ \[Phi]2];\), "\[IndentingNewLine]", \(tmp\[CurlyEpsilon] = \
+\@\(1\/8\)\ Exp[I\ \[Phi]3];\), "\[IndentingNewLine]", \(tmp\[Lambda]L = {1, 
+          0, 0};\), "\[IndentingNewLine]", \(tmp\[Lambda]R = {4, 2, 
+          1};\), "\[IndentingNewLine]", \(tmp\[Nu] = {2, 1, 
+          0};\), "\[IndentingNewLine]", \(tmpY\[Nu] = 
+        Table[\ \(tmp\[Epsilon]L\^tmp\[Lambda]L\[LeftDoubleBracket]
+                  i\[RightDoubleBracket]\) \(tmp\[CurlyEpsilon]\^tmp\[Nu]\
+\[LeftDoubleBracket]j\[RightDoubleBracket]\) 
+            Exp[\(-\((0.1 + I)\)\) \((\ 
+                  tmp\[Lambda]L\[LeftDoubleBracket]i\[RightDoubleBracket] + 
+                    tmp\[Nu]\[LeftDoubleBracket]
+                      j\[RightDoubleBracket])\)], {j, 1, 3}, {i, 1, 
+            3}];\), "\[IndentingNewLine]", \(tmpYe[\[Phi]1_, \[Phi]2_] = 
+        Table[\ \(tmp\[Epsilon]L\^tmp\[Lambda]L\[LeftDoubleBracket]
+                  i\[RightDoubleBracket]\) \(tmp\[Epsilon]R\^tmp\[Lambda]R\
+\[LeftDoubleBracket]j\[RightDoubleBracket]\) 
+            Exp[\(-0.1\) \((\ 
+                  tmp\[Lambda]L\[LeftDoubleBracket]i\[RightDoubleBracket] + 
+                    tmp\[Lambda]R\[LeftDoubleBracket]
+                      j\[RightDoubleBracket])\)], {j, 1, 3}, {i, 1, 
+            3}];\), "\[IndentingNewLine]", \(tmpM1 = 
+        0.1  Table[\ \(tmp\[CurlyEpsilon]\^tmp\[Nu]\[LeftDoubleBracket]
+                    i\[RightDoubleBracket]\) \(tmp\[CurlyEpsilon]\^tmp\[Nu]\
+\[LeftDoubleBracket]j\[RightDoubleBracket]\) 
+              Exp[\(-0.1\) \((\ 
+                    tmp\[Nu]\[LeftDoubleBracket]i\[RightDoubleBracket] + 
+                      tmp\[Nu]\[LeftDoubleBracket]
+                        j\[RightDoubleBracket])\)], {j, 1, 3}, {i, 1, 
+              3}];\), "\[IndentingNewLine]", \(tmpM = \(1\/2\) \((tmpM1 + 
+              Transpose[tmpM1])\);\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\(\*
+StyleBox[\"Y\",\nFontSlant->\"Italic\"]\)\_\[Nu]\)=\>\"", 
+          ",", \(MatrixForm[tmpY\[Nu]]\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\(\*
+StyleBox[\"Y\",\nFontSlant->\"Italic\"]\)\_e\)=\>\"", 
+          ",", \(MatrixForm[tmpYe]\)}], "]"}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(\*
+StyleBox[\"M\",\nFontSlant->\"Italic\"]\)=\>\"", ",", \(MatrixForm[tmpM]\)}], 
+        "]"}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{\(tmpm[\[Phi]1_, \[Phi]2_, \[Phi]3_] = \(1\/2\) \(\(5\ \(10\^4\) 
+                  10\^9\)\/10\^16\) 
+            Transpose[tmpY\[Nu]] . Inverse[tmpM] . tmpY\[Nu];\), 
+      "\[IndentingNewLine]", 
+      RowBox[{"(*", 
+        RowBox[{
+          RowBox[{"Print", "[", 
+            RowBox[{"\"\<\!\(\(\*
+StyleBox[\"m\",\nFontSlant->\"Italic\"]\)\_\[Nu]\)=\>\"", 
+              ",", \(MatrixForm[
+                Simplify[tmpm[\[Phi]1, \[Phi]2, \[Phi]3]]]\)}], "]"}], ";"}], 
+        "*)"}]}], "\[IndentingNewLine]", \(tmpMiPa[\[Phi]1_, \[Phi]2_, \
+\[Phi]3_] := 
+        Catch[MNSParameters[tmpm[\[Phi]1, \[Phi]2, \[Phi]3], 
+            tmpYe[\[Phi]1, \[Phi]2]]];\)}], "Input"],
+
+Cell[BoxData[{
+    \(tmpm[0.4, 0.2, 0.3]\), "\[IndentingNewLine]", 
+    \(tmpMiPa[0.3, 0.2, \[Pi]/4]\)}], "Input"],
+
+Cell[BoxData[
+    \(Plot[\(180\/\[Pi]\) \(tmpMiPa[0, \[Phi]1, \[Pi]/2]\)[\([1, 
+            1]\)], {\[Phi]1, 0, 2  \[Pi]}]\)], "Input"],
+
+Cell[BoxData[""], "Input"],
+
+Cell[BoxData[{
+    \(\(ClearAll[tmp\[Epsilon]L, tmp\[Epsilon]R, tmp\[CurlyEpsilon], 
+        tmp\[Lambda]L, tmp\[Lambda]R, tmp\[Nu], tmpY\[Nu], tmpYe, tmpM1, 
+        tmpM, tmpm, tmpm1, tmpm2, tmpm3, 
+        tmpMiPa];\)\), "\[IndentingNewLine]", 
+    \(\(ClearAll[nMax, list\[Theta]12, list\[Theta]13, list\[Theta]23, 
+        listmmin, list\[CapitalDelta]sol, list\[CapitalDelta]atm, listme, 
+        listm\[Mu], listm\[Tau], listM1, listM2, listM3, evM, listTr, listP, 
+        listY\[Nu]];\)\), "\[IndentingNewLine]", 
+    \(\(list\[Theta]12 = {};\)\), "\[IndentingNewLine]", 
+    \(\(list\[Theta]13 = {};\)\), "\[IndentingNewLine]", 
+    \(\(list\[Theta]23 = {};\)\), "\[IndentingNewLine]", 
+    \(\(listmmin = {};\)\), "\[IndentingNewLine]", 
+    \(\(list\[CapitalDelta]sol = {};\)\), "\[IndentingNewLine]", 
+    \(\(list\[CapitalDelta]atm = {};\)\), "\[IndentingNewLine]", 
+    \(\(listme = {};\)\), "\[IndentingNewLine]", 
+    \(\(listm\[Mu] = {};\)\), "\[IndentingNewLine]", 
+    \(\(listm\[Tau] = {};\)\), "\[IndentingNewLine]", 
+    \(\(listM1 = {};\)\), "\[IndentingNewLine]", 
+    \(\(listM2 = {};\)\), "\[IndentingNewLine]", 
+    \(\(listM3 = {};\)\), "\[IndentingNewLine]", 
+    \(\(listTr = {};\)\), "\[IndentingNewLine]", 
+    \(\(listP = {};\)\), "\[IndentingNewLine]", 
+    \(\(listY\[Nu] = {};\)\), "\[IndentingNewLine]", 
+    \(\(nMax = 10\^3;\)\), "\[IndentingNewLine]", 
+    \(\(tmp\[Epsilon]L = \@\(1\/9\);\)\), "\[IndentingNewLine]", 
+    \(\(tmp\[Epsilon]R = \@\(1\/22\);\)\), "\[IndentingNewLine]", 
+    \(\(tmp\[CurlyEpsilon] = \@\(1\/17\);\)\), "\[IndentingNewLine]", 
+    \(\(tmp\[Lambda]L = {1, 0, 0};\)\), "\[IndentingNewLine]", 
+    \(\(tmp\[Lambda]R = {4, 2, 1};\)\), "\[IndentingNewLine]", 
+    \(\(tmp\[Nu] = {0, 2, 4};\)\), "\[IndentingNewLine]", 
+    \(\(Do[\[IndentingNewLine]tmpY\[Nu] = 
+          Table[Exp[\(-Random[Real, {0, 0.1}]\)]*
+              unitZ[Random[
+                  Complex]]\ \(tmp\[Epsilon]L\^tmp\[Lambda]L\
+\[LeftDoubleBracket]i\[RightDoubleBracket]\) 
+              tmp\[CurlyEpsilon]\^tmp\[Nu]\[LeftDoubleBracket]j\
+\[RightDoubleBracket], {j, 1, 3}, {i, 1, 3}]; \[IndentingNewLine]tmpYe = 
+          Table[Exp[\(-Random[Real, {0, 0.1}]\)]*
+              unitZ[Random[
+                  Complex]]\ \(tmp\[Epsilon]L\^tmp\[Lambda]L\
+\[LeftDoubleBracket]i\[RightDoubleBracket]\) 
+              tmp\[Epsilon]R\^tmp\[Lambda]R\[LeftDoubleBracket]j\
+\[RightDoubleBracket], {j, 1, 3}, {i, 1, 
+              3}]; \[IndentingNewLine]tmpM1 = \(1\/4\) 
+            Table[Exp[\(-Random[Real, {0, 0.1}]\)]*
+                unitZ[Random[
+                    Complex]]\ \(tmp\[CurlyEpsilon]\^tmp\[Nu]\
+\[LeftDoubleBracket]i\[RightDoubleBracket]\) 
+                tmp\[CurlyEpsilon]\^tmp\[Nu]\[LeftDoubleBracket]j\
+\[RightDoubleBracket], {j, 1, 3}, {i, 1, 
+                3}]; \[IndentingNewLine]tmpM = \(1\/2\) \((tmpM1 + 
+                Transpose[
+                  tmpM1])\); \[IndentingNewLine]tmpm = \(1\/2\) \(\(5\ \
+\(10\^4\) 10\^9\)\/10\^16\) 
+            Transpose[tmpY\[Nu]] . Inverse[tmpM] . 
+              tmpY\[Nu]; \[IndentingNewLine]tmpm = 
+          tmpm + 0 \( Log[50]\/\(16  \[Pi]\^2\)\) \((tmpm . 
+                    Transpose[Conjugate[tmpY\[Nu]]] . tmpY\[Nu] + 
+                  Transpose[Transpose[Conjugate[tmpY\[Nu]]] . tmpY\[Nu]] . 
+                    tmpm)\)\[IndentingNewLine] + 
+            0 \( 1\/\(16  \[Pi]\^2\)\) 
+              Log[10\^14] \((tmpm . Transpose[Conjugate[tmpYe]] . tmpYe + 
+                  Transpose[Transpose[Conjugate[tmpYe]] . tmpYe] . 
+                    tmpm)\); \[IndentingNewLine]tmpMiPa = 
+          Catch[MNSParameters[tmpm, 
+              tmpYe]]; \[IndentingNewLine]list\[Theta]12 = 
+          Append[list\[Theta]12, \(180\/\[Pi]\) 
+              tmpMiPa\[LeftDoubleBracket]1, 
+                1\[RightDoubleBracket]]; \[IndentingNewLine]list\[Theta]13 = 
+          Append[list\[Theta]13, \(180\/\[Pi]\) 
+              tmpMiPa\[LeftDoubleBracket]1, 
+                2\[RightDoubleBracket]]; \[IndentingNewLine]list\[Theta]23 = 
+          Append[list\[Theta]23, \(180\/\[Pi]\) 
+              tmpMiPa\[LeftDoubleBracket]1, 
+                3\[RightDoubleBracket]]; \[IndentingNewLine]listmmin = 
+          Append[listmmin, 
+            Min[Abs[tmpMiPa\[LeftDoubleBracket]2\[RightDoubleBracket]]]]; \
+\[IndentingNewLine]list\[CapitalDelta]sol = 
+          Append[list\[CapitalDelta]sol, 
+            Abs[tmpMiPa\[LeftDoubleBracket]2, 2\[RightDoubleBracket]\^2 - 
+                
+                tmpMiPa\[LeftDoubleBracket]2, 1\[RightDoubleBracket]\^2]]; \
+\[IndentingNewLine]list\[CapitalDelta]atm = 
+          Append[list\[CapitalDelta]atm, 
+            Abs[tmpMiPa\[LeftDoubleBracket]2, 3\[RightDoubleBracket]\^2 - 
+                tmpMiPa\[LeftDoubleBracket]2, 2\[RightDoubleBracket]\^2]]; \
+\[IndentingNewLine]listme = 
+          Append[listme, \(1\/50\) 
+              tmpMiPa\[LeftDoubleBracket]3, 
+                1\[RightDoubleBracket]*246]; \[IndentingNewLine]listm\[Mu] = 
+          Append[listm\[Mu], \(1\/50\) 
+              tmpMiPa\[LeftDoubleBracket]3, 
+                2\[RightDoubleBracket]*246]; \[IndentingNewLine]listm\[Tau] = 
+          Append[listm\[Tau], \(1\/50\) 
+              tmpMiPa\[LeftDoubleBracket]3, 
+                3\[RightDoubleBracket]*246]; \[IndentingNewLine]evM = \
+\(10\^16\) Abs[Eigenvalues[tmpM]]; \[IndentingNewLine]listM1 = 
+          Append[listM1, 
+            evM\[LeftDoubleBracket]3\[RightDoubleBracket]]; \
+\[IndentingNewLine]listM2 = 
+          Append[listM2, 
+            evM\[LeftDoubleBracket]2\[RightDoubleBracket]]; \
+\[IndentingNewLine]listM3 = 
+          Append[listM3, 
+            evM\[LeftDoubleBracket]1\[RightDoubleBracket]]; \
+\[IndentingNewLine]listTr = 
+          Append[listTr, 
+            Abs[Tr[Transpose[Conjugate[tmpY\[Nu]]] . 
+                  tmpY\[Nu]]]]; \[IndentingNewLine]listP = 
+          Append[listP, 
+            Transpose[Conjugate[tmpY\[Nu]]] . 
+              tmpY\[Nu]]; \[IndentingNewLine]listY\[Nu] = 
+          Append[listY\[Nu], Abs[tmpY\[Nu]]], {n, 1, 
+          nMax}];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\(\[Theta]\_12\)\&_\)=\>\"", 
+        Mean[list\[Theta]12], "\<\[PlusMinus]\>", 
+        StandardDeviation[
+          list\[Theta]12], \*"\"\<, \!\(\(\[Theta]\_13\)\&_\)=\>\"", 
+        Mean[list\[Theta]13], "\<\[PlusMinus]\>", 
+        StandardDeviation[
+          list\[Theta]13], \*"\"\<, \!\(\(\[Theta]\_23\)\&_\)=\>\"", 
+        Mean[list\[Theta]23], "\<\[PlusMinus]\>", 
+        StandardDeviation[
+          list\[Theta]23], \*"\"\<, \!\(\(m\_min\)\&_\)=\>\"", 
+        Mean[listmmin], "\<\[PlusMinus]\>", 
+        StandardDeviation[
+          listmmin], \*"\"\<, \!\(\[CapitalDelta]m\_sol\%2\&_\)=\>\"", 
+        Mean[list\[CapitalDelta]sol], "\<\[PlusMinus]\>", 
+        StandardDeviation[
+          list\[CapitalDelta]sol], \*"\"\<, \
+\!\(\[CapitalDelta]m\_atm\%2\&_\)=\>\"", 
+        Mean[list\[CapitalDelta]atm], "\<\[PlusMinus]\>", 
+        StandardDeviation[
+          list\[CapitalDelta]atm], \*"\"\<, hierarchy \
+\!\(\[CapitalDelta]m\_atm\%2\/\[CapitalDelta]m\_sol\%2\)=\>\"", 
+        Mean[list\[CapitalDelta]atm]\/Mean[list\[CapitalDelta]sol]];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\(m\_e\)\&_\)=\>\"", 
+        Mean[listme], "\<\[PlusMinus]\>", 
+        StandardDeviation[listme], \*"\"\<, \!\(\(m\_\[Mu]\)\&_\)=\>\"", 
+        Mean[listm\[Mu]], "\<\[PlusMinus]\>", 
+        StandardDeviation[listm\[Mu]] \*"\"\<, \!\(\(m\_\[Tau]\)\&_\)=\>\"", 
+        Mean[listm\[Tau]], "\<\[PlusMinus]\>", 
+        StandardDeviation[listm\[Tau]] \*"\"\<, \!\(\(M\_1\)\&_\)=\>\"", 
+        Mean[listM1], "\<\[PlusMinus]\>", 
+        StandardDeviation[listM1], \*"\"\<, \!\(\(M\_2\)\&_\)=\>\"", 
+        Mean[listM2], "\<\[PlusMinus]\>", 
+        StandardDeviation[listM2], \*"\"\<, \!\(\(M\_3\)\&_\)=\>\"", 
+        Mean[listM3], "\<\[PlusMinus]\>", 
+        StandardDeviation[
+          listM3], \*"\"\<, \!\(\(Tr \((\(Y\_\[Nu]\^\[Dagger]\) Y\_\[Nu])\)\)\
+\&_\)=\>\"", Mean[listTr], "\<\[PlusMinus]\>", 
+        StandardDeviation[listTr]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\(\(Y\_\[Nu]\^\[Dagger]\) Y\_\[Nu]\)\&_\)=\>\"", 
+        Mean[listP], \*"\"\<, \!\(\(\(|\)\(Y\_\[Nu]\)\(|\)\)\&_\)=\>\"", 
+        Mean[listY\[Nu]]];\)\)}], "Input"]
+}, Open  ]]
+}, Open  ]]
+},
+FrontEndVersion->"5.0 for X",
+ScreenRectangle->{{0, 1280}, {0, 1024}},
+WindowSize->{1003, 681},
+WindowMargins->{{Automatic, 1}, {Automatic, 0}},
+StyleDefinitions -> "Report.nb"
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{
+  "CKMParameters"->{
+    Cell[4162, 140, 81, 1, 67, "Section",
+      CellTags->"CKMParameters"]},
+  "MNSParameters"->{
+    Cell[10760, 278, 81, 1, 67, "Section",
+      CellTags->"MNSParameters"]},
+  "DiracMNSParameters"->{
+    Cell[16400, 400, 95, 1, 67, "Section",
+      CellTags->"DiracMNSParameters"]},
+  "Orthogonal and unitary matrix"->{
+    Cell[23229, 543, 115, 1, 67, "Section",
+      CellTags->"Orthogonal and unitary matrix"]},
+  "Extract mixing parameters"->{
+    Cell[23533, 555, 88, 1, 67, "Section",
+      CellTags->"Extract mixing parameters"]},
+  "UL and UR"->{
+    Cell[24825, 600, 92, 1, 67, "Section",
+      CellTags->"UL and UR"]},
+  "Uneutrino"->{
+    Cell[34331, 810, 75, 1, 67, "Section",
+      CellTags->"Uneutrino"]}
+  }
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{
+  {"CKMParameters", 53573, 1212},
+  {"MNSParameters", 53671, 1215},
+  {"DiracMNSParameters", 53775, 1218},
+  {"Orthogonal and unitary matrix", 53895, 1221},
+  {"Extract mixing parameters", 54023, 1224},
+  {"UL and UR", 54130, 1227},
+  {"Uneutrino", 54221, 1230}
+  }
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 48, 0, 80, "Title"],
+Cell[1827, 55, 108, 3, 28, "Text"],
+
+Cell[CellGroupData[{
+Cell[1960, 62, 32, 0, 67, "Section"],
+Cell[1995, 64, 59, 0, 28, "Text"],
+Cell[2057, 66, 65, 1, 32, "Input"],
+Cell[2125, 69, 107, 4, 44, "Text"],
+Cell[2235, 75, 1890, 60, 260, "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[4162, 140, 81, 1, 67, "Section",
+  CellTags->"CKMParameters"],
+Cell[4246, 143, 159, 3, 64, "Input"],
+Cell[4408, 148, 842, 13, 104, "Input"],
+Cell[5253, 163, 5470, 110, 466, "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[10760, 278, 81, 1, 67, "Section",
+  CellTags->"MNSParameters"],
+Cell[10844, 281, 101, 2, 48, "Input"],
+Cell[10948, 285, 842, 13, 104, "Input"],
+Cell[11793, 300, 65, 1, 32, "Input"],
+Cell[11861, 303, 4502, 92, 408, "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[16400, 400, 95, 1, 67, "Section",
+  CellTags->"DiracMNSParameters"],
+Cell[16498, 403, 111, 2, 48, "Input"],
+Cell[16612, 407, 842, 13, 104, "Input"],
+Cell[17457, 422, 3688, 72, 360, "Input"],
+Cell[21148, 496, 39, 0, 28, "Text"],
+Cell[21190, 498, 2002, 40, 350, "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[23229, 543, 115, 1, 67, "Section",
+  CellTags->"Orthogonal and unitary matrix"],
+Cell[23347, 546, 26, 0, 32, "Input"],
+Cell[23376, 548, 120, 2, 48, "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[23533, 555, 88, 1, 67, "Section",
+  CellTags->"Extract mixing parameters"],
+Cell[23624, 558, 60, 1, 32, "Input"],
+Cell[23687, 561, 107, 5, 28, "Text"],
+Cell[23797, 568, 212, 6, 68, "Input"],
+Cell[24012, 576, 464, 8, 80, "Input"],
+Cell[24479, 586, 49, 1, 32, "Input"],
+Cell[24531, 589, 90, 1, 32, "Input"],
+Cell[24624, 592, 164, 3, 48, "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[24825, 600, 92, 1, 67, "Section",
+  CellTags->"UL and UR"],
+Cell[24920, 603, 117, 2, 48, "Input"],
+Cell[25040, 607, 842, 13, 104, "Input"],
+Cell[25885, 622, 485, 9, 122, "Input"],
+Cell[26373, 633, 65, 1, 32, "Input"],
+Cell[26441, 636, 175, 3, 53, "Input"],
+Cell[26619, 641, 1910, 38, 181, "Input"],
+Cell[28532, 681, 33, 0, 28, "Text"],
+Cell[28568, 683, 904, 14, 128, "Input"],
+Cell[29475, 699, 65, 1, 32, "Input"],
+Cell[29543, 702, 1197, 23, 156, "Input"],
+Cell[30743, 727, 58, 1, 32, "Input"],
+Cell[30804, 730, 3102, 65, 192, "Input"],
+Cell[33909, 797, 73, 1, 32, "Input"],
+Cell[33985, 800, 309, 5, 48, "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[34331, 810, 75, 1, 67, "Section",
+  CellTags->"Uneutrino"],
+Cell[34409, 813, 64, 1, 32, "Input"],
+Cell[34476, 816, 68, 1, 32, "Input"],
+Cell[34547, 819, 1213, 23, 204, "Input"],
+Cell[35763, 844, 65, 1, 32, "Input"],
+Cell[35831, 847, 817, 15, 145, "Input"],
+Cell[36651, 864, 137, 3, 49, "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[36825, 872, 42, 0, 39, "Subtitle"],
+Cell[36870, 874, 115, 2, 65, "Input"],
+Cell[36988, 878, 3790, 77, 521, "Input"],
+Cell[40781, 957, 3550, 67, 429, "Input"],
+Cell[44334, 1026, 114, 2, 48, "Input"],
+Cell[44451, 1030, 135, 2, 49, "Input"],
+Cell[44589, 1034, 26, 0, 32, "Input"],
+Cell[44618, 1036, 8311, 156, 1355, "Input"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

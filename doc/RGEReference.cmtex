@@ -1,0 +1,166 @@
+
+\section{Reference}
+
+\subsection{Implementation details}
+
+\package{REAP} is divided in three parts. The main part
+is \package{RGESolver} which
+provides a standard interface between the different models and the user. Thus
+the user does not have to know anything about the implementation details of the
+different models besides the parameters of the models. 
+The second part are the different models, like \package{RGESM},
+\package{RGEMSSM}, \dots which contain the model
+specific parts of the package. 
+The third part is formed by some utility packages
+(\package{RGEUtilities}, \package{RGEParameters}, 
+\package{RGEInitial}, \package{RGEFusaokaYukawa}, \package{RGESymbol}, \package{RGETakagi}) which provide several useful functions
+to the different models. In principle, a user only needs a limited set of
+functions of \package{RGESolver}.
+
+
+
+%% The package \package{REAP} is divided in three parts. The main part is the Mathematica File \package{REAP`RGESolver`} which provides a standard interface to all model. The second part are the different models, like \package{REAP`RGESM`}, \dots ,which contain the model specific parts of the package. The third part is formed by some utility packages (\package{REAP`RGEUtilities`}, \package{REAP`RGEParameters`}, \package{REAP`RGESymbol`}, \package{REAP`RGEInitial`}, \package{REAP`RGEFusaoka`}, \package{REAP`RGETakagi`}) which provide several useful functions to the different models.
+
+%% The \package{RGESolver} provides the interface between the user and the different models. Every model has to register with \function{RegisterModel}.
+%% First the model name is saved in the list named Model. The other parameters are stored in similar lists.
+%% The user has to tell to \package{RGESolver} how his model does look like. He adds several EFT's to his model by \function{RGEAddEFT}. These EFT's are stored in the list \variable{RGEModel}.
+
+<REMOVE level=simple>
+\subsection[\package{RGESolver}]{\package{REAP`RGESolver`}}
+
+The package distinguishes between two different kind of functions. On the one
+hand, there are functions which directly work with the supplied models. They are
+named \function{RGE*Model*}. On the other hand, there are functions dealing
+with the models which are used as an effective field theory (EFT), i.e.\ have been added by
+\function{RGEAddEFT}. These functions are named \function{RGE*EFT*}.
+
+At the beginning, all models have to be loaded by
+\function{RGERegisterModel} in order to make them accessible through
+\package{RGESolver}. \function{RGERegisterModel} takes as argument
+different functions to communicate with the model. After all models have been
+registered which is done by the packages, the models are contained in, the user
+has to specify, how his sequence of EFTs is made up. Different models can be
+added as EFT by \function{RGEAddEFT}. The cutoff is specified by the option
+\option{RGECutoff}. Next, the initial values have to be supplied by the function 
+\function{RGESetInitial}. Then the renormalization group equations are solved
+by executing \function{RGESolve} which uses \function{NDSolve} to numerically
+integrate the differential equations. Finally, the parameters can be obtained
+through \function{RGEGetSolution} at any scale. In order to illustrate the use
+of \package{REAP}, an example is given in Sec.~\ref{sec:FirstSteps} and the
+algorithm to solve the different ranges is demonstrated in the following example.
+
+The setup is the MSSM extended by 3 right-handed neutrinos at the GUT scale of
+$2\cdot10^{16} \GeV$ and set the SUSY breaking scale to 1 TeV. The initial values
+are set to the suggested values which are specified in Sec.~\ref{sec:Models}.
+At first, we define the model and set the initial values.
+\begin{verbatim}
+  RGEAddModel["MSSM"];
+  RGEAddModel["SM",RGECutoff->1000];
+  RGESetInitial[2 10^16];
+\end{verbatim}
+The execution of \function{RGESolve[$91.19$,$2\cdot 10^{16}$]} solves the RGE and finds the scales where
+the right-handed neutrinos are integrated out.
+
+\begin{enumerate}
+\item Solve the RGEs for the MSSM with $3$ right-handed neutrinos between the
+  GUT scale and the SUSY breaking scale without considering any thresholds.
+\item Find the heaviest right-handed neutrino with mass $M_3$ and add a new EFT
+  by \\ \function{RGEAddEFT["MSSM",RGECutoff->$M_3$, RGEIntegratedOut->1]}.
+\item Calculate initial values for MSSM with $2$ right-handed neutrinos by matching $\kappa,
+  Y_\nu$, $M$ and the other parameters at the scale where the first right-handed neutrino is integrated out.
+\item Solve the RGEs for the MSSM with $2$ right-handed neutrinos between $M_3$ and
+  the SUSY breaking scale.
+\item Find the second to heaviest right-handed neutrino with mass $M_2$ and add
+  a new EFT by \function{RGEAddEFT["MSSM", RGECutoff->$M_2$,
+  RGEIntegratedOut->2]}.
+%\item etc.
+\item Calculate initial values for MSSM with $1$ right-handed neutrino.
+\item Solve the RGEs for the MSSM with $1$ right-handed neutrinos between $M_2$ and
+  the SUSY breaking scale.
+\item Find the lightest right-handed neutrino with mass $M_1$ and add
+  a new EFT by\\ \function{RGEAddEFT["MSSM0N", RGECutoff->$M_1$]}.
+\item Calculate initial values for MSSM without right-handed neutrinos.
+\item Solve the RGEs for the MSSM without right-handed neutrinos between $M_1$
+  and the SUSY breaking scale.
+\item Calculate initial values for the SM
+\item Since all right-handed neutrinos have been integrated out already, change
+  SM to SM0N.
+\item Solve the RGEs for SM0N between the SUSY breaking scale and the mass of $Z^0$.
+\end{enumerate}
+</REMOVE>
+
+<PERL>
+our $level;
+Doc("../source/RGESolver.cxml",$level);
+</PERL>
+
+<REMOVE level=simple|advanced>
+\subsection[\package{RGEFusaoka}]{\package{REAP`RGEFusaoka`}\cite{Fusaoka:1998vc}}
+</REMOVE>
+
+<PERL level=internal>
+our $level;
+Doc("../source/RGEFusaoka.cxml",$level);
+</PERL>
+
+<REMOVE level=simple>
+\input{RGESymbol}
+
+\subsection[\package{RGEInitial}]{\package{REAP`RGEInitial`}}
+
+This package contains some functions for converting mass and mixing parameters
+into mass matrices. They are mainly intended for internal use by REAP, but may
+be helpful for the user in some occasions.
+
+</REMOVE>
+
+<PERL level=advanced|internal>
+our $level;
+Doc("../source/RGEInitial.cxml",$level);
+</PERL>
+
+
+
+<REMOVE level=simple>
+\subsection[\package{RGEParameters}]{\package{REAP`RGEParameters`}}
+\package{RGEParameters} contains measured parameters of the SM like mixing
+angles, masses and coupling constants. %\cite{PDBook}
+</REMOVE>
+  
+<PERL level=advanced|internal>
+our $level;
+Doc("../source/RGEParameters.cxml",$level);
+</PERL>
+
+
+
+<REMOVE level=simple>
+\subsection[\package{RGEUtilities}]{\package{REAP`RGEUtilities`}}
+This package contains some functions needed by \package{RGESM},\package{RGEMSSM}
+and \package{2HDM}.
+</REMOVE>
+
+
+
+<PERL level=advanced|internal>
+our $level;
+Doc("../source/RGEUtilities.cxml",$level);
+</PERL>
+
+<REMOVE level=simple>
+\subsection[\package{RGETakagi}]{\package{REAP`RGETakagi`}}
+This package contains a function implementing the Takagi diagonalization, which was implemented by Vinzenz Maurer following the algorithm described in Ref.~\cite{Hahn:2006xx}.
+</REMOVE>
+
+
+<PERL level=advanced|internal>
+our $level;
+Doc("../source/RGETakagi.cxml",$level);
+</PERL>
+
+
+<PERL>
+our $level;
+parse("RGEModels.cmtex");
+</PERL>
+
